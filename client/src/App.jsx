@@ -7,12 +7,9 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Collections from './pages/Collections';
 import Contact from './pages/Contact';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import VeloriaAdministration from './pages/VeloriaAdministration';
 import Account from './pages/Account';
 import Cart from './pages/Cart';
-import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
@@ -26,8 +23,6 @@ const App = () => {
             <Route path="/about" element={<About />} />
             <Route path="/collections" element={<Collections />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
             <Route path="/veloriaAdministration" element={<VeloriaAdministration />} />
             <Route path="/account" element={<Account />} />
             <Route path="/cart" element={<Cart />} />

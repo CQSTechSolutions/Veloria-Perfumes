@@ -27,33 +27,32 @@ const Account = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    setToken(storedToken);
-    if (storedToken) {
-      setIsLogin(true);
-    }
-    // find the user id from the token and fetch the user details from the database
-    const fetchUserDetails = async () => {
-      try {
-        const userId = jwtDecode(storedToken).id;
-        console.log(userId);
+      const storedToken = localStorage.getItem('token');
+      setToken(storedToken);
+      const fetchUserDetails = async () => {
+          try {
+              const userId = jwtDecode(storedToken).id;
+        // console.log(userId);
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/getUserById?userId=${userId}`);
-        console.log(response.data);
+        // console.log(response.data);
         setFormData(prev => ({
-          ...prev,
-          fullName: response.data.fullName || '',
-          email: response.data.email || '',
-          phone: response.data.phone || '',
-          countryCode: response.data.countryCode || '+91',
-          createdAt: response.data.createdAt || '',
+            ...prev,
+            fullName: response.data.fullName || '',
+            email: response.data.email || '',
+            phone: response.data.phone || '',
+            countryCode: response.data.countryCode || '+91',
+            createdAt: response.data.createdAt || '',
         }));
-      } catch (error) {
+    } catch (error) {
         toast.error('Failed to fetch user details. Please log in again.');
         console.error('Error fetching user details:', error);
       }
     };
-    fetchUserDetails();
-  }, []);
+    if (storedToken) {
+      setIsLogin(true);
+      fetchUserDetails();
+    }
+  }, [navigate]);
 
   const passwordRequirements = [
     { label: 'At least 8 characters', regex: /.{8,}/ },
@@ -97,7 +96,7 @@ const Account = () => {
   const login = async (formData) => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, formData);
-      console.log(response.data);
+    //   console.log(response.data);
       if (response.data.token) {
         setFormData({
           fullName: response.data.user.fullName,
@@ -162,7 +161,6 @@ const Account = () => {
         });
       }
     } catch (error) {
-      console.error('Registration error:', error);
       const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
       toast.error(errorMessage, {
         position: "top-right",
