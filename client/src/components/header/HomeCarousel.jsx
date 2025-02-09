@@ -49,7 +49,7 @@ const HomeCarousel = () => {
       autoPlaySpeed={5000}
       showDots={true}
       removeArrowOnDeviceType={["tablet", "mobile"]}
-      className="mt-20 w-full h-auto object-cover"
+      className="w-full h-auto object-cover"
     >
       {banners.map((banner, index) => (
         <div key={index} className="w-full">

@@ -2,7 +2,7 @@ import React from 'react';
 
 const FloatingHearts = ({ count = 12 }) => {
   return (
-    <div className="fixed inset-0 pointer-events-none z-0">
+    <div className="fixed inset-0 pointer-events-none z-10">
       {Array.from({ length: count }, (_, i) => (
         <div
           key={i}
@@ -15,7 +15,7 @@ const FloatingHearts = ({ count = 12 }) => {
           }}
         >
           <span 
-            className="text-red-400 opacity-30 transform rotate-45" 
+            className="text-red-400 transform rotate-45" 
             style={{ fontSize: `${Math.random() * 20 + 20}px` }}
           >
             ❤️

@@ -10,12 +10,12 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import VeloriaAdministration from './pages/VeloriaAdministration';
-// import Account from './pages/Account';
-// import Cart from './pages/Cart';
+import Account from './pages/Account';
+import Cart from './pages/Cart';
 
 const App = () => {
   return (
-    <div className='flex flex-col min-h-screen pt-20'>
+    <div className='flex flex-col min-h-screen pt-35'>
       <FloatingHearts count={15} />
       <Router>
         <Header />
@@ -28,8 +28,8 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/veloriaAdministration" element={<VeloriaAdministration />} />
-            {/* <Route path="/account" element={<Account />} /> */}
-            {/* <Route path="/cart" element={<Cart />} /> */}
+            <Route path="/account" element={<Account />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </div>
         <Footer />
