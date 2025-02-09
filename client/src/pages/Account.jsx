@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { jwtDecode } from 'jwt-decode';
 
 const Account = () => {
   const [token, setToken] = useState(null);
@@ -20,6 +21,7 @@ const Account = () => {
     confirmPassword: '',
     phone: '',
     countryCode: '',
+    createdAt: '',
   });
 
   const navigate = useNavigate();
@@ -30,27 +32,27 @@ const Account = () => {
     if (storedToken) {
       setIsLogin(true);
     }
-
-    const userDetails = localStorage.getItem('userDetails');
-    if (userDetails && userDetails !== 'undefined') {
+    // find the user id from the token and fetch the user details from the database
+    const fetchUserDetails = async () => {
       try {
-        const parsedDetails = JSON.parse(userDetails);
+        const userId = jwtDecode(storedToken).id;
+        console.log(userId);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/getUserById?userId=${userId}`);
+        console.log(response.data);
         setFormData(prev => ({
           ...prev,
-          fullName: parsedDetails.fullName || '',
-          email: parsedDetails.email || '',
-          phone: parsedDetails.phone || '',
-          countryCode: parsedDetails.countryCode || '+91',
-          password: '',
-          confirmPassword: '',
+          fullName: response.data.fullName || '',
+          email: response.data.email || '',
+          phone: response.data.phone || '',
+          countryCode: response.data.countryCode || '+91',
+          createdAt: response.data.createdAt || '',
         }));
       } catch (error) {
-        console.error('Error parsing user details:', error);
-        if (storedToken) {
-          toast.error('Failed to load user details. Please log in again.');
-        }
+        toast.error('Failed to fetch user details. Please log in again.');
+        console.error('Error fetching user details:', error);
       }
-    }
+    };
+    fetchUserDetails();
   }, []);
 
   const passwordRequirements = [
@@ -104,6 +106,7 @@ const Account = () => {
           countryCode: response.data.user.countryCode,
           password: '',
           confirmPassword: '',
+          createdAt: response.data.user.createdAt,
         });
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('expirationTime', new Date().getTime() + 60 * 60 * 1000);
@@ -123,7 +126,8 @@ const Account = () => {
         email: formData.email,
         password: formData.password,
         phone: formData.phone,
-        countryCode: formData.countryCode || '+91'
+        countryCode: formData.countryCode || '+91',
+        createdAt: new Date().toISOString()
       };
 
       const response = await axios.post(
@@ -146,6 +150,7 @@ const Account = () => {
         
         setToken(response.data.token);
         setIsLogin(true);
+        
         setFormData({
           fullName: response.data.user.fullName,
           email: response.data.user.email,
@@ -153,6 +158,7 @@ const Account = () => {
           countryCode: response.data.user.countryCode,
           password: '',
           confirmPassword: '',
+          createdAt: response.data.user.createdAt,
         });
       }
     } catch (error) {
@@ -180,6 +186,7 @@ const Account = () => {
         confirmPassword: '',
         phone: '',
         countryCode: '',
+        createdAt: '',
       });
     } catch (error) {
       toast.error('Error logging out. Please try again.');
@@ -312,7 +319,7 @@ const Account = () => {
                 >
                   <div className="flex items-center justify-between text-sm text-gray-500">
                     <p>Member since</p>
-                    <p>{new Date().toLocaleDateString()}</p>
+                    <p>{new Date(formData.createdAt).toLocaleDateString()}</p>
                   </div>
                 </motion.div>
               </div>

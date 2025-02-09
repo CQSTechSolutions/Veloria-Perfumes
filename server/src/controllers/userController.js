@@ -5,4 +5,10 @@ const getAllUsers = async (req, res) => {
     res.json(users);
 };
 
-module.exports = { getAllUsers };
+const getUserById = async (req, res) => {
+    const {userId} = req.query;
+    const user = await User.findById(userId).select('-password');
+    res.json(user);
+};
+
+module.exports = { getAllUsers, getUserById };
