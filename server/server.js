@@ -9,9 +9,16 @@ const userRoute = require('./src/routes/userRoute');
 const authRoute = require('./src/routes/authRoute');
 
 dbConn();
+
 const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : [];
 app.use(cors({
-  origin: ['http://localhost:5173'],
+  origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin) || !origin) {
+          callback(null, true);
+      } else {
+          callback(new Error('Not allowed by CORS'));
+      }
+  },
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
