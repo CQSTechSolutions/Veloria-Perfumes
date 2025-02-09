@@ -1,6 +1,26 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+const cors = require('cors');
+require('dotenv').config();
+
+const dbConn = require("./src/utils/db.js");
+const userRoute = require('./src/routes/userRoute');
+const authRoute = require('./src/routes/authRoute');
+
+dbConn();
+const allowedOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : [];
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/user', userRoute);
+app.use('/api/auth', authRoute);
+
 
 app.get('/', (req, res) => {
   res.send('Hello World');

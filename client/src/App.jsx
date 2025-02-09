@@ -12,6 +12,7 @@ import Register from './pages/Register';
 import VeloriaAdministration from './pages/VeloriaAdministration';
 import Account from './pages/Account';
 import Cart from './pages/Cart';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (

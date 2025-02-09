@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { FiUser, FiMail, FiLock, FiPhone } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiPhone, FiEye, FiEyeOff } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Account = () => {
   const [token, setToken] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const [loginTab, setLoginTab] = useState(true);
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     fullName: '',
@@ -19,20 +22,34 @@ const Account = () => {
     countryCode: '',
   });
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     setToken(storedToken);
+    if (storedToken) {
+      setIsLogin(true);
+    }
 
-    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-    if (userDetails) {
-      setFormData({
-        fullName: userDetails.fullName || '',
-        email: userDetails.email || '',
-        phone: userDetails.phone || '',
-        countryCode: userDetails.countryCode || '',
-        password: '',
-        confirmPassword: '',
-      });
+    const userDetails = localStorage.getItem('userDetails');
+    if (userDetails && userDetails !== 'undefined') {
+      try {
+        const parsedDetails = JSON.parse(userDetails);
+        setFormData(prev => ({
+          ...prev,
+          fullName: parsedDetails.fullName || '',
+          email: parsedDetails.email || '',
+          phone: parsedDetails.phone || '',
+          countryCode: parsedDetails.countryCode || '+91',
+          password: '',
+          confirmPassword: '',
+        }));
+      } catch (error) {
+        console.error('Error parsing user details:', error);
+        if (storedToken) {
+          toast.error('Failed to load user details. Please log in again.');
+        }
+      }
     }
   }, []);
 
@@ -75,22 +92,145 @@ const Account = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const login = async (formData) => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, formData);
+      console.log(response.data);
+      if (response.data.token) {
+        setFormData({
+          fullName: response.data.user.fullName,
+          email: response.data.user.email,
+          phone: response.data.user.phone,
+          countryCode: response.data.user.countryCode,
+          password: '',
+          confirmPassword: '',
+        });
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('expirationTime', new Date().getTime() + 60 * 60 * 1000);
+        // localStorage.setItem('userDetails', JSON.stringify(response.data.user));
+        setIsLogin(true);
+        toast.success('Successfully logged in!');
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to login. Please try again.');
+    }
+  };
+
+  const register = async (formData) => {
+    try {
+      const registrationData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        countryCode: formData.countryCode || '+91'
+      };
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        registrationData
+      );
+
+      if (response.data && response.data.token) {
+        toast.success('🎉 Registration successful!', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        });
+
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('expirationTime', new Date().getTime() + 60 * 60 * 1000);
+        // localStorage.setItem('userDetails', JSON.stringify(response.data.user));
+        
+        setToken(response.data.token);
+        setIsLogin(true);
+        setFormData({
+          fullName: response.data.user.fullName,
+          email: response.data.user.email,
+          phone: response.data.user.phone,
+          countryCode: response.data.user.countryCode,
+          password: '',
+          confirmPassword: '',
+        });
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+      });
+    }
+  };
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userDetails');
+      localStorage.removeItem('expirationTime');
+      setIsLogin(false);
+      setLoginTab(true);
+      toast.success('Successfully logged out!');
+      setFormData({
+        fullName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        phone: '',
+        countryCode: '',
+      });
+    } catch (error) {
+      toast.error('Error logging out. Please try again.');
+    }
+  };
+
+//    const handleForgotPassword = async (email) => {
+//     try {
+//       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
+//       toast.success(response.data.message || 'Password reset link sent to your email!');
+//       setShowForgotPassword(false);
+//     } catch (error) {
+//       toast.error(error.response?.data?.message || 'Failed to send reset link. Please try again.');
+//     }
+//   };
+
   const handleSubmit = async (event) => {
+    event.preventDefault();
     if (validateForm()) {
-      const fullPhoneNumber = `${formData.countryCode}${formData.phone}`;
-    //   console.log(`Form is ${loginTab ? 'login' : 'register'}`);
-    //   console.log(`Updated form without country code and phone number:`, {
-    //     fullName: formData.fullName,
-    //     email: formData.email,
-    //     password: formData.password,
-    //     fullPhoneNumber: fullPhoneNumber
-    //   });
-      setIsLogin(true);
+      try {
+        if (loginTab) {
+          await login(formData);
+        } else {
+          if (formData.password !== formData.confirmPassword) {
+            toast.error('Passwords do not match');
+            return;
+          }
+          await register(formData);
+        }
+      } catch (error) {
+        toast.error('An error occurred. Please try again.');
+      }
     }
   };
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        limit={3} // Limit number of toasts
+      />
+      
       {isLogin ? (
         <motion.div 
           initial={{ opacity: 0 }}
@@ -147,8 +287,8 @@ const Account = () => {
                       whileTap={{ scale: 0.98 }}
                       className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200 font-semibold"
                       onClick={() => {
-                        // Add edit profile functionality
                         setIsLogin(false);
+                        // Add edit profile functionality
                       }}
                     >
                       Edit Profile
@@ -157,13 +297,7 @@ const Account = () => {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className="flex-1 border-2 border-red-600 text-red-600 py-2 px-4 rounded-lg hover:bg-red-50 transition-colors duration-200 font-semibold"
-                      onClick={() => {
-                        // Add logout functionality
-                        localStorage.removeItem('token');
-                        localStorage.removeItem('userDetails');
-                        setIsLogin(false);
-                        setLoginTab(true);
-                      }}
+                      onClick={handleLogout}
                     >
                       Logout
                     </motion.button>
@@ -260,6 +394,15 @@ const Account = () => {
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
                       error={errors.password}
                       placeholder="Enter your password"
+                      rightIcon={
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? <FiEyeOff /> : <FiEye />}
+                        </button>
+                      }
                     />
                     
                     {!loginTab && (
@@ -349,7 +492,7 @@ const Account = () => {
   );
 };
 
-const InputField = ({ icon, label, error, ...props }) => (
+const InputField = ({ icon, label, error, rightIcon, ...props }) => (
   <div className="space-y-1">
     <label className="block text-sm font-medium text-gray-700">{label}</label>
     <div className="relative">
@@ -358,10 +501,11 @@ const InputField = ({ icon, label, error, ...props }) => (
       </span>
       <input
         {...props}
-        className={`w-full pl-10 pr-3 py-2 border ${
+        className={`w-full pl-10 pr-${rightIcon ? '10' : '3'} py-2 border ${
           error ? 'border-red-500' : 'border-gray-300'
         } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200`}
       />
+      {rightIcon}
     </div>
     {error && (
       <motion.p
