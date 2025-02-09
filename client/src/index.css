@@ -1,1 +1,68 @@
 @import "tailwindcss";
+
+/* hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float linear infinite;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+  to {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .7;
+    transform: scale(0.95);
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Add smooth scrolling to the whole page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Add a subtle transition to all elements */
+* {
+  transition: all 0.3s ease-in-out;
+}

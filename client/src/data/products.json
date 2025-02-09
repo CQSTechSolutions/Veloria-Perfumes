@@ -1,0 +1,94 @@
+{
+  "bestsellers": [
+    {
+      "id": 1,
+      "title": "Luxury Perfume Gift Set For Men",
+      "price": 849.00,
+      "originalPrice": 999.00,
+      "rating": 4.7,
+      "reviews": 11200,
+      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "tags": ["BUY 1 GET 1 FREE", "BESTSELLER"],
+      "category": "GIFT SET FOR MEN"
+    },
+    {
+      "id": 2,
+      "title": "EAU DE PARFUM GIFT SET",
+      "price": 749.00,
+      "originalPrice": 899.00,
+      "rating": 4.8,
+      "reviews": 8500,
+      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "tags": ["BESTSELLER"],
+      "category": "GIFT SET FOR WOMEN"
+    },
+    {
+      "id": 3,
+      "title": "EAU DE PARFUM GIFT SET",
+      "price": 749.00,
+      "originalPrice": 899.00,
+      "rating": 4.8,
+      "reviews": 8500,
+      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "tags": ["BESTSELLER"],
+      "category": "GIFT SET FOR WOMEN"
+    },
+    {
+      "id": 4,
+      "title": "EAU DE PARFUM GIFT SET",
+      "price": 749.00,
+      "originalPrice": 899.00,
+      "rating": 4.8,
+      "reviews": 8500,
+      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "tags": ["BESTSELLER"],
+      "category": "GIFT SET FOR WOMEN"
+    }
+  ],
+  "newArrivals": [
+    {
+      "id": 1,
+      "title": "LUXURY PERFUME COLLECTION",
+      "price": 1299.00,
+      "originalPrice": 1499.00,
+      "rating": 4.9,
+      "reviews": 2300,
+      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "tags": ["NEW"],
+      "category": "PERFUMES"
+    },
+    {
+      "id": 2,
+      "title": "EAU DE PARFUM GIFT SET",
+      "price": 749.00,
+      "originalPrice": 899.00,
+      "rating": 4.8,
+      "reviews": 8500,
+      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "tags": ["NEW"],
+      "category": "PERFUMES"
+    },
+    {
+      "id": 3,
+      "title": "EAU DE PARFUM GIFT SET",
+      "price": 749.00,
+      "originalPrice": 899.00,
+      "rating": 4.8,
+      "reviews": 8500,
+      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "tags": ["NEW"],
+      "category": "PERFUMES"
+    },
+    {
+      "id": 4,
+      "title": "EAU DE PARFUM GIFT SET",
+      "price": 749.00,
+      "originalPrice": 899.00,
+      "rating": 4.8,
+      "reviews": 8500,
+      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "tags": ["NEW"],
+      "category": "PERFUMES"
+    }
+  ]
+} 
