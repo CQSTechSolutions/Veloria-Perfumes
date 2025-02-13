@@ -2,7 +2,7 @@ import React from 'react';
 
 const FloatingHearts = ({ count = 12 }) => {
   return (
-    <div className="fixed inset-0 pointer-events-none z-10">
+    <div className="fixed inset-0 pointer-events-none">
       {Array.from({ length: count }, (_, i) => (
         <div
           key={i}

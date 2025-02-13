@@ -9,15 +9,20 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const categories = [
-    { name: 'BOGO', path: '/bogo' },
-    { name: 'SHOP ALL', path: '/shop-all' },
-    { name: 'BESTSELLERS', path: '/bestsellers' },
-    { name: 'PERFUMES', path: '/perfumes' },
-    { name: 'BATH & BODY', path: '/bath-body' },
-    { name: 'COSMETICS', path: '/cosmetics' },
-    { name: 'NEW ARRIVALS', path: '/new-arrivals' },
-    { name: 'SKINCARE', path: '/skincare' },
-    { name: 'GIFTING', path: '/gifting' },
+    // { name: 'BOGO', path: '/bogo' },
+    // { name: 'SHOP ALL', path: '/shop-all' },
+    // { name: 'BESTSELLERS', path: '/bestsellers' },
+    // { name: 'PERFUMES', path: '/perfumes' },
+    // { name: 'BATH & BODY', path: '/bath-body' },
+    // { name: 'COSMETICS', path: '/cosmetics' },
+    // { name: 'NEW ARRIVALS', path: '/new-arrivals' },
+    // { name: 'SKINCARE', path: '/skincare' },
+    // { name: 'GIFTING', path: '/gifting' },
+    { name: 'HOME', path: '/' },
+    { name: 'ABOUT', path: '/about' },
+    { name: 'COLLECTIONS', path: '/collections' },
+    { name: 'CONTACT', path: '/contact' },
+    { name: 'FAQ', path: '/faq' },
   ];
 
   return (
