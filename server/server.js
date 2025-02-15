@@ -7,6 +7,7 @@ require('dotenv').config();
 const dbConn = require("./src/utils/db.js");
 const userRoute = require('./src/routes/userRoute');
 const authRoute = require('./src/routes/authRoute');
+const collectionRoute = require('./src/routes/collectionRoute');
 
 dbConn();
 
@@ -27,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', userRoute);
 app.use('/api/auth', authRoute);
-
+app.use('/api/collection', collectionRoute);
 
 app.get('/', (req, res) => {
   res.send('Hello World');
