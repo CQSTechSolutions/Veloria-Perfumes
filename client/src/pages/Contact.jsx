@@ -30,37 +30,37 @@ const Contact = () => {
             icon: <FaWhatsapp className="w-6 h-6" />,
             label: 'WhatsApp',
             link: 'https://wa.me/917011010256',
-            color: 'bg-green-500'
+            color: 'bg-green-600'
         },
         {
             icon: <FaInstagram className="w-6 h-6" />,
             label: 'Instagram',
             link: 'https://instagram.com/veloria_collections',
-            color: 'bg-pink-600'
+            color: 'bg-pink-700'
         },
         {
             icon: <FaFacebookF className="w-6 h-6" />,
             label: 'Facebook',
             link: 'https://facebook.com/veloria_collections',
-            color: 'bg-blue-600'
+            color: 'bg-blue-700'
         },
         {
             icon: <FaTwitter className="w-6 h-6" />,
             label: 'Twitter',
             link: 'https://twitter.com/veloria_collections',
-            color: 'bg-blue-400'
+            color: 'bg-blue-500'
         }
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-red-200 to-red-500 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-br from-teal-800 via-teal-600 to-blue-800 py-12 px-4 sm:px-6 lg:px-8">
             <ToastContainer />
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-12">
                     <motion.h1 
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl font-bold text-gray-800 mb-4"
+                        className="text-4xl font-bold text-white mb-4"
                     >
                         Get in Touch
                     </motion.h1>
@@ -68,7 +68,7 @@ const Contact = () => {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-lg text-gray-600"
+                        className="text-lg text-gray-200"
                     >
                         We'd love to hear from you. Please fill out the form or reach us through other channels.
                     </motion.p>
@@ -93,7 +93,7 @@ const Contact = () => {
                                     <input
                                         type="text"
                                         required
-                                        className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                        className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                         placeholder="Your Name"
                                         value={formData.name}
                                         onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -110,7 +110,7 @@ const Contact = () => {
                                     <input
                                         type="email"
                                         required
-                                        className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                        className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                         placeholder="your@email.com"
                                         value={formData.email}
                                         onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -126,7 +126,7 @@ const Contact = () => {
                                     <FiPhone className="absolute left-3 top-3 text-gray-400" />
                                     <input
                                         type="tel"
-                                        className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                        className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                         placeholder="Your Phone Number"
                                         value={formData.phone}
                                         onChange={(e) => setFormData({...formData, phone: e.target.value})}
@@ -142,7 +142,7 @@ const Contact = () => {
                                     <FiMessageSquare className="absolute left-3 top-3 text-gray-400" />
                                     <textarea
                                         required
-                                        className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                                        className="pl-10 w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                                         placeholder="Your Message"
                                         rows="4"
                                         value={formData.message}
@@ -155,7 +155,7 @@ const Contact = () => {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 type="submit"
-                                className="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center justify-center gap-2"
+                                className="w-full bg-teal-600 text-white py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors duration-200 flex items-center justify-center gap-2"
                             >
                                 <FiSend />
                                 Send Message
@@ -175,14 +175,14 @@ const Contact = () => {
                             <h2 className="text-2xl font-semibold mb-6">Quick Contact</h2>
                             <div className="space-y-4">
                                 <a href="mailto:contact@example.com" className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                    <FiMail className="w-6 h-6 text-red-600" />
+                                    <FiMail className="w-6 h-6 text-teal-600" />
                                     <div className="ml-4">
                                         <p className="font-medium">Email Us</p>
                                         <p className="text-sm text-gray-600">contact@veloriacollections.com</p>
                                     </div>
                                 </a>
                                 <a href="tel:+1234567890" className="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                    <FiPhone className="w-6 h-6 text-red-600" />
+                                    <FiPhone className="w-6 h-6 text-teal-600" />
                                     <div className="ml-4">
                                         <p className="font-medium">Call Us</p>
                                         <p className="text-sm text-gray-600">+91 7011010256</p>
