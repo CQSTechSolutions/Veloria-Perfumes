@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import Card from '../components/product/CollectionsCard';
 import { FiPackage, FiFilter } from 'react-icons/fi';
+import { toast } from 'react-hot-toast';
 
 const Collections = () => {
     const [collections, setCollections] = useState([]);
@@ -11,6 +12,8 @@ const Collections = () => {
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [searchParams] = useSearchParams();
+    const [cartItems, setCartItems] = useState([]);
+    const [wishlistItems, setWishlistItems] = useState([]);
 
     useEffect(() => {
         setLoading(true);
@@ -26,6 +29,10 @@ const Collections = () => {
             });
     }, []);
 
+    useEffect(() => {
+        fetchUserData();
+    }, []);
+
     const categories = ['all', 'perfumes', 'gift sets', 'limited edition'];
     const searchQuery = searchParams.get('search') || '';
 
@@ -37,6 +44,36 @@ const Collections = () => {
             collection.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             collection.description?.toLowerCase().includes(searchQuery.toLowerCase())
         );
+
+    const fetchUserData = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setCartItems([]);
+                setWishlistItems([]);
+                return;
+            }
+
+            const cartResponse = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/cart`,
+                {
+                    headers: { 
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (cartResponse.data.success) {
+                setCartItems(cartResponse.data.cart.items || []);
+            }
+
+        } catch (error) {
+            console.error('Error fetching cart data:', error);
+            // Don't show error toast here as it's not critical
+            setCartItems([]);
+        }
+    };
 
     if (loading) {
         return (
@@ -71,14 +108,14 @@ const Collections = () => {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
-                    <h1 className="text-5xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
+                    <h1 className="text-3xl md:text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
                         {searchQuery 
                             ? `Search Results for "${searchQuery}"`
                             : "Our Collections"
                         }
                     </h1>
-                    <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-blue-400 mx-auto mb-6 rounded-full" />
-                    <p className="text-xl text-purple-100">
+                        <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-blue-400 mx-auto mb-6 rounded-full" />
+                    <p className="text-xl text-purple-100 my-4">
                         {searchQuery 
                             ? `Found ${filteredCollections.length} items`
                             : "Discover our exquisite range of fragrances"
@@ -86,7 +123,7 @@ const Collections = () => {
                     </p>
                 </motion.div>
 
-                {/* Category Filters */}
+                {/* Category Filters
                 {!searchQuery && (
                     <div className="mb-12">
                         <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -105,30 +142,26 @@ const Collections = () => {
                             ))}
                         </div>
                     </div>
-                )}
+                )} */}
 
                 {/* Collections Grid */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
                 >
                     {filteredCollections.map((collection) => (
                         <motion.div
-                            key={collection._id || index}
+                            key={collection._id}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
                         >
                             <Card 
-                                product={{
-                                    ...collection,
-                                    rating: collection.rating || 5,
-                                    reviews: collection.reviews || 0,
-                                    price: collection.price || 0,
-                                    category: collection.category || 'Collection'
-                                }} 
+                                product={collection}
+                                onCartUpdate={fetchUserData}
+                                isInCart={cartItems.some(item => item.productId === collection._id)}
                             />
                         </motion.div>
                     ))}

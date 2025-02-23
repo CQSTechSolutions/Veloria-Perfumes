@@ -11,6 +11,7 @@ import VeloriaAdministration from './pages/VeloriaAdministration';
 import Account from './pages/Account';
 import Cart from './pages/Cart';
 import FAQ from './pages/FAQ';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   function ScrollToTop() {
@@ -24,26 +25,27 @@ const App = () => {
   }
   return (
     <>
-    <div className='flex flex-col min-h-screen pt-35'>
-      <FloatingHearts count={15} />
-      <Router>
-      <ScrollToTop/>
-        <Header />
-        <div className='flex-grow relative'>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/collections" element={<Collections />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/veloriaAdministration" element={<VeloriaAdministration />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/cart" element={<Cart />} />
-          </Routes>
-        </div>
-        <Footer />
-      </Router>
-    </div>
+      <Toaster position="top-right" />
+      <div className='flex flex-col min-h-screen pt-35'>
+        <FloatingHearts count={15} />
+        <Router>
+        <ScrollToTop/>
+          <Header />
+          <div className='flex-grow relative'>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/collections" element={<Collections />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/veloriaAdministration" element={<VeloriaAdministration />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/cart" element={<Cart />} />
+            </Routes>
+          </div>
+          <Footer />
+        </Router>
+      </div>
     </>
   )
 };

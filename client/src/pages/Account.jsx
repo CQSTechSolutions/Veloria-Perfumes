@@ -1,11 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { FiUser, FiMail, FiLock, FiPhone, FiEye, FiEyeOff } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { FiUser, FiMail, FiLock, FiPhone, FiEye, FiEyeOff, FiShoppingBag, FiClock, FiCalendar } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-hot-toast';
 import { jwtDecode } from 'jwt-decode';
+
+const InputField = ({ icon, label, type, value, onChange, error, placeholder, className = "w-full" }) => (
+  <div className={className}>
+    <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
+    <div className="relative">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+        {icon}
+      </div>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`w-full pl-10 pr-4 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200`}
+      />
+      {error && (
+        <motion.p
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-red-500 text-xs mt-1"
+        >
+          {error}
+        </motion.p>
+      )}
+    </div>
+  </div>
+);
 
 const Account = () => {
   const [token, setToken] = useState(null);
@@ -27,89 +53,88 @@ const Account = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      const storedToken = localStorage.getItem('token');
-      setToken(storedToken);
-      const fetchUserDetails = async () => {
-          try {
-              const userId = jwtDecode(storedToken).id;
-        // console.log(userId);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/getUserById?userId=${userId}`);
-        // console.log(response.data);
-        setFormData(prev => ({
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+    
+    const fetchUserDetails = async () => {
+      try {
+        const userId = jwtDecode(storedToken).id;
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/user/getUserById?userId=${userId}`,
+          { headers: { Authorization: `Bearer ${storedToken}` }}
+        );
+
+        if (response.data) {
+          setFormData(prev => ({
             ...prev,
             fullName: response.data.fullName || '',
             email: response.data.email || '',
             phone: response.data.phone || '',
             countryCode: response.data.countryCode || '+91',
             createdAt: response.data.createdAt || '',
-        }));
-    } catch (error) {
+          }));
+          setIsLogin(true);
+        }
+      } catch (error) {
         toast.error('Failed to fetch user details. Please log in again.');
         console.error('Error fetching user details:', error);
+        handleLogout();
       }
     };
+
     if (storedToken) {
-      setIsLogin(true);
       fetchUserDetails();
     }
-  }, [navigate]);
+  }, []);
 
-  const passwordRequirements = [
-    { label: 'At least 8 characters', regex: /.{8,}/ },
-    { label: 'Contains uppercase letter', regex: /[A-Z]/ },
-    { label: 'Contains lowercase letter', regex: /[a-z]/ },
-    { label: 'Contains number', regex: /[0-9]/ },
-    { label: 'Contains special character', regex: /[!@#$%^&*]/ },
-  ];
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    toast.success('Logged out successfully', {
+      icon: '👋',
+      style: { background: '#333', color: '#fff' }
+    });
+    setIsLogin(false);
+    navigate('/');
+  };
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.fullName && !loginTab) {
-      newErrors.fullName = 'Full name is required';
-    }
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Invalid email format';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    }
-    
+    if (!loginTab && !formData.fullName) newErrors.fullName = 'Name is required';
+    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
     if (!loginTab && formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    
-    if (!loginTab && !formData.phone) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!loginTab && !/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = 'Invalid phone number format';
-    }
-    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const login = async (formData) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, formData);
-    //   console.log(response.data);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+        email: formData.email,
+        password: formData.password
+      });
+
       if (response.data.token) {
+        const userResponse = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/user/getUserById?userId=${jwtDecode(response.data.token).id}`,
+          { headers: { Authorization: `Bearer ${response.data.token}` }}
+        );
+
         setFormData({
-          fullName: response.data.user.fullName,
-          email: response.data.user.email,
-          phone: response.data.user.phone,
-          countryCode: response.data.user.countryCode,
+          fullName: userResponse.data.fullName || '',
+          email: userResponse.data.email || '',
+          phone: userResponse.data.phone || '',
+          countryCode: userResponse.data.countryCode || '+91',
           password: '',
           confirmPassword: '',
-          createdAt: response.data.user.createdAt,
+          createdAt: userResponse.data.createdAt || '',
         });
+
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('expirationTime', new Date().getTime() + 60 * 60 * 1000);
-        // localStorage.setItem('userDetails', JSON.stringify(response.data.user));
+        setToken(response.data.token);
         setIsLogin(true);
         toast.success('Successfully logged in!');
       }
@@ -135,29 +160,32 @@ const Account = () => {
       );
 
       if (response.data && response.data.token) {
+        const userResponse = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/user/getUserById?userId=${jwtDecode(response.data.token).id}`,
+          { headers: { Authorization: `Bearer ${response.data.token}` }}
+        );
+
+        setFormData({
+          fullName: userResponse.data.fullName || '',
+          email: userResponse.data.email || '',
+          phone: userResponse.data.phone || '',
+          countryCode: userResponse.data.countryCode || '+91',
+          password: '',
+          confirmPassword: '',
+          createdAt: userResponse.data.createdAt || '',
+        });
+
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('expirationTime', new Date().getTime() + 60 * 60 * 1000);
+        setToken(response.data.token);
+        setIsLogin(true);
+        
         toast.success('🎉 Registration successful!', {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
-        });
-
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('expirationTime', new Date().getTime() + 60 * 60 * 1000);
-        // localStorage.setItem('userDetails', JSON.stringify(response.data.user));
-        
-        setToken(response.data.token);
-        setIsLogin(true);
-        
-        setFormData({
-          fullName: response.data.user.fullName,
-          email: response.data.user.email,
-          phone: response.data.user.phone,
-          countryCode: response.data.user.countryCode,
-          password: '',
-          confirmPassword: '',
-          createdAt: response.data.user.createdAt,
         });
       }
     } catch (error) {
@@ -169,38 +197,6 @@ const Account = () => {
     }
   };
 
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userDetails');
-      localStorage.removeItem('expirationTime');
-      setIsLogin(false);
-      setLoginTab(true);
-      toast.success('Successfully logged out!');
-      setFormData({
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        phone: '',
-        countryCode: '',
-        createdAt: '',
-      });
-    } catch (error) {
-      toast.error('Error logging out. Please try again.');
-    }
-  };
-
-//    const handleForgotPassword = async (email) => {
-//     try {
-//       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
-//       toast.success(response.data.message || 'Password reset link sent to your email!');
-//       setShowForgotPassword(false);
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || 'Failed to send reset link. Please try again.');
-//     }
-//   };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (validateForm()) {
@@ -208,152 +204,165 @@ const Account = () => {
         if (loginTab) {
           await login(formData);
         } else {
-          if (formData.password !== formData.confirmPassword) {
-            toast.error('Passwords do not match');
-            return;
-          }
           await register(formData);
         }
       } catch (error) {
-        toast.error('An error occurred. Please try again.');
+        toast.error('An error occurred', {
+          icon: '❌',
+          style: { background: '#333', color: '#fff' }
+        });
       }
     }
   };
 
   return (
-    <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        limit={3} // Limit number of toasts
-      />
-      
+    <AnimatePresence mode="wait">
       {isLogin ? (
         <motion.div 
+          key="profile"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="h-screen flex items-center justify-center bg-gradient-to-r from-red-200 to-red-500"
+          exit={{ opacity: 0 }}
+          className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 py-12 px-4 sm:px-6 lg:px-8"
         >
-          <motion.div 
-            initial={{ scale: 0.9, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-xl w-full mx-4"
-          >
-            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-              <div className="relative bg-red-600 p-6 text-white">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="absolute top-5 right-5 bg-yellow-400 rounded-full p-4"
-                >
-                  <FiUser className="w-6 h-6 text-red-600" />
-                </motion.div>
-                <h2 className="text-2xl font-bold">Account Details</h2>
-                <p className="text-red-100 mt-2">Welcome back, {formData.fullName}!</p>
-              </div>
-
-              <div className="p-6">
-                <motion.div 
-                  className="space-y-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <div className="bg-gray-50 rounded-lg p-3 hover:shadow-md transition-shadow duration-300">
-                    <p className="text-sm text-gray-500">Full Name</p>
-                    <p className="text-lg font-semibold text-gray-800">{formData.fullName}</p>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-lg p-3 hover:shadow-md transition-shadow duration-300">
-                    <p className="text-sm text-gray-500">Email Address</p>
-                    <p className="text-lg font-semibold text-gray-800">{formData.email}</p>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-lg p-3 hover:shadow-md transition-shadow duration-300">
-                    <p className="text-sm text-gray-500">Phone Number</p>
-                    <p className="text-lg font-semibold text-gray-800">
-                      {formData.countryCode} {formData.phone}
-                    </p>
-                  </div>
-
-                  <div className="flex gap-4 mt-6">
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200 font-semibold"
-                      onClick={() => {
-                        setIsLogin(false);
-                        // Add edit profile functionality
-                      }}
-                    >
-                      Edit Profile
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1 border-2 border-red-600 text-red-600 py-2 px-4 rounded-lg hover:bg-red-50 transition-colors duration-200 font-semibold"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </motion.button>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="mt-6 pt-4 border-t border-gray-200"
-                >
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <p>Member since</p>
-                    <p>{new Date(formData.createdAt).toLocaleDateString()}</p>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="mt-4 text-center text-gray-800 text-sm"
+          <div className="max-w-4xl mx-auto">
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20"
             >
-              <p className="font-semibold">Need assistance? Reach out to our support team!</p>
-              <Link to="mailto:support@example.com" className="text-red-600 underline">support@example.com</Link>
+              <div className="p-8">
+                <div className="flex items-center gap-6 mb-8">
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="w-24 h-24 bg-purple-600 rounded-full flex items-center justify-center"
+                  >
+                    <FiUser className="w-12 h-12 text-white" />
+                  </motion.div>
+                  <div>
+                    <motion.h1 
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                      className="text-3xl font-bold text-white"
+                    >
+                      {formData.fullName}
+                    </motion.h1>
+                    <motion.p 
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="text-purple-200"
+                    >
+                      {formData.email}
+                    </motion.p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <motion.div 
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                    className="bg-white/5 p-6 rounded-xl border border-white/10"
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <FiPhone className="w-5 h-5 text-purple-300" />
+                      <h2 className="text-lg font-semibold text-white">Contact Details</h2>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-purple-200">
+                        <span className="text-purple-400">Email:</span> {formData.email}
+                      </p>
+                      <p className="text-purple-200">
+                        <span className="text-purple-400">Phone:</span> {formData.countryCode} {formData.phone}
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div 
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                    className="bg-white/5 p-6 rounded-xl border border-white/10"
+                  >
+                    <div className="flex items-center gap-4 mb-4">
+                      <FiCalendar className="w-5 h-5 text-purple-300" />
+                      <h2 className="text-lg font-semibold text-white">Account Info</h2>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-purple-200">
+                        <span className="text-purple-400">Member since:</span>{' '}
+                        {new Date(formData.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                      <p className="text-purple-200">
+                        <span className="text-purple-400">Account status:</span>{' '}
+                        <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
+                          Active
+                        </span>
+                      </p>
+                    </div>
+                  </motion.div>
+                </div>
+
+                <div className="mt-8 flex gap-4">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-all duration-200"
+                    onClick={() => navigate('/cart')}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <FiShoppingBag className="w-5 h-5" />
+                      <span>View Cart</span>
+                    </div>
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex-1 border border-white/20 text-white py-3 px-6 rounded-lg hover:bg-white/5 transition-all duration-200"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </motion.button>
+                </div>
+              </div>
             </motion.div>
-          </motion.div>
+          </div>
         </motion.div>
       ) : (
-        <div className="min-h-screen bg-gradient-to-r from-red-200 to-red-500 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-md w-full"
-          >
-            <div className="bg-white shadow-2xl rounded-lg overflow-hidden">
-              <div className="flex border-b border-gray-200">
+        <motion.div 
+          key="auth"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 py-12 px-4 sm:px-6 lg:px-8"
+        >
+          <div className="max-w-md mx-auto">
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20"
+            >
+              <div className="flex border-b border-white/10">
                 <motion.button
-                  whileHover={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                  className={`flex-1 py-4 text-center font-semibold ${loginTab ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500'}`}
+                  whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+                  className={`flex-1 py-4 text-center font-semibold ${loginTab ? 'text-white border-b-2 border-purple-500' : 'text-purple-200'}`}
                   onClick={() => setLoginTab(true)}
                 >
                   Login
                 </motion.button>
                 <motion.button
-                  whileHover={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                  className={`flex-1 py-4 text-center font-semibold ${!loginTab ? 'text-red-600 border-b-2 border-red-600' : 'text-gray-500'}`}
+                  whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+                  className={`flex-1 py-4 text-center font-semibold ${!loginTab ? 'text-white border-b-2 border-purple-500' : 'text-purple-200'}`}
                   onClick={() => setLoginTab(false)}
                 >
                   Register
@@ -409,24 +418,6 @@ const Account = () => {
                         </button>
                       }
                     />
-                    
-                    {!loginTab && (
-                      <div className="mt-2 space-y-2">
-                        {passwordRequirements.map((req, index) => (
-                          <div 
-                            key={index}
-                            className={`text-xs flex items-center ${
-                              req.regex.test(formData.password) ? 'text-green-600' : 'text-gray-400'
-                            }`}
-                          >
-                            <div className={`w-2 h-2 rounded-full mr-2 ${
-                              req.regex.test(formData.password) ? 'bg-green-600' : 'bg-gray-400'
-                            }`} />
-                            {req.label}
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
                   {!loginTab && (
@@ -469,59 +460,18 @@ const Account = () => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    type="button"
-                    className="w-full py-3 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-semibold"
-                    onClick={handleSubmit}
+                    className="w-full bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-all duration-200"
                   >
-                    {loginTab ? 'Sign In' : 'Create Account'}
+                    <span>{loginTab ? 'Sign In' : 'Create Account'}</span>
                   </motion.button>
-
-                  {loginTab && (
-                    <motion.button
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      type="button"
-                      onClick={() => setShowForgotPassword(true)}
-                      className="w-full text-sm text-red-600 hover:text-red-800 transition-colors duration-200"
-                    >
-                      Forgot Password?
-                    </motion.button>
-                  )}
                 </motion.form>
               </div>
-            </div>
-          </motion.div>
-        </div>
+            </motion.div>
+          </div>
+        </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 };
-
-const InputField = ({ icon, label, error, rightIcon, ...props }) => (
-  <div className="space-y-1">
-    <label className="block text-sm font-medium text-gray-700">{label}</label>
-    <div className="relative">
-      <span className="absolute left-3 top-3 text-gray-400">
-        {icon}
-      </span>
-      <input
-        {...props}
-        className={`w-full pl-10 pr-${rightIcon ? '10' : '3'} py-2 border ${
-          error ? 'border-red-500' : 'border-gray-300'
-        } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200`}
-      />
-      {rightIcon}
-    </div>
-    {error && (
-      <motion.p
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-red-500 text-xs mt-1"
-      >
-        {error}
-      </motion.p>
-    )}
-  </div>
-);
 
 export default Account;

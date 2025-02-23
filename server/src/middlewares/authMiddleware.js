@@ -1,18 +1,45 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/userModel');
 
-const isAuthenticated = (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1];
-    if (token) {
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-            if (err) {
-                res.status(401).send('Unauthorized');
-            } else {
-                req.user = decoded;
-                next();
-            }
+exports.isAuthenticated = async (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
+        
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({
+                success: false,
+                message: 'Please login to access this resource'
+            });
+        }
+
+        const token = authHeader.split(' ')[1];
+        
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                message: 'Please login to access this resource'
+            });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Set the entire user object in req.user
+        req.user = user;
+        next();
+    } catch (error) {
+        console.error('Auth middleware error:', error);
+        res.status(401).json({
+            success: false,
+            message: 'Invalid or expired token'
         });
-    } else {
-        res.status(401).send('Unauthorized');
     }
 };
 
@@ -23,5 +50,3 @@ const isAdmin = (req, res, next) => {
         res.status(403).send('Forbidden');
     }
 };
-
-module.exports = { isAdmin, isAuthenticated };
