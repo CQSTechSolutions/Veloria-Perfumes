@@ -5,7 +5,13 @@ import { FiArrowRight, FiStar, FiHeart, FiShoppingBag } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 
-const CollectionsCard = ({ product, onCartUpdate }) => {
+const CollectionsCard = ({ 
+    product, 
+    onCartUpdate, 
+    isInCart, 
+    onWishlistUpdate,
+    isInWishlist 
+}) => {
     if (!product) return null;
 
     const {
@@ -21,36 +27,18 @@ const CollectionsCard = ({ product, onCartUpdate }) => {
     } = product;
 
     const handleAddToCart = async () => {
-        // Show loading toast
         const loadingToast = toast.loading('Adding to cart...');
-
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                 toast.dismiss(loadingToast);
-                toast.error('Please login to add items to cart', {
-                    icon: '🔒',
-                    duration: 3000,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#333',
-                        color: '#fff',
-                    },
-                });
+                toast.error('Please login to add items to cart');
                 return;
             }
 
             if (stock <= 0) {
                 toast.dismiss(loadingToast);
-                toast.error('Product is out of stock', {
-                    icon: '😔',
-                    duration: 3000,
-                    style: {
-                        borderRadius: '10px',
-                        background: '#333',
-                        color: '#fff',
-                    },
-                });
+                toast.error('Product is out of stock');
                 return;
             }
 
@@ -104,70 +92,64 @@ const CollectionsCard = ({ product, onCartUpdate }) => {
                     },
                 }
             );
-            console.error('Add to cart error:', error);
+        }
+    };
+
+    const handleToggleWishlist = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                toast.error('Please login to manage wishlist');
+                return;
+            }
+
+            const loadingToast = toast.loading(
+                isInWishlist ? 'Removing from wishlist...' : 'Adding to wishlist...'
+            );
+
+            await onWishlistUpdate(_id);
+            toast.dismiss(loadingToast);
+
+        } catch (error) {
+            toast.error('Failed to update wishlist');
         }
     };
 
     return (
-        <motion.div
+        <motion.div 
+            className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 group relative"
             whileHover={{ y: -5 }}
-            className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden group relative shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10"
+            transition={{ duration: 0.2 }}
         >
-            {/* Image Container */}
-            <div className="relative h-72 overflow-hidden">
+            <div className="relative">
                 <img
                     src={image}
                     alt={name}
-                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                    onError={(e) => {
-                        e.target.src = '/default-collection-image.jpg';
-                    }}
+                    className="w-full h-64 object-cover"
                 />
-                
-                {/* Gradient Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                {/* Category Badge */}
-                <div className="absolute top-4 left-4 z-10">
-                    <span className="px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-medium shadow-lg border border-white/20">
-                        {category}
-                    </span>
-                </div>
-
-                {/* Rating Badge */}
-                <div className="absolute top-4 right-4 z-10">
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-400/90 backdrop-blur-md rounded-full shadow-lg">
-                        <FiStar className="text-white w-4 h-4" />
-                        <span className="text-white text-sm font-semibold">{rating?.toFixed(1) || '5.0'}</span>
-                    </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="absolute bottom-4 right-4 flex gap-3 z-10">
-                    <motion.button 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="p-3 bg-white/10 backdrop-blur-md rounded-full text-white hover:bg-white/20 transition-all duration-300 shadow-lg border border-white/20"
+                <div className="absolute top-4 right-4 flex flex-col gap-2">
+                    <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={handleToggleWishlist}
+                        className={`p-3 rounded-full backdrop-blur-md transition-all duration-300 ${
+                            isInWishlist 
+                                ? 'bg-red-500 text-white' 
+                                : 'bg-white/20 text-white hover:bg-white/30'
+                        }`}
                     >
-                        <FiHeart className="w-5 h-5" />
+                        <FiHeart 
+                            className={`w-5 h-5 ${isInWishlist ? 'fill-current' : ''}`} 
+                        />
                     </motion.button>
-                    <motion.button 
-                        onClick={handleAddToCart}
-                        disabled={stock <= 0}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`p-3 backdrop-blur-md rounded-full transition-all duration-300 shadow-lg border border-white/20
-                            ${stock <= 0 
-                                ? 'bg-gray-500/50 cursor-not-allowed text-gray-400' 
-                                : 'bg-white/10 text-white hover:bg-white/20'}`}
-                    >
-                        <FiShoppingBag className="w-5 h-5" />
-                    </motion.button>
+                    {isInCart && (
+                        <div className="p-3 rounded-full bg-green-500/20 text-green-400 backdrop-blur-md">
+                            <FiShoppingBag className="w-5 h-5" />
+                        </div>
+                    )}
                 </div>
             </div>
 
-            {/* Content */}
             <div className="p-5">
                 <div className="mb-4">
                     <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors line-clamp-1">
@@ -205,13 +187,29 @@ const CollectionsCard = ({ product, onCartUpdate }) => {
                         </div>
                     </div>
 
-                    <Link 
-                        to={`/collection/${_id}`}
-                        className="group/btn relative p-3 bg-purple-500/20 rounded-full text-purple-300 hover:bg-purple-500/30 hover:text-white transition-all duration-300 shadow-lg"
-                    >
-                        <FiArrowRight className="w-6 h-6 transform group-hover/btn:translate-x-1 transition-transform duration-300" />
-                        <div className="absolute inset-0 bg-purple-400/20 rounded-full blur opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300 -z-10" />
-                    </Link>
+                    <div className="flex gap-2">
+                        {!isInCart && (
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={handleAddToCart}
+                                disabled={stock <= 0}
+                                className={`p-3 rounded-full ${
+                                    stock <= 0
+                                        ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
+                                        : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30'
+                                } transition-all duration-300`}
+                            >
+                                <FiShoppingBag className="w-5 h-5" />
+                            </motion.button>
+                        )}
+                        <Link 
+                            to={`/collection/${_id}`}
+                            className="p-3 bg-purple-500/20 rounded-full text-purple-300 hover:bg-purple-500/30 transition-all duration-300"
+                        >
+                            <FiArrowRight className="w-5 h-5" />
+                        </Link>
+                    </div>
                 </div>
             </div>
         </motion.div>

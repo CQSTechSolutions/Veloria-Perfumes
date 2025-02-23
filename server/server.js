@@ -9,6 +9,7 @@ const userRoute = require('./src/routes/userRoute');
 const authRoute = require('./src/routes/authRoute');
 const collectionRoute = require('./src/routes/collectionRoute');
 const cartRoute = require('./src/routes/cartRoute');
+const wishlistRoute = require('./src/routes/wishlistRoute');
 
 dbConn();
 
@@ -31,6 +32,7 @@ app.use('/api/user', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/collection', collectionRoute);
 app.use('/api/cart', cartRoute);
+app.use('/api/wishlist', wishlistRoute);
 
 app.get('/', (req, res) => {
   res.send('Hello World');

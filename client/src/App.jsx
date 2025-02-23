@@ -11,6 +11,7 @@ import VeloriaAdministration from './pages/VeloriaAdministration';
 import Account from './pages/Account';
 import Cart from './pages/Cart';
 import FAQ from './pages/FAQ';
+import Wishlist from './pages/Wishlist';
 import { Toaster } from 'react-hot-toast';
 
 const App = () => {
@@ -41,6 +42,7 @@ const App = () => {
               <Route path="/faq" element={<FAQ />} />
               <Route path="/account" element={<Account />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/wishlist" element={<Wishlist />} />
             </Routes>
           </div>
           <Footer />

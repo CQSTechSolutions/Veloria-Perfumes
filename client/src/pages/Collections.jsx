@@ -54,6 +54,7 @@ const Collections = () => {
                 return;
             }
 
+            // Fetch cart items
             const cartResponse = await axios.get(
                 `${import.meta.env.VITE_API_URL}/api/cart`,
                 {
@@ -64,14 +65,65 @@ const Collections = () => {
                 }
             );
 
+            // Fetch wishlist items
+            const wishlistResponse = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/wishlist`,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
             if (cartResponse.data.success) {
                 setCartItems(cartResponse.data.cart.items || []);
             }
 
+            if (wishlistResponse.data.success) {
+                // Extract product IDs from wishlist items
+                const wishlistProductIds = wishlistResponse.data.wishlist.items.map(
+                    item => item.product._id
+                );
+                setWishlistItems(wishlistProductIds);
+            }
+
         } catch (error) {
-            console.error('Error fetching cart data:', error);
-            // Don't show error toast here as it's not critical
+            console.error('Error fetching user data:', error);
             setCartItems([]);
+            setWishlistItems([]);
+        }
+    };
+
+    const toggleWishlist = async (productId) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                toast.error('Please login to add to wishlist');
+                return;
+            }
+
+            const isInWishlist = wishlistItems.includes(productId);
+            const method = isInWishlist ? 'delete' : 'post';
+            const endpoint = isInWishlist ? 'remove' : 'add';
+
+            const response = await axios({
+                method,
+                url: `${import.meta.env.VITE_API_URL}/api/wishlist/${endpoint}/${productId}`,
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (response.data.success) {
+                setWishlistItems(prev => 
+                    isInWishlist 
+                        ? prev.filter(id => id !== productId)
+                        : [...prev, productId]
+                );
+                toast.success(
+                    isInWishlist ? 'Removed from wishlist' : 'Added to wishlist',
+                    { icon: isInWishlist ? '💔' : '❤️' }
+                );
+            }
+        } catch (error) {
+            console.error('Wishlist error:', error);
+            toast.error('Failed to update wishlist');
         }
     };
 
@@ -162,6 +214,8 @@ const Collections = () => {
                                 product={collection}
                                 onCartUpdate={fetchUserData}
                                 isInCart={cartItems.some(item => item.productId === collection._id)}
+                                onWishlistUpdate={toggleWishlist}
+                                isInWishlist={wishlistItems.includes(collection._id)}
                             />
                         </motion.div>
                     ))}
