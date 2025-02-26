@@ -305,3 +305,16 @@ exports.getOrderHistory = async (req, res) => {
         });
     }
 }; 
+
+exports.getAllOrders = async (req, res) => {
+    const orders = await Order.find().populate('user', 'name email');
+    res.json({ success: true, orders });
+};
+
+exports.updateOrderStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
+    res.json({ success: true, order });
+};
+    

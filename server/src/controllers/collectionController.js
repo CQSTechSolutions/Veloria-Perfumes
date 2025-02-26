@@ -11,7 +11,7 @@ const getCollections = async (req, res) => {
 };
 
 const createCollection = async (req, res) => {
-    try {
+        try {
         const collection = new Collection(req.body);
         await collection.save();
         res.status(201).json({ message: 'Collection created successfully', collection });
@@ -21,4 +21,14 @@ const createCollection = async (req, res) => {
     }
 };
 
-module.exports = { getCollections, createCollection };
+const deleteCollection = async (req, res) => {
+    try {
+        await Collection.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Collection deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting collection:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+module.exports = { getCollections, createCollection, deleteCollection };

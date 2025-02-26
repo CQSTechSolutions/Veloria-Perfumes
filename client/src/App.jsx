@@ -7,7 +7,13 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Collections from './pages/Collections';
 import Contact from './pages/Contact';
-import VeloriaAdministration from './pages/VeloriaAdministration';
+import VeloriaAdministration from './pages/admin/Dashboard';
+import ProductList from './pages/admin/ProductList';
+import ProductForm from './pages/admin/ProductForm';
+import CollectionForm from './pages/admin/CollectionForm';
+import OrderList from './pages/admin/OrderList';
+import UserList from './pages/admin/UserList';
+import Settings from './pages/admin/Settings';
 import Account from './pages/Account';
 import Cart from './pages/Cart';
 import FAQ from './pages/FAQ';
@@ -32,23 +38,32 @@ const AppContent = () => {
     }
   }, [navigate]);
 
+  // Show Header and Footer only for non-admin routes
+  const isAdminRoute = pathname.startsWith('/admin');
+
   return (
     <>
-      <Header />
-      <div className='flex-grow relative'>
+      {!isAdminRoute && <Header />}
+      <div className={`flex-grow relative ${!isAdminRoute ? 'mt-40' : ''}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/collections" element={<Collections />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/veloriaAdministration" element={<VeloriaAdministration />} />
+          <Route path="/admin" element={<VeloriaAdministration />} />
+          <Route path="/admin/products" element={<ProductList />} />
+          <Route path="/admin/products/new" element={<ProductForm />} />
+          <Route path="/admin/collection/edit/:id" element={<CollectionForm />} />
+          <Route path="/admin/orders" element={<OrderList />} />
+          <Route path="/admin/users" element={<UserList />} />
+          <Route path="/admin/settings" element={<Settings />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/account" element={<Account />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </div>
-      <Footer />
+      {!isAdminRoute && <Footer />}
     </>
   );
 };
@@ -57,7 +72,7 @@ const App = () => {
   return (
     <>
       <Toaster position="top-right" />
-      <div className='flex flex-col min-h-screen pt-35'>
+      <div className='flex flex-col min-h-screen'>
         <FloatingHearts count={15} />
         <Router>
           <AppContent />
