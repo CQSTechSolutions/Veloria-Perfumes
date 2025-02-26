@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiArrowRight, FiStar, FiHeart, FiShoppingBag } from 'react-icons/fi';
+import { FiArrowRight, FiStar, FiHeart, FiShoppingBag, FiPlus } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 
@@ -12,6 +12,8 @@ const CollectionsCard = ({
     onWishlistUpdate,
     isInWishlist 
 }) => {
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+
     if (!product) return null;
 
     const {
@@ -27,7 +29,11 @@ const CollectionsCard = ({
     } = product;
 
     const handleAddToCart = async () => {
+        if (isAddingToCart) return;
+
         const loadingToast = toast.loading('Adding to cart...');
+        setIsAddingToCart(true);
+
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -42,46 +48,102 @@ const CollectionsCard = ({
                 return;
             }
 
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/cart/add`,
-                { 
-                    productId: _id,
-                    quantity: 1
-                },
-                { 
-                    headers: { 
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-
-            if (response.data.success) {
-                toast.dismiss(loadingToast);
-                toast.success(
-                    <div className="flex items-center gap-2">
-                        <FiShoppingBag className="w-5 h-5" />
-                        <span>{name} added to cart!</span>
-                    </div>,
-                    {
-                        duration: 3000,
-                        style: {
-                            borderRadius: '10px',
-                            background: '#333',
-                            color: '#fff',
-                        },
-                        iconTheme: {
-                            primary: '#4ade80',
-                            secondary: '#fff',
-                        },
+            // If item is already in cart, increment quantity
+            if (isInCart) {
+                // First get the current cart to find the item
+                const cartResponse = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/api/cart`,
+                    { 
+                        headers: { 
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
                     }
                 );
-                onCartUpdate?.();
+
+                if (cartResponse.data.success) {
+                    const cartItem = cartResponse.data.cart.items.find(
+                        item => item.productId === _id
+                    );
+
+                    if (cartItem) {
+                        // Update quantity
+                        const response = await axios.put(
+                            `${import.meta.env.VITE_API_URL}/api/cart/update/${cartItem.id}`,
+                            { 
+                                quantity: cartItem.quantity + 1
+                            },
+                            { 
+                                headers: { 
+                                    Authorization: `Bearer ${token}`,
+                                    'Content-Type': 'application/json'
+                                }
+                            }
+                        );
+
+                        if (response.data.success) {
+                            toast.dismiss(loadingToast);
+                            toast.success(
+                                <div className="flex items-center gap-2">
+                                    <FiShoppingBag className="w-5 h-5" />
+                                    <span>Updated quantity in cart!</span>
+                                </div>,
+                                {
+                                    duration: 3000,
+                                    style: {
+                                        borderRadius: '10px',
+                                        background: '#333',
+                                        color: '#fff',
+                                    },
+                                }
+                            );
+                            onCartUpdate?.();
+                        }
+                    }
+                }
+            } else {
+                // Add new item to cart
+                const response = await axios.post(
+                    `${import.meta.env.VITE_API_URL}/api/cart/add`,
+                    { 
+                        productId: _id,
+                        quantity: 1
+                    },
+                    { 
+                        headers: { 
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                if (response.data.success) {
+                    toast.dismiss(loadingToast);
+                    toast.success(
+                        <div className="flex items-center gap-2">
+                            <FiShoppingBag className="w-5 h-5" />
+                            <span>{name} added to cart!</span>
+                        </div>,
+                        {
+                            duration: 3000,
+                            style: {
+                                borderRadius: '10px',
+                                background: '#333',
+                                color: '#fff',
+                            },
+                            iconTheme: {
+                                primary: '#4ade80',
+                                secondary: '#fff',
+                            },
+                        }
+                    );
+                    onCartUpdate?.();
+                }
             }
         } catch (error) {
             toast.dismiss(loadingToast);
             toast.error(
-                error.response?.data?.message || 'Failed to add to cart',
+                error.response?.data?.message || 'Failed to update cart',
                 {
                     icon: '❌',
                     duration: 3000,
@@ -92,6 +154,8 @@ const CollectionsCard = ({
                     },
                 }
             );
+        } finally {
+            setIsAddingToCart(false);
         }
     };
 
@@ -188,21 +252,27 @@ const CollectionsCard = ({
                     </div>
 
                     <div className="flex gap-2">
-                        {!isInCart && (
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={handleAddToCart}
-                                disabled={stock <= 0}
-                                className={`p-3 rounded-full ${
-                                    stock <= 0
-                                        ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
-                                        : 'bg-purple-500/20 text-purple-300 hover:bg-purple-500/30'
-                                } transition-all duration-300`}
-                            >
-                                <FiShoppingBag className="w-5 h-5" />
-                            </motion.button>
-                        )}
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={handleAddToCart}
+                            disabled={isAddingToCart || stock <= 0}
+                            className={`p-3 rounded-full backdrop-blur-md transition-all duration-300 ${
+                                isAddingToCart 
+                                    ? 'bg-gray-500/20 text-gray-400 cursor-not-allowed'
+                                    : isInCart
+                                    ? 'bg-green-500/20 text-green-400'
+                                    : stock <= 0
+                                    ? 'bg-red-500/20 text-red-400 cursor-not-allowed'
+                                    : 'bg-white/20 text-white hover:bg-white/30'
+                            }`}
+                        >
+                            {isInCart ? (
+                                <FiPlus className={`w-5 h-5 ${isAddingToCart ? 'animate-pulse' : ''}`} />
+                            ) : (
+                                <FiShoppingBag className={`w-5 h-5 ${isAddingToCart ? 'animate-pulse' : ''}`} />
+                            )}
+                        </motion.button>
                         <Link 
                             to={`/collection/${_id}`}
                             className="p-3 bg-purple-500/20 rounded-full text-purple-300 hover:bg-purple-500/30 transition-all duration-300"
