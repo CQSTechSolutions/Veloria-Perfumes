@@ -29,7 +29,7 @@ const Contact = () => {
         {
             icon: <FaWhatsapp className="w-6 h-6" />,
             label: 'WhatsApp',
-            link: 'https://wa.me/917011010256',
+            link: 'https://wa.me/919643169183',
             color: 'bg-green-600'
         },
         {
@@ -55,7 +55,7 @@ const Contact = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-teal-800 via-teal-600 to-blue-800 py-12 px-4 sm:px-6 lg:px-8">
             <ToastContainer />
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-7xl mx-auto space-y-12">
                 <div className="text-center mb-12">
                     <motion.h1 
                         initial={{ opacity: 0, y: -20 }}
@@ -185,7 +185,7 @@ const Contact = () => {
                                     <FiPhone className="w-6 h-6 text-teal-600" />
                                     <div className="ml-4">
                                         <p className="font-medium">Call Us</p>
-                                        <p className="text-sm text-gray-600">+91 7011010256</p>
+                                        <p className="text-sm text-gray-600">+91 9643169183</p>
                                     </div>
                                 </a>
                             </div>
@@ -228,6 +228,73 @@ const Contact = () => {
                         </div>
                     </motion.div>
                 </div>
+
+                {/* New Map Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="bg-white rounded-lg shadow-xl p-6"
+                >
+                    <h2 className="text-2xl font-semibold mb-6">Visit Our Store</h2>
+                    <div className="space-y-4">
+                        <div className="flex items-start space-x-4 mb-4">
+                            <div className="bg-teal-100 p-2 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 className="font-medium text-gray-900">Our Location</h3>
+                                <p className="text-gray-600">K P Towers, Sector 1, Noida, Uttar Pradesh 201301</p>
+                            </div>
+                        </div>
+                        <div className="relative w-full h-[400px] rounded-lg overflow-hidden">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3503.8615337885626!2d77.30870057581843!3d28.573920375696794!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce59804f01a57%3A0xe34b80d40c73dfb8!2sK%20P%20Towers!5e0!3m2!1sen!2sin!4v1741620584203!5m2!1sen!2sin" 
+                                className="w-full h-full"
+                                style={{ border: 0 }}
+                                allowFullScreen=""
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                        </div>
+                        {/* <div className="flex justify-center">
+                            <a 
+                                href="https://goo.gl/maps/YOUR_GOOGLE_MAPS_LINK" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors duration-200"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                                Get Directions
+                            </a>
+                        </div> */}
+                    </div>
+                </motion.div>
+
+                {/* Additional Contact Information
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="bg-white rounded-lg shadow-xl p-6"
+                >
+                    <h2 className="text-2xl font-semibold mb-6">Additional Information</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <h3 className="font-medium text-gray-900">Parking</h3>
+                            <p className="text-gray-600">Free parking available for customers</p>
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="font-medium text-gray-900">Public Transport</h3>
+                            <p className="text-gray-600">Nearest Metro Station: Sector 1 (500m)</p>
+                        </div>
+                    </div>
+                </motion.div> */}
             </div>
         </div>
     );
