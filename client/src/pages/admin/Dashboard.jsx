@@ -17,6 +17,15 @@ const VeloriaAdministration = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      if (!decodedToken.admin) {
+        window.location.href = '/';
+      }
+    } else {
+      window.location.href = '/';
+    }
     fetchDashboardStats();
   }, []);
 

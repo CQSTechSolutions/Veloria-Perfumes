@@ -30,8 +30,13 @@ const Wishlist = () => {
         setWishlistItems(response.data.wishlist.items || []);
       }
     } catch (error) {
-      console.error('Wishlist fetch error:', error);
-      toast.error('Failed to fetch wishlist');
+      if(response.status == 404){
+        // leave due to no items
+      }
+      else{
+        console.error('Wishlist fetch error:', error);
+        toast.error('Failed to fetch wishlist');
+      }
     } finally {
       setLoading(false);
     }

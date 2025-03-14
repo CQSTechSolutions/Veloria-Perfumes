@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { getCollections , createCollection, deleteCollection } = require('../controllers/collectionController.js');
-const { isAuthenticated, isAdmin } = require('../middlewares/authMiddleware');
+const { getCollections, createCollection, deleteCollection } = require('../controllers/collectionController');
+const { isAdmin, isAuthenticated } = require('../middlewares/authMiddleware');
 
+// Public route
 router.get('/', getCollections);
 
-router.use(isAuthenticated);
-router.use(isAdmin);
-router.post('/', createCollection);
-router.delete('/:id', deleteCollection);
+// Admin routes
+router.post('/', isAuthenticated, isAdmin, createCollection);
+router.delete('/:id', isAuthenticated, isAdmin, deleteCollection);
 
 module.exports = router;

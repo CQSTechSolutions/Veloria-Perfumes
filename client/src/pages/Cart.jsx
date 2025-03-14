@@ -48,11 +48,16 @@ const Cart = () => {
         setCart(response.data.cart);
       }
     } catch (error) {
-      toast.error('Failed to fetch cart', {
-        icon: '❌',
-        style: { background: '#333', color: '#fff' }
-      });
-      console.error('Error fetching cart:', error);
+      if(response.status == 404){
+        // continue with no msg
+      }
+      else{
+        toast.error('Failed to fetch cart', {
+          icon: '❌',
+          style: { background: '#333', color: '#fff' }
+        });
+        console.error('Error fetching cart:', error);
+      }
     } finally {
       setLoading(false);
     }
