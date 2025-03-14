@@ -7,7 +7,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Collections from './pages/Collections';
 import Contact from './pages/Contact';
-import VeloriaAdministration from './pages/admin/Dashboard';
+import VeloriaAdministration from './pages/admin/VeloriaAdministration.jsx';
 import ProductList from './pages/admin/ProductList';
 import ProductForm from './pages/admin/ProductForm';
 import CollectionForm from './pages/admin/CollectionForm';
