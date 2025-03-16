@@ -3,38 +3,38 @@
     {
       "id": 1,
       "name": "Perfumes",
-      "image": "https://bellavitaorganic.com/cdn/shop/files/Cosmetics.jpg?v=1738070036&width=300",
-      "link": "/category/perfumes"
+      "image": "/perfume-sample.jpg",
+      "link": "/collections"
     },
     {
       "id": 2,
-      "name": "Bath & Body",
-      "image": "https://bellavitaorganic.com/cdn/shop/files/skincare_ef59c42a-92b0-4ca2-b34b-d115e904e6e7.jpg?v=1738070036&width=300",
-      "link": "/category/bath-body"
+      "name": "Floral Perfumes",
+      "image": "/perfume-sample.jpg",
+      "link": "/collections"
     },
     {
       "id": 3,
-      "name": "Skincare",
-      "image": "https://bellavitaorganic.com/cdn/shop/files/perfumes_0d8bd078-88d8-49fa-b9a0-41c749209281.jpg?v=1738070036&width=300",
-      "link": "/category/skincare"
+      "name": "Woody Perfumes",
+      "image": "/perfume-sample.jpg",
+      "link": "/collections"
     },
     {
       "id": 4,
-      "name": "Gift Sets",
-      "image": "https://bellavitaorganic.com/cdn/shop/files/bath-_-body.jpg?v=1738070036&width=300",
-      "link": "/category/gift-sets"
+      "name": "Citrus Perfumes",
+      "image": "/perfume-sample.jpg",
+      "link": "/collections"
     },
     {
       "id": 5,
-      "name": "Fragrances",
-      "image": "https://bellavitaorganic.com/cdn/shop/files/deo.jpg?v=1738070036&width=300",
-      "link": "/category/fragrances"
+      "name": "Oriental Perfumes",
+      "image": "/perfume-sample.jpg",
+      "link": "/collections"
     },
     {
       "id": 6,
-      "name": "Gift Sets",
-      "image": "https://bellavitaorganic.com/cdn/shop/files/gift-sets_4423111b-0de5-427f-8a8d-d817f544c6bf.jpg?v=1738070036&width=300",
-      "link": "/category/gift-sets"
+      "name": "Gift Sets Perfumes",
+      "image": "/perfume-sample.jpg",
+      "link": "/collections"
     }
   ]
 } 

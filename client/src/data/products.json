@@ -7,7 +7,7 @@
       "originalPrice": 999.00,
       "rating": 4.7,
       "reviews": 11200,
-      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "image": "/perfume-sample.jpg",
       "tags": ["BUY 1 GET 1 FREE", "BESTSELLER"],
       "category": "GIFT SET FOR MEN"
     },
@@ -18,7 +18,7 @@
       "originalPrice": 899.00,
       "rating": 4.8,
       "reviews": 8500,
-      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "image": "/perfume-sample.jpg",
       "tags": ["BESTSELLER"],
       "category": "GIFT SET FOR WOMEN"
     },
@@ -29,7 +29,7 @@
       "originalPrice": 899.00,
       "rating": 4.8,
       "reviews": 8500,
-      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "image": "/perfume-sample.jpg",
       "tags": ["BESTSELLER"],
       "category": "GIFT SET FOR WOMEN"
     },
@@ -40,7 +40,7 @@
       "originalPrice": 899.00,
       "rating": 4.8,
       "reviews": 8500,
-      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "image": "/perfume-sample.jpg",
       "tags": ["BESTSELLER"],
       "category": "GIFT SET FOR WOMEN"
     }
@@ -53,7 +53,7 @@
       "originalPrice": 1499.00,
       "rating": 4.9,
       "reviews": 2300,
-      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "image": "/perfume-sample.jpg",
       "tags": ["NEW"],
       "category": "PERFUMES"
     },
@@ -64,7 +64,7 @@
       "originalPrice": 899.00,
       "rating": 4.8,
       "reviews": 8500,
-      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "image": "/perfume-sample.jpg",
       "tags": ["NEW"],
       "category": "PERFUMES"
     },
@@ -75,7 +75,7 @@
       "originalPrice": 899.00,
       "rating": 4.8,
       "reviews": 8500,
-      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "image": "/perfume-sample.jpg",
       "tags": ["NEW"],
       "category": "PERFUMES"
     },
@@ -86,7 +86,7 @@
       "originalPrice": 899.00,
       "rating": 4.8,
       "reviews": 8500,
-      "image": "https://bellavitaorganic.com/cdn/shop/files/front_2.jpg?v=1736851564&width=300",
+      "image": "/perfume-sample.jpg",
       "tags": ["NEW"],
       "category": "PERFUMES"
     }
