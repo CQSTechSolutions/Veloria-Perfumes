@@ -32,6 +32,7 @@ const VeloriaAdministration = () => {
   const fetchDashboardStats = async () => {
     try {
       const token = localStorage.getItem('token');
+      console.log("Token being sent:", token);
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/getStats`,
         { headers: { Authorization: `Bearer ${token}` }}

@@ -26,11 +26,11 @@ const collectionSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    category: {
+    category: [{
         type: String,
         required: true,
         trim: true
-    },
+    }],
     createdAt: {
         type: Date,
         default: Date.now

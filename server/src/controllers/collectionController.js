@@ -1,8 +1,8 @@
-const Collection = require('../models/collectionModel.js');
+const Collection = require('../models/collectionModel');
 
 const getCollections = async (req, res) => {
     try {
-        const collections = await Collection.find();
+        const collections = await Collection.find({});
         res.status(200).json(collections);
     } catch (error) {
         console.error('Error fetching collections:', error);
