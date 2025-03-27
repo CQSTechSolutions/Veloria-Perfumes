@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FiBox, FiUsers, FiShoppingBag, FiSettings, FiPieChart } from 'react-icons/fi';
+import { FiBox, FiUsers, FiShoppingBag, FiSettings, FiPieChart, FiTrendingUp, FiCalendar } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { motion } from 'framer-motion';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import StatsCard from '../../components/admin/StatsCard';
 import RecentOrders from '../../components/admin/RecentOrders';
@@ -15,6 +16,7 @@ const VeloriaAdministration = () => {
     totalRevenue: 0
   });
   const [loading, setLoading] = useState(true);
+  const [timeframe, setTimeframe] = useState('week');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -27,14 +29,14 @@ const VeloriaAdministration = () => {
       window.location.href = '/';
     }
     fetchDashboardStats();
-  }, []);
+  }, [timeframe]);
 
   const fetchDashboardStats = async () => {
     try {
       const token = localStorage.getItem('token');
       console.log("Token being sent:", token);
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/getStats`,
+        `${import.meta.env.VITE_API_URL}/api/getStats?timeframe=${timeframe}`,
         { headers: { Authorization: `Bearer ${token}` }}
       );
 
@@ -55,69 +57,135 @@ const VeloriaAdministration = () => {
     return (
       <div className="flex h-screen bg-gray-900">
         <AdminSidebar />
-        <div className="flex-1 p-8">
-          <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-          </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-gray-900">
+    <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
       <AdminSidebar />
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <div className="p-8">
-          <h1 className="text-3xl font-bold text-white mb-8">
-            Dashboard Overview
-          </h1>
+      <div className="flex-1 overflow-y-auto p-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="mb-8"
+        >
+          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
+          <p className="text-gray-400">Welcome to Veloria Admin Panel</p>
+        </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Time filter */}
+        <div className="mb-6 flex items-center space-x-2">
+          <FiCalendar className="text-gray-400" />
+          <span className="text-gray-400 mr-2">Time Period:</span>
+          <div className="flex bg-gray-800 rounded-lg p-1">
+            {['day', 'week', 'month', 'year'].map((period) => (
+              <button
+                key={period}
+                onClick={() => setTimeframe(period)}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                  timeframe === period 
+                    ? 'bg-purple-600 text-white' 
+                    : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {period.charAt(0).toUpperCase() + period.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
             <StatsCard
               title="Total Products"
-              value={stats.totalProducts || 0}
+              value={stats.totalProducts}
               icon={<FiBox className="w-6 h-6" />}
-              color="bg-blue-600"
+              change={5.2}
+              color="from-blue-500 to-blue-600"
             />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
             <StatsCard
               title="Total Orders"
-              value={stats.totalOrders || 0}
+              value={stats.totalOrders}
               icon={<FiShoppingBag className="w-6 h-6" />}
-              color="bg-green-600"
+              change={12.5}
+              color="from-green-500 to-green-600"
             />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.3 }}
+          >
             <StatsCard
               title="Total Users"
-              value={stats.totalUsers || 0}
+              value={stats.totalUsers}
               icon={<FiUsers className="w-6 h-6" />}
-              color="bg-purple-600"
+              change={8.1}
+              color="from-yellow-500 to-yellow-600"
             />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
+          >
             <StatsCard
               title="Total Revenue"
-              value={`₹${(stats.totalRevenue || 0).toLocaleString()}`}
-              icon={<FiPieChart className="w-6 h-6" />}
-              color="bg-red-600"
+              value={`₹${stats.totalRevenue.toLocaleString()}`}
+              icon={<FiTrendingUp className="w-6 h-6" />}
+              change={15.3}
+              color="from-purple-500 to-purple-600"
             />
-          </div>
+          </motion.div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-8 pb-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <div className="h-auto overflow-y-auto">
-                <RecentOrders />
-              </div>
-            </div>
-            <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <div className="h-auto overflow-y-auto">
-                <ProductsTable />
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Recent Orders */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.5 }}
+          className="bg-gray-800 rounded-xl p-6 mb-8"
+        >
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <FiShoppingBag className="mr-2" /> Recent Orders
+          </h2>
+          <RecentOrders />
+        </motion.div>
+
+        {/* Products Table */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.6 }}
+          className="bg-gray-800 rounded-xl p-6"
+        >
+          <h2 className="text-xl font-semibold mb-4 flex items-center">
+            <FiBox className="mr-2" /> Popular Products
+          </h2>
+          <ProductsTable />
+        </motion.div>
       </div>
     </div>
   );
 };
 
-export default VeloriaAdministration; 
+export default VeloriaAdministration;
