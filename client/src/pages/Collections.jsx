@@ -15,19 +15,30 @@ const Collections = () => {
     const [cartItems, setCartItems] = useState([]);
     const [wishlistItems, setWishlistItems] = useState([]);
     const [availableCategories, setAvailableCategories] = useState([]);
+    
+    // Get category from URL params
+    const categoryParam = searchParams.get('category');
+
+    useEffect(() => {
+        // Set selected category from URL parameter if available
+        if (categoryParam) {
+            setSelectedCategory(categoryParam);
+        }
+    }, [categoryParam]);
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`${import.meta.env.VITE_API_URL}/api/collection`)
+        // Use the category parameter in the API request if it exists
+        const apiUrl = categoryParam 
+            ? `${import.meta.env.VITE_API_URL}/api/collection?category=${categoryParam}`
+            : `${import.meta.env.VITE_API_URL}/api/collection`;
+            
+        axios.get(apiUrl)
             .then(res => {
-                console.log("API Response:", res.data); // Inspect the API response
+                console.log("API Response:", res.data);
                 setCollections(res.data);
-                console.log("Collections State:", res.data); // Inspect the collections state
                 setLoading(false);
 
-                //
-              
-    
                 // Generate unique categories
                 const allCategories = res.data.reduce((acc, collection) => {
                     if (Array.isArray(collection.category)) {
@@ -42,19 +53,25 @@ const Collections = () => {
                     return acc;
                 }, []);
                 
-                setAvailableCategories(['all', ...allCategories]);
-                console.log("availableCategories State:", ['all', ...allCategories]);
+                setAvailableCategories(allCategories);
             })
             .catch(err => {
-                console.error("API Error:", err); // Log any API errors
-                setError('Failed to load collections');
+                console.error("Error fetching collections:", err);
+                setError(err.message || 'Failed to fetch collections');
                 setLoading(false);
+                toast.error('Failed to load collections');
             });
-    }, []);
+    }, [categoryParam]); // Re-fetch when category param changes
 
-    useEffect(() => {
-        fetchUserData();
-    }, []);
+    // Remove this duplicate declaration
+    // const filteredCollections = selectedCategory === 'all'
+    //     ? collections
+    //     : collections.filter(collection => {
+    //         if (Array.isArray(collection.category)) {
+    //             return collection.category.includes(selectedCategory);
+    //         }
+    //         return collection.category === selectedCategory;
+    //     });
 
     const searchQuery = searchParams.get('search') || '';
 
@@ -85,7 +102,6 @@ const Collections = () => {
 
 console.log("Filtered Collections:", filteredCollections);
 
-    // ... (fetchUserData, toggleWishlist, loading, error handling, etc.)
     const fetchUserData = async () => {
                 try {
                     const token = localStorage.getItem('token');
