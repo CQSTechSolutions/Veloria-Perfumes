@@ -13,6 +13,7 @@ const wishlistRoute = require('./src/routes/wishlistRoute');
 const orderRoute = require('./src/routes/orderRoute');
 const statsRoute = require('./src/routes/statsRoute');
 const settingsRoute = require('./src/routes/settingsRoute');
+const categoryRoute = require('./src/routes/categoryRoute'); // Add this line
 
 dbConn();
 
@@ -34,6 +35,7 @@ app.use('/api/cart', cartRoute);
 app.use('/api/wishlist', wishlistRoute);
 app.use('/api/orders', orderRoute);
 app.use('/api/settings', settingsRoute);
+app.use('/api/categories', categoryRoute); // Add this line
 
 app.get('/', (req, res) => {
   res.send('Hello World');

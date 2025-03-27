@@ -5,6 +5,26 @@
   display: none;
 }
 
+/* Add this to allow scrollbars for admin sections */
+.admin-section::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+
+.admin-section::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 10px;
+}
+
+.admin-section::-webkit-scrollbar-thumb {
+  background-color: rgba(147, 51, 234, 0.5);
+  border-radius: 10px;
+}
+
+.admin-section::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(147, 51, 234, 0.7);
+}
+
 @keyframes float {
   0% {
     transform: translateY(100vh) rotate(0deg);
@@ -42,6 +62,39 @@
   animation: spin-slow linear infinite;
 }
 
+/* Replace -ms-high-contrast with modern forced-colors-mode */
+@media (forced-colors: active) {
+  /* Add your forced colors mode styles here */
+  .your-element {
+    forced-color-adjust: auto;
+  }
+}
+
+/* Add this to your existing CSS */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(147, 51, 234, 0.5) rgba(31, 41, 55, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(147, 51, 234, 0.5);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(147, 51, 234, 0.7);
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -65,11 +118,4 @@ html {
 /* Add a subtle transition to all elements */
 * {
   transition: all 0.3s ease-in-out;
-}
-
-@media (forced-colors: active) {
-  /* Add your forced colors mode styles here */
-  .your-element {
-    forced-color-adjust: auto;
-  }
 }

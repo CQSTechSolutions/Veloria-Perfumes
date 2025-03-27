@@ -11,7 +11,7 @@ const Collections = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('all');
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [cartItems, setCartItems] = useState([]);
     const [wishlistItems, setWishlistItems] = useState([]);
     const [availableCategories, setAvailableCategories] = useState([]);
@@ -25,8 +25,23 @@ const Collections = () => {
         // Set selected category from URL parameter if available
         if (categoryParam) {
             setSelectedCategory(categoryParam);
+        } else {
+            setSelectedCategory('all');
         }
     }, [categoryParam]);
+
+    // Update URL when category changes
+    const handleCategoryChange = (category) => {
+        if (category === 'all') {
+            // Remove category param if "all" is selected
+            searchParams.delete('category');
+            setSearchParams(searchParams);
+        } else {
+            // Set category param for specific category
+            setSearchParams({ ...Object.fromEntries(searchParams), category });
+        }
+        setSelectedCategory(category);
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -253,7 +268,7 @@ const Collections = () => {
                             <div className="flex items-center justify-center gap-4 flex-wrap">
                                 <FiFilter className="text-white" />
                                 <button
-                                    onClick={() => setSelectedCategory('all')}
+                                    onClick={() => handleCategoryChange('all')}
                                     className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300
                                         ${selectedCategory === 'all' 
                                             ? 'bg-white text-purple-800' 
@@ -264,7 +279,7 @@ const Collections = () => {
                                 {availableCategories.map((category) => (
                                     <button
                                         key={category}
-                                        onClick={() => setSelectedCategory(category.toLowerCase())}
+                                        onClick={() => handleCategoryChange(category.toLowerCase())}
                                         className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300
                                             ${selectedCategory === category.toLowerCase() 
                                                 ? 'bg-white text-purple-800' 
