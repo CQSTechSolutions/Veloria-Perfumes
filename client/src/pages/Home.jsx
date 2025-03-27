@@ -40,7 +40,7 @@ const Home = () => {
                 </a>
             </div>
 
-            <PromotionalBanner />
+            {/* <PromotionalBanner /> */}
 
             {/* New Arrivals */}
             <section className="py-12 px-4">
