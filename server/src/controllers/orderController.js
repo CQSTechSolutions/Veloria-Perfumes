@@ -334,4 +334,26 @@ exports.updateOrderStatus = async (req, res) => {
     const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
     res.json({ success: true, order });
 };
+
+exports.getRecentOrders = async (req, res) => {
+    try {
+        const orders = await Order.find()
+            .populate('user', 'name email')
+            .populate('items.product')
+            .sort({ createdAt: -1 })
+            .limit(10);
+
+        res.json({
+            success: true,
+            orders
+        });
+    } catch (error) {
+        console.error('Error fetching recent orders:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching recent orders',
+            error: error.message
+        });
+    }
+};
     

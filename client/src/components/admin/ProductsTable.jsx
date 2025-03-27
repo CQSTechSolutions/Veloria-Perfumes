@@ -119,49 +119,38 @@ const ProductsTable = () => {
 
   return (
     <div>
-      {/* Table Controls */}
-      <div className="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full md:w-64">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <FiSearch className="text-gray-400" />
+      {/* Table Controls with Paper Theme */}
+      <div className="mb-6 p-4 bg-white rounded-lg shadow-md border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full md:w-64">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FiSearch className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              className="bg-white dark:bg-gray-700 text-gray-900 dark:text-white pl-10 pr-4 py-2 rounded-lg w-full border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-          <input
-            type="text"
-            className="bg-gray-700 text-white pl-10 pr-4 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <select
-            className="bg-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="all">All Categories</option>
-            {categories.map(category => (
-              <option key={category._id} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </select>
           
-          <button 
-            onClick={fetchProducts}
-            className="bg-gray-700 text-white p-2 rounded-lg hover:bg-gray-600 transition-colors"
-            title="Refresh"
-          >
-            <FiRefreshCw />
-          </button>
-          
-          <Link
-            to="/admin/products/add"
-            className="bg-purple-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-purple-700 transition-colors"
-          >
-            <FiPlus className="mr-2" /> Add Product
-          </Link>
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <button 
+              onClick={fetchProducts}
+              className="bg-white dark:bg-gray-700 text-gray-700 dark:text-white p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
+              title="Refresh"
+            >
+              <FiRefreshCw />
+            </button>
+            
+            <Link
+              to="/admin/products/add"
+              className="bg-purple-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-purple-700 transition-colors shadow-md"
+            >
+              <FiPlus className="mr-2" /> Add Product
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -169,26 +158,26 @@ const ProductsTable = () => {
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-gray-700 rounded-lg p-8 text-center"
+          className="bg-white dark:bg-gray-800 rounded-lg p-8 text-center shadow-md border border-gray-200 dark:border-gray-700"
         >
           <FiBox className="mx-auto text-4xl text-gray-400 mb-4" />
-          <h3 className="text-xl font-medium text-white mb-2">No Products Found</h3>
-          <p className="text-gray-400 mb-6">Try adjusting your search or filter criteria</p>
+          <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No Products Found</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Try adjusting your search criteria</p>
           <Link
             to="/admin/products/add"
-            className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors shadow-md"
           >
             <FiPlus className="mr-2" /> Add New Product
           </Link>
         </motion.div>
       ) : (
-        <div className="bg-gray-800 rounded-xl overflow-hidden shadow-xl">
+        <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md border border-gray-200 dark:border-gray-700">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-700">
-              <thead className="bg-gray-700">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
                   <th 
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer hover:text-white"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:text-gray-700 dark:hover:text-white"
                     onClick={() => handleSort('name')}
                   >
                     <div className="flex items-center">
@@ -236,18 +225,18 @@ const ProductsTable = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700 bg-gray-800">
+              <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-800">
                 {filteredProducts.map((product) => (
                   <motion.tr 
                     key={product._id} 
-                    className="hover:bg-gray-700 transition-colors"
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border border-gray-600">
+                        <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-gray-600">
                           <img 
                             className="h-12 w-12 object-cover" 
                             src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg'} 
@@ -255,8 +244,8 @@ const ProductsTable = () => {
                           />
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-white">{product.name}</div>
-                          <div className="text-sm text-gray-400">{product.category}</div>
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">{product.name}</div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">{product.category}</div>
                         </div>
                       </div>
                     </td>

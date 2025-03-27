@@ -8,7 +8,7 @@
       "rating": 4.7,
       "reviews": 11200,
       "image": "/perfume-sample.jpg",
-      "tags": ["BUY 1 GET 1 FREE", "BESTSELLER"],
+      "tags": ["BESTSELLER"],
       "category": "GIFT SET FOR MEN"
     },
     {
@@ -18,7 +18,7 @@
       "originalPrice": 899.00,
       "rating": 4.8,
       "reviews": 8500,
-      "image": "/perfume-sample.jpg",
+      "image": "https://cdn.pixabay.com/photo/2021/12/28/16/40/perfume-6899766_1280.jpg",
       "tags": ["BESTSELLER"],
       "category": "GIFT SET FOR WOMEN"
     },
@@ -29,7 +29,7 @@
       "originalPrice": 899.00,
       "rating": 4.8,
       "reviews": 8500,
-      "image": "/perfume-sample.jpg",
+      "image": "https://static.vecteezy.com/system/resources/previews/032/253/865/non_2x/perfume-perfume-bottle-with-pink-flower-ai-generated-free-photo.jpg",
       "tags": ["BESTSELLER"],
       "category": "GIFT SET FOR WOMEN"
     },

@@ -4,21 +4,21 @@ const User = require('../models/userModel');
 const isAuthenticated = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
-        let token; // Declare token outside the if block
+        let token;
 
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return res.status(401).json({
                 success: false,
-                message: 'Please login to access this resource'
+                message: 'Please provide a valid authentication token'
             });
         }
 
-        token = authHeader.split(' ')[1]; // Assign token here
+        token = authHeader.split(' ')[1];
 
         if (!token) {
             return res.status(401).json({
                 success: false,
-                message: 'Please login to access this resource'
+                message: 'Please provide a valid authentication token'
             });
         }
 
@@ -35,10 +35,10 @@ const isAuthenticated = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.error('JWT Verification Error:', error, 'Token:', token); // Log token here
+        console.error('Authentication Error:', error);
         res.status(401).json({
             success: false,
-            message: 'Invalid or expired token'
+            message: 'Authentication failed - Invalid or expired token'
         });
     }
 };
@@ -73,10 +73,10 @@ const isAdmin = (req, res, next) => {
             });
         }
     } catch (error) {
-        console.error('Admin auth error:', error, 'Token:', token); // Log token here
+        console.error('Admin Authorization Error:', error);
         return res.status(403).json({
             success: false,
-            message: 'Invalid or expired token'
+            message: 'Admin authorization failed - Invalid or expired token'
         });
     }
 };
