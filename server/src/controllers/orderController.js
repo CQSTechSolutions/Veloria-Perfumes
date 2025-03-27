@@ -306,9 +306,26 @@ exports.getOrderHistory = async (req, res) => {
     }
 }; 
 
+// Update the getAllOrders function to populate product details
 exports.getAllOrders = async (req, res) => {
-    const orders = await Order.find().populate('user', 'name email');
-    res.json({ success: true, orders });
+    try {
+        const orders = await Order.find()
+            .populate('user', 'name email')
+            .populate('items.product')
+            .sort({ createdAt: -1 });
+            
+        res.status(200).json({
+            success: true,
+            orders
+        });
+    } catch (error) {
+        console.error('Error fetching all orders:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching orders',
+            error: error.message
+        });
+    }
 };
 
 exports.updateOrderStatus = async (req, res) => {
