@@ -7,7 +7,6 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const closeTimeoutRef = useRef(null);
 
-  // Handle hover functionality with delay on close
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
       clearTimeout(closeTimeoutRef.current);
@@ -17,7 +16,6 @@ const Navbar = () => {
   };
 
   const handleMouseLeave = () => {
-    // Add a small delay before closing to allow user to move to dropdown
     closeTimeoutRef.current = setTimeout(() => {
       setIsDropdownOpen(false);
     }, 150);
@@ -140,8 +138,8 @@ const Navbar = () => {
         <Link to="/bestsellers" className="font-medium text-gray-700 hover:text-indigo-600">
           Bestsellers
         </Link>
-        <Link to="/new-releases" className="font-medium text-gray-700 hover:text-indigo-600">
-          New Releases
+        <Link to="/shop" className="font-medium text-gray-700 hover:text-indigo-600">
+          Shop
         </Link>
         <Link to="/discover" className="font-medium text-gray-700 hover:text-indigo-600">
           Discover

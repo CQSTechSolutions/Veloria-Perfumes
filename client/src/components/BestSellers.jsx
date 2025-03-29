@@ -1,41 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const BestSellers = () => {
-  const bestSellerProducts = [
-    {
-      id: 1,
-      name: 'Veloria Midnight Bloom',
-      image: 'https://images.unsplash.com/photo-1615265449494-ee3321e88b61?q=80&w=500&auto=format&fit=crop',
-      price: 89.99,
-      rating: 4.8,
-      category: 'Floral'
-    },
-    {
-      id: 3,
-      name: 'Amber Mystique',
-      image: 'https://images.unsplash.com/photo-1592945403407-9caf930b0c6a?q=80&w=500&auto=format&fit=crop',
-      price: 129.99,
-      rating: 4.9,
-      category: 'Oriental'
-    },
-    {
-      id: 4,
-      name: 'Velvet Oud',
-      image: 'https://images.unsplash.com/photo-1595425970377-c9fcfdd257a7?q=80&w=500&auto=format&fit=crop',
-      price: 150.00,
-      rating: 4.7,
-      category: 'Woody'
-    },
-    {
-      id: 7,
-      name: 'Midnight Noir',
-      image: 'https://images.unsplash.com/photo-1608528577891-eb055944f2e7?q=80&w=500&auto=format&fit=crop',
-      price: 110.00,
-      rating: 4.9,
-      category: 'Woody'
-    }
-  ];
+  const [bestSellerProducts, setBestSellerProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    const fetchBestSellers = async () => {
+      let response;
+      try {
+        response = await fetch('http://localhost:3000/api/bestsellers');
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            setNotFound(true);
+            setLoading(false);
+            return;
+          }
+          throw new Error('Failed to fetch best sellers');
+        }
+        const result = await response.json();
+        
+        // Check the structure of the response and extract the data array
+        const products = result.data || [];
+        setBestSellerProducts(products.slice(0, 4));
+        setLoading(false);
+      } catch (err) {
+        if (response && response.status === 404) {
+          setNotFound(true);
+          console.error('No best sellers found');
+        }
+        else{
+          setError(err.message);
+          console.error('Error fetching best sellers:', err);
+        }
+        setLoading(false);
+      }
+    };
+
+    fetchBestSellers();
+  }, []);
+
+  // Don't render anything if 404 Not Found
+  if (notFound) {
+    return null;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-center py-10 text-red-600">Error: {error}</div>;
+  }
+
+  // Also don't render if no products found
+  if (bestSellerProducts.length === 0) {
+    return null;
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 bg-gray-50">
@@ -48,8 +76,8 @@ const BestSellers = () => {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {bestSellerProducts.map((product) => (
-          <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-            <Link to={`/product/${product.id}`}>
+          <div key={product._id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
+            <Link to={`/product/${product._id}`}>
               <div className="h-64 overflow-hidden relative">
                 <img 
                   src={product.image} 
@@ -96,4 +124,4 @@ const BestSellers = () => {
   );
 };
 
-export default BestSellers; 
+export default BestSellers;
