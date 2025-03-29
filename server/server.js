@@ -6,6 +6,7 @@ import cors from "cors";
 import dbConn from "./src/utils/db.js";
 import bestsellersRoutes from './src/routes/bestsellersRoutes.js';
 import products from './src/routes/products.js';
+import authRoutes from './src/routes/auth.js';
 
 const app = express();
 dotenv.config({ path: '.env.local' });
@@ -29,6 +30,7 @@ dbConn();
 
 app.use('/api/bestsellers', bestsellersRoutes);
 app.use('/api/products', products);
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World');

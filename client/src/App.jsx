@@ -10,6 +10,11 @@ import WoodyPage from './pages/WoodyPage';
 import FreshPage from './pages/FreshPage';
 import CitrusPage from './pages/CitrusPage';
 import GourmandPage from './pages/GourmandPage';
+import Discover from './pages/Discover';
+import Search from './pages/Search';
+import Cart from './pages/Cart';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 function App() {
   return (
@@ -25,6 +30,11 @@ function App() {
         <Route path="/category/fresh" element={<FreshPage />} />
         <Route path="/category/citrus" element={<CitrusPage />} />
         <Route path="/category/gourmand" element={<GourmandPage />} />
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
       </Routes>
     </Router>
   );

@@ -1,11 +1,42 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FaSearch, FaShoppingCart } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaSearch, FaShoppingCart, FaSignOutAlt } from 'react-icons/fa';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const closeTimeoutRef = useRef(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  // Check if user is logged in on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const expiryTime = localStorage.getItem('expiryTime');
+    
+    if (token && expiryTime && new Date().getTime() < parseInt(expiryTime)) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const handleSignOut = () => {
+    // Clear localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('expiryTime');
+    
+    // Update state
+    setIsLoggedIn(false);
+    
+    // Redirect to home page
+    navigate('/', { 
+      state: { 
+        message: 'You have been signed out successfully!' 
+      } 
+    });
+  };
 
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
@@ -146,7 +177,7 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Search, Cart and Sign In */}
+      {/* Search, Cart and Sign In/Out */}
       <div className="flex items-center space-x-4">
         <button className="text-gray-700 hover:text-indigo-600 focus:outline-none">
           <FaSearch className="w-5 h-5" />
@@ -154,9 +185,20 @@ const Navbar = () => {
         <Link to="/cart" className="text-gray-700 hover:text-indigo-600">
           <FaShoppingCart className="w-5 h-5" />
         </Link>
-        <Link to="/signin" className="px-4 py-2 rounded-full bg-white text-indigo-600 border border-indigo-600 hover:bg-indigo-50 font-medium">
-          Sign In
-        </Link>
+        
+        {isLoggedIn ? (
+          <button 
+            onClick={handleSignOut}
+            className="px-4 py-2 rounded-full bg-white text-indigo-600 border border-indigo-600 hover:bg-indigo-50 font-medium flex items-center gap-2"
+          >
+            <FaSignOutAlt className="w-4 h-4" />
+            Sign Out
+          </button>
+        ) : (
+          <Link to="/signin" className="px-4 py-2 rounded-full bg-white text-indigo-600 border border-indigo-600 hover:bg-indigo-50 font-medium">
+            Sign In
+          </Link>
+        )}
       </div>
     </nav>
   );
