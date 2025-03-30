@@ -161,7 +161,7 @@ const FeaturedProducts = () => {
                 </div>
                 
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="font-bold text-lg">${perfume.price.toFixed(2)}</span>
+                  <span className="font-bold text-lg">₹{perfume.price.toFixed(2)}</span>
                   <button className="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hover:bg-indigo-700 transition-colors">
                     Add to Cart
                   </button>

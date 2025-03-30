@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { FaHeart, FaShare, FaShoppingCart, FaTruck, FaUndo, FaShieldAlt } from 'react-icons/fa';
+import { CartContext } from '../context/CartContext';
+import { AuthContext } from '../context/AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// API URL from environment or default
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -14,11 +21,13 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState('description');
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [randomProducts, setRandomProducts] = useState([]);
+  const { addToCart } = useContext(CartContext);
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/products/${id}`);
+        const response = await fetch(`${API_URL}/products/${id}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch product details');
@@ -41,7 +50,7 @@ const ProductDetail = () => {
 
     const fetchRelatedProducts = async (category) => {
       try {
-        const response = await fetch('http://localhost:3000/api/products');
+        const response = await fetch(`${API_URL}/products`);
         
         if (response.ok) {
           const result = await response.json();
@@ -59,7 +68,7 @@ const ProductDetail = () => {
     // Add this function to fetch random products
     const fetchRandomProducts = async (currentProductId) => {
       try {
-        const response = await fetch('http://localhost:3000/api/products');
+        const response = await fetch(`${API_URL}/products`);
         
         if (response.ok) {
           const result = await response.json();
@@ -90,10 +99,20 @@ const ProductDetail = () => {
     setQuantity(prev => Math.max(1, prev - 1));
   };
 
-  const handleAddToCart = () => {
-    // Implement cart functionality here
-    console.log(`Added ${quantity} of ${product.name} to cart`);
-    // You can dispatch to a cart context/redux store here
+  const handleAddToCart = async () => {
+    if (!currentUser) {
+      // If user is not logged in, show a message
+      toast.info("Please sign in to add items to your cart");
+      return;
+    }
+    
+    try {
+      // Use the addToCart function from CartContext
+      await addToCart(product._id, quantity);
+      toast.success(`Added ${quantity} ${product.name} to your cart!`);
+    } catch (error) {
+      toast.error(`Failed to add to cart: ${error.message}`);
+    }
   };
 
   if (loading) {
@@ -131,6 +150,7 @@ const ProductDetail = () => {
   return (
     <>
       <Navbar />
+      <ToastContainer position="top-right" autoClose={3000} />
       
       {/* Breadcrumb */}
       <div className="bg-gray-100 py-3">
@@ -217,7 +237,7 @@ const ProductDetail = () => {
             </div>
 
             <div className="border-t border-b py-4">
-              <p className="text-3xl font-bold text-indigo-700">${product.price.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-indigo-700">₹{product.price.toFixed(2)}</p>
               <p className="text-green-600 mt-1">
                 {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
               </p>
@@ -462,8 +482,19 @@ const ProductDetail = () => {
                       </div>
                       
                       <div className="mt-3 flex items-center justify-between">
-                        <span className="font-bold text-lg">${product.price.toFixed(2)}</span>
-                        <button className="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hover:bg-indigo-700 transition-colors">
+                        <span className="font-bold text-lg">₹{product.price.toFixed(2)}</span>
+                        <button 
+                          className="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hover:bg-indigo-700 transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (currentUser) {
+                              addToCart(product._id, 1);
+                              toast.success(`Added ${product.name} to your cart!`);
+                            } else {
+                              toast.info("Please sign in to add items to your cart");
+                            }
+                          }}
+                        >
                           Add to Cart
                         </button>
                       </div>
@@ -517,8 +548,19 @@ const ProductDetail = () => {
                       </div>
                       
                       <div className="mt-3 flex items-center justify-between">
-                        <span className="font-bold text-lg">${product.price.toFixed(2)}</span>
-                        <button className="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hover:bg-indigo-700 transition-colors">
+                        <span className="font-bold text-lg">₹{product.price.toFixed(2)}</span>
+                        <button 
+                          className="bg-indigo-600 text-white px-3 py-1 rounded-full text-sm hover:bg-indigo-700 transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (currentUser) {
+                              addToCart(product._id, 1);
+                              toast.success(`Added ${product.name} to your cart!`);
+                            } else {
+                              toast.info("Please sign in to add items to your cart");
+                            }
+                          }}
+                        >
                           Add to Cart
                         </button>
                       </div>

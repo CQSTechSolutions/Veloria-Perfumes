@@ -13,30 +13,42 @@ import GourmandPage from './pages/GourmandPage';
 import Discover from './pages/Discover';
 import Search from './pages/Search';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import OrderHistory from './pages/OrderHistory';
+import OrderDetails from './pages/OrderDetails';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Store />} />
-        <Route path="/bestsellers" element={<BestSellersPage />} />
-        <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/category/floral" element={<FloralPage />} />
-        <Route path="/category/oriental" element={<OrientalPage />} />
-        <Route path="/category/woody" element={<WoodyPage />} />
-        <Route path="/category/fresh" element={<FreshPage />} />
-        <Route path="/category/citrus" element={<CitrusPage />} />
-        <Route path="/category/gourmand" element={<GourmandPage />} />
-        <Route path="/discover" element={<Discover />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<Store />} />
+            <Route path="/bestsellers" element={<BestSellersPage />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/category/floral" element={<FloralPage />} />
+            <Route path="/category/oriental" element={<OrientalPage />} />
+            <Route path="/category/woody" element={<WoodyPage />} />
+            <Route path="/category/fresh" element={<FreshPage />} />
+            <Route path="/category/citrus" element={<CitrusPage />} />
+            <Route path="/category/gourmand" element={<GourmandPage />} />
+            <Route path="/discover" element={<Discover />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/orders" element={<OrderHistory />} />
+            <Route path="/orders/:orderId" element={<OrderDetails />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/signin" element={<SignIn />} />
+          </Routes>
+        </Router>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 
