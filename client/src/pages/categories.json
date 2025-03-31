@@ -2,9 +2,9 @@
     "categories": [
       { "id": 1, "name": "Luxury Perfumes", "image": "luxury-perfumes.jpg","slug":"Luxury" },
       { "id": 2, "name": "Limited Editions", "image": "limited-editions.jpg","slug":"Limited Editions" },
-      { "id": 3, "name": "Gift Sets", "image": "gift-sets.jpg","slug":"Gift Sets" },
+      { "id": 3, "name": "Oriental", "image": "gift-sets.jpg","slug":"Oriental" },
       { "id": 4, "name": "Men's Fragrances", "image": "men-fragrances.jpg","slug":"Men's Fragrances" },
       { "id": 5, "name": "Women's Fragrances", "image": "women-fragrances.webp","slug":"Women's Fragrances" },
-      { "id": 6, "name": "Travel Sizes", "image": "travel-sizes.jpg","slug":"Travel Sizes" }
+      { "id": 6, "name": "Aquatic", "image": "travel-sizes.jpg","slug":"Aquatic" }
     ]
   }
