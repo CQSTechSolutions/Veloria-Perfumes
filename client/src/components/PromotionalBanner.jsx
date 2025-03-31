@@ -5,14 +5,6 @@ import { motion } from 'framer-motion';
 const PromotionalBanner = () => {
   return (
     <section className="py-16 px-4 relative overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <img 
-          src="https://images.unsplash.com/photo-1562887250-9a52e2c99806?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80" 
-          alt="Luxury perfume" 
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-soft-black/60"></div>
-      </div>
       
       <div className="max-w-4xl mx-auto relative z-10">
         <motion.div 

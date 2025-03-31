@@ -6,22 +6,22 @@ import { motion } from 'framer-motion';
 
 const HomeCarousel = () => {
   const slides = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1616486338812-3dadae405b3a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80',
-      title: 'Discover Elegance',
-      subtitle: 'Experience our exclusive collection of luxury fragrances',
-      buttonText: 'Shop Collection',
-      link: '/collections'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1563170352-898dae651d31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80',
-      title: 'Sensual & Refined',
-      subtitle: 'Handcrafted perfumes for the discerning connoisseur',
-      buttonText: 'Explore Now',
-      link: '/collections'
-    },
+    // {
+    //   id: 1,
+    //   image: 'https://images.unsplash.com/photo-1616486338812-3dadae405b3a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80',
+    //   title: 'Discover Elegance',
+    //   subtitle: 'Experience our exclusive collection of luxury fragrances',
+    //   buttonText: 'Shop Collection',
+    //   link: '/collections'
+    // },
+    // {
+    //   id: 2,
+    //   image: 'https://images.unsplash.com/photo-1563170352-898dae651d31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80',
+    //   title: 'Sensual & Refined',
+    //   subtitle: 'Handcrafted perfumes for the discerning connoisseur',
+    //   buttonText: 'Explore Now',
+    //   link: '/collections'
+    // },
     {
       id: 3,
       image: 'https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',

@@ -16,7 +16,7 @@ const perfumes = [
   {
     name: 'Royal Essence',
     description: 'A majestic blend of rare oud, royal amber, and precious saffron. This opulent fragrance opens with bergamot and cardamom, unveiling a heart of Bulgarian rose and orris. The base notes of sandalwood, patchouli, and vanilla create a sophisticated, lingering trail that embodies true luxury. Perfect for special occasions, this scent commands attention with its distinctive character and exceptional longevity.',
-    image: 'https://images.unsplash.com/photo-1594035910387-fae33fe80df7?q=80&w=1000',
+    image: 'https://images.pexels.com/photos/755992/pexels-photo-755992.jpeg',
     price: 8999,
     stock: '50',
     category: ['Luxury', 'Oud', 'Unisex Fragrances', 'New Arrivals']
@@ -24,7 +24,7 @@ const perfumes = [
   {
     name: 'Midnight Velvet',
     description: 'An enchanting nocturnal blend capturing the essence of mystery and allure. This sophisticated perfume combines rich black currant and midnight jasmine with deep notes of smoky vetiver and amber. The velvety texture evolves on the skin, revealing layers of complexity with each passing hour. A perfect companion for elegant evenings and unforgettable nights, Midnight Velvet leaves an intoxicating trail that lingers in the memory.',
-    image: 'https://images.unsplash.com/photo-1596742578443-7682ef5251cd?q=80&w=1000',
+    image: 'https://th.bing.com/th/id/OIP.gwd_XwTivnxa6olBO3b7qAHaE8?rs=1&pid=ImgDetMain',
     price: 7499,
     stock: '75',
     category: ['Luxury', 'Evening Wear', "Women's Fragrances", 'Best Sellers']
@@ -32,7 +32,7 @@ const perfumes = [
   {
     name: 'Amber Royale',
     description: 'A majestic composition centered around precious amber, enriched with rare woods and exotic spices. The opening bursts with vibrant bergamot and saffron, leading to a warm heart of labdanum and myrrh. Base notes of vanilla, sandalwood, and benzoin create a rich, resinous foundation that encapsulates timeless luxury. This regal fragrance envelops the wearer in an aura of sophistication and distinction, ideal for those who appreciate extraordinary olfactory experiences.',
-    image: 'https://images.unsplash.com/photo-1594035910387-fae33fe80df7?q=80&w=1000',
+    image: 'https://th.bing.com/th/id/OIP.I-thhbeRfi7xnvXCopiRoQHaMB?w=196&h=318&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
     price: 9999,
     stock: '40',
     category: ['Luxury', 'Amber', 'Unisex Fragrances', 'Limited Editions']
@@ -42,7 +42,7 @@ const perfumes = [
   {
     name: 'Mediterranean Breeze',
     description: 'A refreshing escape to sun-drenched citrus groves along the Mediterranean coast. This invigorating fragrance opens with sparkling notes of Sicilian lemon, bergamot, and mandarin, balanced by aromatic rosemary and basil. The heart reveals white flowers and sea salt accord, while the base offers a subtle blend of cedar and white musk. Perfect for warm weather, this scent captures the essence of coastal bliss and carefree summer days with remarkable clarity and brightness.',
-    image: 'https://images.unsplash.com/photo-1588599376442-3cbf9c67449e?q=80&w=1000',
+    image: 'https://th.bing.com/th/id/OIP.HEqlDJcJSC-QDodpJ8Ng6AHaF7?w=279&h=223&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
     price: 3999,
     stock: '120',
     category: ['Fresh', 'Citrus', "Summer Collection", 'New Arrivals']
@@ -50,7 +50,7 @@ const perfumes = [
   {
     name: 'Citrus Splash',
     description: 'An energizing explosion of citrus notes designed to invigorate the senses and lift the spirit. This vibrant composition begins with zesty lime, grapefruit, and lemon verbena, complemented by green tea and mint for added freshness. The heart features subtle aquatic notes and transparent florals, while the base provides a clean, modern foundation of white woods and musk. A perfect daily companion, this effervescent fragrance brings a burst of energy and optimism to any moment.',
-    image: 'https://images.unsplash.com/photo-1616604745302-9cfa2342ec93?q=80&w=1000',
+    image: 'https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg',
     price: 2999,
     stock: '150',
     category: ['Fresh', 'Citrus', "Unisex Fragrances", 'Best Sellers']
@@ -60,7 +60,7 @@ const perfumes = [
   {
     name: 'Rose Symphony',
     description: 'A magnificent tribute to the queen of flowers, showcasing different facets of rose in perfect harmony. This elegant composition intertwines Bulgarian rose, Turkish rose, and May rose, enhanced by bright bergamot and pink pepper. The heart reveals supporting notes of peony, lily of the valley, and a touch of raspberry for modern radiance. The base features patchouli, sandalwood, and musk creating a timeless, sophisticated floral masterpiece with exceptional depth and character.',
-    image: 'https://images.unsplash.com/photo-1620915789336-97ae8d345be2?q=80&w=1000',
+    image: 'https://th.bing.com/th/id/OIP.dkHwewY8IFAMznlJRtkKQwHaLG?w=204&h=305&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
     price: 5999,
     stock: '100',
     category: ['Floral', "Women's Fragrances", 'Best Sellers']
@@ -68,7 +68,7 @@ const perfumes = [
   {
     name: 'White Blossom',
     description: 'A celebration of luminous white flowers in their most exquisite expression. This pure and radiant composition showcases the ethereal beauty of jasmine sambac, orange blossom, and tuberose, opening with delicate notes of dewy pear and lychee. The heart is a magnificent floral bouquet, while the base offers creamy sandalwood, vanilla, and white amber. This sophisticated fragrance embodies feminine grace and elegance, leaving a memorable trail of refined beauty.',
-    image: 'https://images.unsplash.com/photo-1557170334-a9086d21c4a3?q=80&w=1000',
+    image: 'https://images.pexels.com/photos/3059609/pexels-photo-3059609.jpeg',
     price: 4999,
     stock: '85',
     category: ['Floral', "Women's Fragrances", 'New Arrivals']
@@ -78,7 +78,7 @@ const perfumes = [
   {
     name: 'Cedar Majesty',
     description: 'A sophisticated woody composition celebrating the noble character of cedar in its most refined form. This distinctive fragrance opens with bright bergamot and cardamom, leading to a heart dominated by Atlas cedar, cypress, and subtle violet leaves. The base reveals a complex blend of vetiver, amber, and leather accords, creating a powerful yet elegant statement. Perfect for those who appreciate architectural, structured scents with depth and character that command respect.',
-    image: 'https://images.unsplash.com/photo-1595425970377-c9703cf48107?q=80&w=1000',
+    image: 'https://bellavitaorganic.com/cdn/shop/files/download_8064dace-302a-4462-a075-9da8103f97f9.jpg?v=1738909116&width=400',
     price: 4599,
     stock: '90',
     category: ['Woody', "Men's Fragrances", 'Best Sellers']
@@ -86,7 +86,7 @@ const perfumes = [
   {
     name: 'Sandalwood Legacy',
     description: 'An homage to precious sandalwood in all its creamy, sophisticated glory. This rich composition begins with cardamom and nutmeg, unveiling a heart of smooth Australian sandalwood enhanced by rose and violet. The base offers depth through vetiver, amber, and a touch of vanilla, creating a warm, enveloping aura that becomes like a second skin. This timeless fragrance offers exceptional longevity and sillage, perfect for those who appreciate refined, natural elegance.',
-    image: 'https://images.unsplash.com/photo-1608528577891-eb055944d2e5?q=80&w=1000',
+    image: 'https://bellavitaorganic.com/cdn/shop/files/download_5bea8eae-fa1f-45d3-95bc-81ced6860f9d.jpg?v=1732892381&width=400',
     price: 6999,
     stock: '65',
     category: ['Woody', 'Sandalwood', 'Unisex Fragrances', 'Limited Editions']
@@ -96,7 +96,7 @@ const perfumes = [
   {
     name: 'Spice Market',
     description: 'A captivating journey through ancient spice markets of the East, rich with exotic aromas and mystery. This opulent oriental opens with vibrant saffron and cardamom, revealing a heart of precious oud, Turkish rose, and incense. The base offers rich amber, vanilla, and musk for a warm, enveloping trail that lingers beautifully. This complex fragrance transcends seasons with its magnificent presence, perfect for those who appreciate bold, statement perfumes with cultural depth.',
-    image: 'https://images.unsplash.com/photo-1518543214837-7640edab8e90?q=80&w=1000',
+    image: 'https://bellavitaorganic.com/cdn/shop/files/0_3.jpg?v=1698055971&width=400',
     price: 7499,
     stock: '70',
     category: ['Oriental', 'Spicy', 'Unisex Fragrances', 'Limited Editions']
@@ -104,7 +104,7 @@ const perfumes = [
   {
     name: 'Amber Nights',
     description: 'A sumptuous oriental amber that captures the magic of desert nights under the stars. This sophisticated composition begins with saffron and bergamot, leading to a rich heart of amber, labdanum, and rose. The base reveals vanilla, patchouli, and oud notes that create a warm, resinous embrace lasting for hours. This luxurious fragrance offers exceptional depth and complexity, perfect for cool evenings and special occasions where its magnificent trail makes an unforgettable impression.',
-    image: 'https://images.unsplash.com/photo-1622618991746-fe6004db3a47?q=80&w=1000',
+    image: 'https://bellavitaorganic.com/cdn/shop/files/1_25f79680-b265-4423-b0c2-bdf6af78b69a.jpg?v=1700137801&width=400',
     price: 6999,
     stock: '80',
     category: ['Oriental', 'Amber', 'Unisex Fragrances', 'Best Sellers']
@@ -114,7 +114,7 @@ const perfumes = [
   {
     name: 'Ocean Breeze',
     description: 'A refreshing aquatic fragrance that captures the essence of a pristine coastline. This invigorating scent opens with sea salt accord, bergamot, and ozonic notes, creating an immediate sensation of fresh sea air. The heart reveals water lily, jasmine, and transparent florals, while the base offers ambergris, driftwood, and white musk. Perfect for hot summer days, this clean, refreshing fragrance evokes the serenity of ocean vistas and the revitalizing power of coastal escapes.',
-    image: 'https://images.unsplash.com/photo-1544156739-99e2d6a61d06?q=80&w=1000',
+    image: 'https://images.pexels.com/photos/161599/scent-sticks-fragrance-aromatic-161599.jpeg',
     price: 3499,
     stock: '110',
     category: ['Fresh', 'Aquatic', 'Unisex Fragrances', 'Summer Collection']
@@ -122,7 +122,7 @@ const perfumes = [
   {
     name: 'Green Vitality',
     description: 'A vibrant celebration of lush greenery and vital energy. This refreshing composition opens with crushed mint leaves, lime zest, and galbanum, creating an immediate sensation of natural freshness. The heart features violet leaves, green tea, and aromatic herbs, while the base offers vetiver, cedar, and light musk. An ideal companion for active lifestyles, this energizing fragrance breathes life into everyday moments with its crisp, natural character and uplifting presence.',
-    image: 'https://images.unsplash.com/photo-1605293722533-7a4297197c07?q=80&w=1000',
+    image: 'https://images.pexels.com/photos/4110348/pexels-photo-4110348.jpeg',
     price: 2999,
     stock: '130',
     category: ['Fresh', 'Green', "Men's Fragrances", 'New Arrivals']
@@ -132,7 +132,7 @@ const perfumes = [
   {
     name: 'Black Opulence',
     description: 'A bold, contemporary statement fragrance that embodies modern luxury and sophistication. This striking composition opens with black pepper, dark berries, and a touch of absinthe, leading to an intense heart of black leather, black orchid, and smoky incense. The base reveals powerful notes of oud, black amber, and patchouli for a distinctive, long-lasting trail. This exceptional fragrance commands attention with its contemporary character and mysterious depth, perfect for confident individuals who appreciate artistic expression.',
-    image: 'https://images.unsplash.com/photo-1563170352-58f8206e6e94?q=80&w=1000',
+    image: 'https://bellavitaorganic.com/cdn/shop/files/Tiger-10_1_2_1.jpg?v=1720330847&width=1000',
     price: 8499,
     stock: '60',
     category: ['Luxury', 'Modern', "Men's Fragrances", 'Limited Editions']
@@ -140,7 +140,7 @@ const perfumes = [
   {
     name: 'Velvet Iris',
     description: 'A masterful interpretation of noble iris in its most luxurious form. This sophisticated fragrance showcases precious orris butter enhanced by violet leaves and subtle carrot seed, opening with bright bergamot and pink pepper. The heart reveals the full glory of iris pallida alongside rose and jasmine, while the base offers cashmere woods, vanilla, and ambrette seeds. This elegant, powdery creation embodies refined taste and timeless elegance, perfect for those who appreciate understated luxury.',
-    image: 'https://images.unsplash.com/photo-1595425970377-c9703cf48107?q=80&w=1000',
+    image: 'https://images.pexels.com/photos/264870/pexels-photo-264870.jpeg',
     price: 7999,
     stock: '70',
     category: ['Luxury', 'Floral', "Women's Fragrances", 'Best Sellers']
@@ -150,7 +150,7 @@ const perfumes = [
   {
     name: 'Leather & Oud',
     description: 'A powerful masculine statement combining two iconic materials in perfect balance. This sophisticated fragrance opens with spicy saffron and cardamom, revealing a heart of smoky oud wood complemented by rich leather accord and tobacco. The base features dark patchouli, amber, and benzoin, creating a bold, memorable signature. This distinguished fragrance offers exceptional projection and longevity, perfect for the confident man who appreciates traditional masculine elements with contemporary sophistication.',
-    image: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?q=80&w=1000',
+    image: 'https://images.pexels.com/photos/3910071/pexels-photo-3910071.jpeg',
     price: 6799,
     stock: '75',
     category: ['Woody', 'Leather', "Men's Fragrances", 'Best Sellers']
@@ -158,7 +158,7 @@ const perfumes = [
   {
     name: 'Gentleman\'s Club',
     description: 'A sophisticated tribute to traditional gentleman\'s clubs with their rich atmosphere of polished wood, fine spirits, and leather armchairs. This elegant composition opens with bergamot, mandarin, and cinnamon, revealing a heart of tobacco, cognac accord, and cedarwood. The base features vetiver, vanilla, and leather for a warm, refined trail. This distinguished fragrance offers timeless masculinity with modern refinement, perfect for the discerning gentleman who values tradition with a contemporary edge.',
-    image: 'https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?q=80&w=1000',
+    image: 'https://bellavitaorganic.com/cdn/shop/files/1_f67f45b0-f265-4845-98bf-982e0c595504.jpg?v=1714740709&width=400',
     price: 5999,
     stock: '85',
     category: ['Woody', 'Aromatic', "Men's Fragrances", 'New Arrivals']
@@ -188,16 +188,23 @@ const generateMorePerfumes = () => {
   const nouns = ['Rose', 'Oud', 'Amber', 'Musk', 'Jasmine', 'Sandalwood', 'Vanilla', 'Vetiver', 'Iris', 'Leather', 'Woods', 'Saffron', 'Bergamot', 'Neroli', 'Incense', 'Spice', 'Violets', 'Cedar', 'Orchid', 'Patchouli'];
   
   const images = [
-    'https://images.unsplash.com/photo-1594035910387-fae33fe80df7?q=80&w=1000',
-    'https://images.unsplash.com/photo-1596742578443-7682ef5251cd?q=80&w=1000',
-    'https://images.unsplash.com/photo-1588599376442-3cbf9c67449e?q=80&w=1000',
-    'https://images.unsplash.com/photo-1616604745302-9cfa2342ec93?q=80&w=1000',
-    'https://images.unsplash.com/photo-1620915789336-97ae8d345be2?q=80&w=1000',
-    'https://images.unsplash.com/photo-1557170334-a9086d21c4a3?q=80&w=1000',
-    'https://images.unsplash.com/photo-1595425970377-c9703cf48107?q=80&w=1000',
-    'https://images.unsplash.com/photo-1608528577891-eb055944d2e5?q=80&w=1000',
-    'https://images.unsplash.com/photo-1518543214837-7640edab8e90?q=80&w=1000',
-    'https://images.unsplash.com/photo-1622618991746-fe6004db3a47?q=80&w=1000'
+    'https://images.pexels.com/photos/755992/pexels-photo-755992.jpeg',
+    'https://www.elpalaciodehierro.com/on/demandware.static/-/Sites-palacio-master-catalog/default/dw624c9c8c/images/15763616/large/15763616_x1.jpg',
+    'https://img.lazcdn.com/g/p/1469d54cae3a44ee412b71802b2e8e26.jpg_720x720q80.jpg',
+    'https://th.bing.com/th/id/OIP.9EnwxNCinROJvsu9Np_mJwHaHa?rs=1&pid=ImgDetMain',
+    'https://goodmockups.com/wp-content/uploads/2022/08/Free-Clear-Glass-Perfume-Bottle-Mockup-PSD.jpg',
+    'https://images.pexels.com/photos/3059609/pexels-photo-3059609.jpeg',
+    'https://image.shutterstock.com/z/stock-photo-perfume-bottle-244186693.jpg',
+    'https://static.vecteezy.com/system/resources/previews/024/050/446/non_2x/a-high-class-bottle-of-glass-perfume-with-light-blue-liquid-aromatic-perfume-bottles-on-white-background-beauty-product-cosmetic-perfume-day-fragrance-day-or-perfume-launch-event-by-ai-generated-free-photo.jpg',
+    'https://th.bing.com/th/id/OIP.zdUQuyq7OXzrYZ818aEfAwHaKF?w=1087&h=1481&rs=1&pid=ImgDetMain',
+    'https://th.bing.com/th/id/OIP.Q6bkV1x5TDdqWHD_u7IoSwHaHa?w=626&h=626&rs=1&pid=ImgDetMain',
+    'https://images.pexels.com/photos/161599/scent-sticks-fragrance-aromatic-161599.jpeg',
+    'https://images.pexels.com/photos/4110348/pexels-photo-4110348.jpeg',
+    'https://th.bing.com/th/id/OIP.Vl8gQsZHYwX5otvLU8E5tQHaHa?w=626&h=626&rs=1&pid=ImgDetMain',
+    'https://images.pexels.com/photos/264870/pexels-photo-264870.jpeg',
+    'https://images.pexels.com/photos/3910071/pexels-photo-3910071.jpeg',
+    'https://cdn.pixabay.com/photo/2021/12/28/16/40/perfume-6899766_1280.jpg',
+    'https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg'
   ];
   
   const descriptions = [
