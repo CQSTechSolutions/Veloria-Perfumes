@@ -14,11 +14,35 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
-        required: true,
+        required: false,
+    },
+    countryCode: {
+        type: String,
+        default: '+91'
     },
     password: {
         type: String,
         required: true,
+    },
+    address: {
+        type: String,
+        default: ''
+    },
+    city: {
+        type: String,
+        default: ''
+    },
+    state: {
+        type: String,
+        default: ''
+    },
+    zipCode: {
+        type: String,
+        default: ''
+    },
+    isProfileComplete: {
+        type: Boolean,
+        default: false
     }
 },{timestamps: true});
 

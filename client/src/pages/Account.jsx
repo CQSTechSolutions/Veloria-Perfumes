@@ -36,7 +36,6 @@ const InputField = ({ icon, label, type, value, onChange, error, placeholder, cl
 const Account = () => {
   const [token, setToken] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
-  const [loginTab, setLoginTab] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -46,19 +45,21 @@ const Account = () => {
     password: '',
     confirmPassword: '',
     phone: '',
-    countryCode: '',
+    countryCode: '+91',
     createdAt: '',
     address: '',
     city: '',
     state: '',
     zipCode: '',
   });
-  const [isSignUp, setIsSignUp] = useState(true);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   const navigate = useNavigate();
 
+  console.log('Account component - API URL:', import.meta.env.VITE_API_URL);
+  
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     setToken(storedToken);
@@ -123,22 +124,50 @@ const Account = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!loginTab && !formData.fullName) newErrors.fullName = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password) newErrors.password = 'Password is required';
-    if (!loginTab && formData.password !== formData.confirmPassword) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    // For registration
+    if (!isLogin && isSignUp && !formData.fullName) newErrors.fullName = 'Name is required';
+    
+    // Email validation with proper format checking
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    // Phone validation for registration
+    if (!isLogin && isSignUp && !formData.phone) {
+      newErrors.phone = 'Phone number is required';
+    }
+    
+    // Only validate password for login or registration, not for profile updates
+    if (!isLogin && !formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (!isLogin && isSignUp && formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    // Confirm password validation only for registration or when changing password in profile
+    if ((!isLogin && isSignUp && formData.password !== formData.confirmPassword) || 
+        (isLogin && editMode && formData.password && formData.password !== formData.confirmPassword)) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const login = async (formData) => {
     try {
+      console.log('Attempting login with:', { email: formData.email });
+      
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         email: formData.email,
         password: formData.password
       });
+
+      console.log('Login response:', response.data);
 
       if (response.data.token) {
         const userResponse = await axios.get(
@@ -167,12 +196,25 @@ const Account = () => {
         toast.success('Successfully logged in!');
       }
     } catch (error) {
+      console.error('Login error:', error);
       toast.error(error.response?.data?.message || 'Failed to login. Please try again.');
     }
   };
 
   const register = async (formData) => {
     try {
+      // Additional validation before submission
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast.error('Please enter a valid email address');
+        return;
+      }
+      
+      if (formData.password.length < 6) {
+        toast.error('Password must be at least 6 characters');
+        return;
+      }
+      
       const registrationData = {
         fullName: formData.fullName,
         email: formData.email,
@@ -186,11 +228,15 @@ const Account = () => {
         zipCode: formData.zipCode || '',
       };
 
+      console.log('Attempting registration with:', registrationData);
+
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/register`,
         registrationData
       );
 
+      console.log('Registration response:', response.data);
+      
       if (response.data && response.data.token) {
         const userResponse = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/user/getUserById?userId=${jwtDecode(response.data.token).id}`,
@@ -225,6 +271,7 @@ const Account = () => {
         });
       }
     } catch (error) {
+      console.error('Registration error:', error);
       const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
       toast.error(errorMessage, {
         position: "top-right",
@@ -233,21 +280,87 @@ const Account = () => {
     }
   };
 
+  const updateProfile = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const updateData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        countryCode: formData.countryCode,
+        address: formData.address || '',
+        city: formData.city || '',
+        state: formData.state || '',
+        zipCode: formData.zipCode || '',
+      };
+      
+      // Only include password in update if it's provided
+      if (formData.password && formData.password.trim() !== '') {
+        updateData.password = formData.password;
+      }
+      
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/api/user/updateProfile`,
+        updateData,
+        { headers: { Authorization: `Bearer ${token}` }}
+      );
+      
+      if (response.data.success) {
+        toast.success('Profile updated successfully');
+        // Reset password fields
+        setFormData(prev => ({
+          ...prev,
+          password: '',
+          confirmPassword: ''
+        }));
+        setEditMode(false);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update profile');
+      console.error('Error updating profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+    
     if (validateForm()) {
       try {
-        if (loginTab) {
-          await login(formData);
+        if (isLogin) {
+          // If we're in the profile view, update profile
+          if (editMode) {
+            await updateProfile();
+          }
         } else {
-          await register(formData);
+          // Login or Register
+          if (!isSignUp) {
+            await login(formData);
+          } else {
+            await register(formData);
+          }
         }
       } catch (error) {
-        toast.error('An error occurred', {
+        console.error('Form submission error:', error);
+        toast.error(error.response?.data?.message || 'An error occurred. Please try again.', {
+          icon: '❌',
+          style: { background: '#333', color: '#fff' }
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // Display a toast for validation errors
+      if (Object.keys(errors).length > 0) {
+        toast.error('Please fix the highlighted errors', {
           icon: '❌',
           style: { background: '#333', color: '#fff' }
         });
       }
+      setLoading(false);
     }
   };
 
@@ -336,27 +449,34 @@ const Account = () => {
                         <h2 className="text-lg font-serif text-soft-black">Personal Details</h2>
                       </div>
                       <div className="space-y-4">
+                        <AnimatePresence mode="wait">
+                          {isSignUp && (
+                            <motion.div
+                              key="fullName"
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                            >
+                              <label className="block text-sm font-medium text-soft-black/70 mb-1">Full Name *</label>
+                              <input 
+                                type="text"
+                                name="fullName"
+                                value={formData.fullName}
+                                onChange={handleInputChange}
+                                className={`veloria-input w-full bg-transparent ${errors.fullName ? 'border-burgundy' : 'border-gold/30'}`}
+                              />
+                              {errors.fullName && <p className="mt-1 text-burgundy text-sm">{errors.fullName}</p>}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                         <div>
-                          <label className="block text-sm font-medium text-soft-black/70 mb-1">Full Name</label>
-                          <input 
-                            type="text"
-                            name="fullName"
-                            value={formData.fullName}
-                            onChange={handleInputChange}
-                            disabled={!editMode}
-                            className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} ${errors.fullName ? 'border-burgundy' : 'border-gold/30'}`}
-                          />
-                          {errors.fullName && <p className="mt-1 text-burgundy text-sm">{errors.fullName}</p>}
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-soft-black/70 mb-1">Email</label>
+                          <label className="block text-sm font-medium text-soft-black/70 mb-1">Email *</label>
                           <input 
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={handleInputChange}
-                            disabled={!editMode}
-                            className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} ${errors.email ? 'border-burgundy' : 'border-gold/30'}`}
+                            className={`veloria-input w-full bg-transparent ${errors.email ? 'border-burgundy' : 'border-gold/30'}`}
                           />
                           {errors.email && <p className="mt-1 text-burgundy text-sm">{errors.email}</p>}
                         </div>
@@ -367,8 +487,7 @@ const Account = () => {
                               name="countryCode"
                               value={formData.countryCode}
                               onChange={handleInputChange}
-                              disabled={!editMode}
-                              className={`veloria-input w-20 ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                              className={`veloria-input w-20 bg-transparent border-gold/30`}
                             >
                               <option value="+91">+91</option>
                               <option value="+1">+1</option>
@@ -379,8 +498,7 @@ const Account = () => {
                               name="phone"
                               value={formData.phone}
                               onChange={handleInputChange}
-                              disabled={!editMode}
-                              className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} ${errors.phone ? 'border-burgundy' : 'border-gold/30'}`}
+                              className={`veloria-input w-full bg-transparent ${errors.phone ? 'border-burgundy' : 'border-gold/30'}`}
                             />
                           </div>
                           {errors.phone && <p className="mt-1 text-burgundy text-sm">{errors.phone}</p>}
@@ -406,8 +524,7 @@ const Account = () => {
                             name="address"
                             value={formData.address || ''}
                             onChange={handleInputChange}
-                            disabled={!editMode}
-                            className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                            className={`veloria-input w-full bg-transparent border-gold/30`}
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
@@ -418,8 +535,7 @@ const Account = () => {
                               name="city"
                               value={formData.city || ''}
                               onChange={handleInputChange}
-                              disabled={!editMode}
-                              className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                              className={`veloria-input w-full bg-transparent border-gold/30`}
                             />
                           </div>
                           <div>
@@ -429,8 +545,7 @@ const Account = () => {
                               name="state"
                               value={formData.state || ''}
                               onChange={handleInputChange}
-                              disabled={!editMode}
-                              className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                              className={`veloria-input w-full bg-transparent border-gold/30`}
                             />
                           </div>
                         </div>
@@ -441,8 +556,7 @@ const Account = () => {
                             name="zipCode"
                             value={formData.zipCode || ''}
                             onChange={handleInputChange}
-                            disabled={!editMode}
-                            className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                            className={`veloria-input w-full bg-transparent border-gold/30`}
                           />
                         </div>
                       </div>
@@ -480,6 +594,9 @@ const Account = () => {
                             </button>
                           </div>
                           {errors.password && <p className="mt-1 text-burgundy text-sm">{errors.password}</p>}
+                          {isSignUp && !errors.password && (
+                            <p className="mt-1 text-soft-black/50 text-xs">Password must be at least 6 characters</p>
+                          )}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-soft-black/70 mb-1">Confirm New Password</label>
@@ -587,7 +704,7 @@ const Account = () => {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                     >
-                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Full Name</label>
+                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Full Name *</label>
                       <input 
                         type="text"
                         name="fullName"
@@ -601,7 +718,7 @@ const Account = () => {
                 </AnimatePresence>
                 
                 <div>
-                  <label className="block text-sm font-medium text-soft-black/70 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-soft-black/70 mb-1">Email *</label>
                   <input 
                     type="email"
                     name="email"
@@ -620,7 +737,7 @@ const Account = () => {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                     >
-                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Phone</label>
+                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Phone *</label>
                       <div className="flex">
                         <select 
                           name="countryCode"
@@ -646,7 +763,7 @@ const Account = () => {
                 </AnimatePresence>
                 
                 <div>
-                  <label className="block text-sm font-medium text-soft-black/70 mb-1">Password</label>
+                  <label className="block text-sm font-medium text-soft-black/70 mb-1">Password *</label>
                   <div className="relative">
                     <input 
                       type={showPassword ? "text" : "password"}
@@ -664,6 +781,9 @@ const Account = () => {
                     </button>
                   </div>
                   {errors.password && <p className="mt-1 text-burgundy text-sm">{errors.password}</p>}
+                  {isSignUp && !errors.password && (
+                    <p className="mt-1 text-soft-black/50 text-xs">Password must be at least 6 characters</p>
+                  )}
                 </div>
                 
                 <AnimatePresence mode="wait">
@@ -674,7 +794,7 @@ const Account = () => {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                     >
-                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Confirm Password</label>
+                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Confirm Password *</label>
                       <div className="relative">
                         <input 
                           type={showPassword ? "text" : "password"}
@@ -709,7 +829,17 @@ const Account = () => {
               
               <div className="mt-6 text-center">
                 <button
-                  onClick={() => setIsSignUp(!isSignUp)}
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setFormData(prev => ({
+                      ...prev,
+                      fullName: '',
+                      password: '',
+                      confirmPassword: '',
+                      phone: ''
+                    }));
+                    setErrors({});
+                  }}
                   className="text-burgundy hover:text-gold transition-colors"
                 >
                   {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}

@@ -210,8 +210,8 @@ const Collections = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-purple-800 via-purple-600 to-blue-700 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-600"></div>
             </div>
         );
     }

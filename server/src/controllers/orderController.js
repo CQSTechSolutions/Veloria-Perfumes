@@ -38,13 +38,45 @@ try {
 
 exports.createOrder = async (req, res) => {
     try {
-        const { shippingAddress, items, totalAmount } = req.body;
+        let { shippingAddress, items, totalAmount } = req.body;
 
         // Validate cart is not empty
         if (!items || items.length === 0) {
             return res.status(400).json({
                 success: false,
                 message: 'Cart is empty'
+            });
+        }
+
+        // Use stored user address if no shipping address is provided
+        if (!shippingAddress || Object.keys(shippingAddress).length === 0) {
+            const user = req.user;
+            
+            // Check if user has a complete address
+            if (user.address && user.city && user.state && user.zipCode) {
+                shippingAddress = {
+                    fullName: user.fullName,
+                    addressLine1: user.address,
+                    city: user.city,
+                    state: user.state,
+                    postalCode: user.zipCode,
+                    phone: user.phone || ''
+                };
+            } else {
+                // If address is incomplete, require it from the client
+                return res.status(400).json({
+                    success: false,
+                    message: 'Shipping address is required'
+                });
+            }
+        }
+
+        // Validate shipping address
+        if (!shippingAddress.fullName || !shippingAddress.addressLine1 || 
+            !shippingAddress.city || !shippingAddress.state || !shippingAddress.postalCode) {
+            return res.status(400).json({
+                success: false,
+                message: 'Complete shipping address is required'
             });
         }
 
@@ -187,110 +219,42 @@ exports.verifyPayment = async (req, res) => {
                     throw new Error(`Stock information not available for product: ${product.name}`);
                 }
 
-                // Convert stock to number and validate
                 const currentStock = parseInt(product.stock);
                 if (isNaN(currentStock)) {
                     throw new Error(`Invalid stock value for product: ${product.name}`);
                 }
 
-                // Ensure stock is sufficient before updating
                 if (currentStock < item.quantity) {
-                    throw new Error(`Insufficient stock for product: ${product.name}`);
+                    throw new Error(`Insufficient stock for product: ${product.name}. Available: ${currentStock}`);
                 }
 
-                const newStock = currentStock - item.quantity;
-
-                // Update stock and sold count
-                const result = await Collection.findByIdAndUpdate(
-                    item.product,
-                    {
-                        $set: { stock: newStock.toString() },
-                        $inc: { soldCount: item.quantity }
-                    },
-                    { new: true }
-                );
-
-                if (!result) {
-                    throw new Error(`Failed to update product: ${item.product}`);
-                }
-
-                return result;
+                product.stock = currentStock - item.quantity;
+                product.soldCount = parseInt(product.soldCount) + item.quantity;
+                await product.save();
             } catch (error) {
-                console.error(`Error updating product ${item.product}:`, error);
-                error.productId = item.product;
-                throw error;
+                console.error(`Error updating stock for product: ${item.product}`, error);
             }
         });
 
-        // Wait for all product updates to complete
-        const updateResults = await Promise.allSettled(updatePromises);
+        await Promise.all(updatePromises);
 
-        // Check if any updates failed
-        const failedUpdates = updateResults.filter(result => result.status === 'rejected');
-        if (failedUpdates.length > 0) {
-            console.error('Some product updates failed:', failedUpdates);
-            
-            // Implement rollback for failed updates
-            for (const update of failedUpdates) {
-                const failedItem = order.items.find(item => 
-                    item.product._id.toString() === update.reason.productId
-                );
-                if (failedItem) {
-                    try {
-                        const product = await Collection.findById(failedItem.product._id);
-                        if (product) {
-                            const currentStock = parseInt(product.stock);
-                            await Collection.findByIdAndUpdate(
-                                failedItem.product._id,
-                                {
-                                    $set: { stock: (currentStock + failedItem.quantity).toString() },
-                                    $inc: { soldCount: -failedItem.quantity }
-                                }
-                            );
-                        }
-                    } catch (rollbackError) {
-                        console.error(`Rollback failed for product ${failedItem.product._id}:`, rollbackError);
-                    }
-                }
-            }
-            return res.status(500).json({
-                success: false,
-                message: 'Failed to update product stock'
-            });
-        }
-
-        // Update payment info
-        order.paymentInfo.razorpayPaymentId = razorpayPaymentId;
         order.paymentInfo.status = 'completed';
-        order.status = 'processing';
         await order.save();
-
-        // Clear the cart
-        await Cart.findOneAndUpdate(
-            { user: req.user._id },
-            { $set: { items: [] } }
-        );
-
-        // Get updated order with populated items
-        const updatedOrder = await Order.findById(orderId).populate({
-            path: 'items.product',
-            select: 'name price image description stock'
-        });
 
         res.json({
             success: true,
-            message: 'Payment verified and stock updated successfully',
-            order: updatedOrder
+            message: 'Payment verified and stock updated successfully'
         });
     } catch (error) {
         console.error('Verify payment error:', error);
         res.status(500).json({ 
             success: false, 
-            message: 'Internal server error'
+            message: error.message || 'Failed to verify payment'
         });
     }
 };
 
+// Add the missing controller functions
 exports.getOrderHistory = async (req, res) => {
     try {
         const orders = await Order.find({ user: req.user._id })
@@ -331,13 +295,12 @@ exports.getOrderHistory = async (req, res) => {
             message: 'Failed to fetch order history'
         });
     }
-}; 
+};
 
-// Update the getAllOrders function to populate product details
 exports.getAllOrders = async (req, res) => {
     try {
         const orders = await Order.find()
-            .populate('user', 'name email')
+            .populate('user', 'fullName email')
             .populate('items.product')
             .sort({ createdAt: -1 });
             
@@ -356,16 +319,41 @@ exports.getAllOrders = async (req, res) => {
 };
 
 exports.updateOrderStatus = async (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body;
-    const order = await Order.findByIdAndUpdate(id, { status }, { new: true });
-    res.json({ success: true, order });
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+        
+        const order = await Order.findByIdAndUpdate(
+            id, 
+            { status }, 
+            { new: true }
+        );
+        
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: 'Order not found'
+            });
+        }
+        
+        res.json({ 
+            success: true, 
+            order 
+        });
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update order status',
+            error: error.message
+        });
+    }
 };
 
 exports.getRecentOrders = async (req, res) => {
     try {
         const orders = await Order.find()
-            .populate('user', 'name email')
+            .populate('user', 'fullName email')
             .populate('items.product')
             .sort({ createdAt: -1 })
             .limit(10);
@@ -383,4 +371,3 @@ exports.getRecentOrders = async (req, res) => {
         });
     }
 };
-    

@@ -27,9 +27,44 @@ const Cart = () => {
     const init = async () => {
       await fetchCart();
       await fetchOrderHistory();
+      await fetchUserProfile();
     };
     init();
   }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const tokenParts = token.split('.');
+      if (tokenParts.length !== 3) return;
+      
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const userId = payload.id;
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/user/getUserById?userId=${userId}`,
+        { headers: { Authorization: `Bearer ${token}` }}
+      );
+
+      if (response.data) {
+        if (response.data.address && response.data.city && response.data.state && response.data.zipCode) {
+          setShippingAddress({
+            fullName: response.data.fullName || '',
+            addressLine1: response.data.address || '',
+            addressLine2: '',
+            city: response.data.city || '',
+            state: response.data.state || '',
+            postalCode: response.data.zipCode || '',
+            phone: response.data.phone || ''
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
 
   const fetchCart = async () => {
     try {
@@ -178,29 +213,103 @@ const Cart = () => {
     
     try {
       setIsProcessing(true);
+      
+      // Format the items correctly for the API
+      const orderItems = cart.items.map(item => ({
+        product: item.productId, // Server expects 'product' field, not 'productId'
+        quantity: item.quantity,
+        price: item.price
+      }));
+      
+      // Calculate total manually as a fallback
+      const calculatedTotal = cart.items.reduce((total, item) => 
+        total + (item.price * item.quantity), 0);
+      
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/orders/create`,
         {
-          items: cart.items.map(item => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.price
-          })),
+          items: orderItems,
+          totalAmount: cart.total || calculatedTotal,
           shippingAddress
         },
         { headers: { Authorization: `Bearer ${token}` }}
       );
       
       if (response.data.success) {
-        setCart({ items: [], total: 0 });
-        toast.success('Order placed successfully!');
-        // Refresh order history to show new order
-        fetchOrderHistory();
+        const { order } = response.data;
+        
+        // Check if Razorpay key is available
+        if (!import.meta.env.VITE_RAZORPAY_KEY_ID) {
+          console.error('Razorpay key not found in environment variables');
+          toast.error('Payment gateway configuration error. Please contact support.');
+          setIsProcessing(false);
+          return;
+        }
+        
+        // Check if Razorpay script is loaded
+        if (!window.Razorpay) {
+          console.error('Razorpay script not loaded');
+          toast.error('Payment gateway not loaded. Please refresh the page or contact support.');
+          setIsProcessing(false);
+          return;
+        }
+        
+        // Initialize Razorpay payment
+        const options = {
+          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+          amount: order.amount * 100, // Razorpay expects amount in paise
+          currency: "INR",
+          name: "Veloria Perfumes",
+          description: "Payment for your order",
+          order_id: order.razorpayOrderId,
+          handler: async function (response) {
+            try {
+              // Verify payment on the server
+              const verifyResponse = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/orders/verify`,
+                {
+                  orderId: order._id,
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature
+                },
+                { headers: { Authorization: `Bearer ${token}` }}
+              );
+              
+              if (verifyResponse.data.success) {
+                setCart({ items: [], total: 0 });
+                toast.success('Payment successful! Order placed.');
+                // Refresh order history
+                fetchOrderHistory();
+              }
+            } catch (error) {
+              console.error('Payment verification error:', error);
+              toast.error(error.response?.data?.message || 'Payment verification failed');
+            } finally {
+              setIsProcessing(false);
+            }
+          },
+          prefill: {
+            name: shippingAddress.fullName,
+            contact: shippingAddress.phone,
+          },
+          theme: {
+            color: "#800020", // Burgundy color
+          },
+          modal: {
+            ondismiss: function() {
+              setIsProcessing(false);
+              toast.error('Payment cancelled. Your order has been saved.');
+            }
+          }
+        };
+        
+        const rzp = new window.Razorpay(options);
+        rzp.open();
       }
     } catch (error) {
       console.error('Checkout error:', error);
       toast.error(error.response?.data?.message || 'Failed to place order');
-    } finally {
       setIsProcessing(false);
     }
   };
@@ -437,6 +546,115 @@ const Cart = () => {
                 <div className="flex justify-between items-center mb-6">
                   <span className="text-lg font-serif text-soft-black">Total</span>
                   <span className="text-2xl font-serif font-bold text-burgundy">₹{(cart?.total || 0).toLocaleString()}</span>
+                </div>
+                
+                {/* Shipping Address Form */}
+                <div className="mb-6 border-t border-gold/10 pt-6">
+                  <h3 className="text-xl font-serif text-burgundy mb-4">Shipping Information</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="form-group">
+                      <label htmlFor="fullName" className="block text-soft-black mb-1">Full Name *</label>
+                      <input 
+                        type="text" 
+                        id="fullName"
+                        name="fullName"
+                        value={shippingAddress.fullName} 
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-2 border ${validationErrors.fullName ? 'border-red-500' : 'border-gold/20'} focus:border-burgundy bg-soft-white text-soft-black outline-none`}
+                      />
+                      {validationErrors.fullName && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.fullName}</p>
+                      )}
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="phone" className="block text-soft-black mb-1">Phone Number *</label>
+                      <input 
+                        type="text" 
+                        id="phone"
+                        name="phone"
+                        value={shippingAddress.phone} 
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-2 border ${validationErrors.phone ? 'border-red-500' : 'border-gold/20'} focus:border-burgundy bg-soft-white text-soft-black outline-none`}
+                      />
+                      {validationErrors.phone && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.phone}</p>
+                      )}
+                    </div>
+                    
+                    <div className="form-group md:col-span-2">
+                      <label htmlFor="addressLine1" className="block text-soft-black mb-1">Address Line 1 *</label>
+                      <input 
+                        type="text" 
+                        id="addressLine1"
+                        name="addressLine1"
+                        value={shippingAddress.addressLine1} 
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-2 border ${validationErrors.addressLine1 ? 'border-red-500' : 'border-gold/20'} focus:border-burgundy bg-soft-white text-soft-black outline-none`}
+                      />
+                      {validationErrors.addressLine1 && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.addressLine1}</p>
+                      )}
+                    </div>
+                    
+                    <div className="form-group md:col-span-2">
+                      <label htmlFor="addressLine2" className="block text-soft-black mb-1">Address Line 2 (Optional)</label>
+                      <input 
+                        type="text" 
+                        id="addressLine2"
+                        name="addressLine2"
+                        value={shippingAddress.addressLine2} 
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gold/20 focus:border-burgundy bg-soft-white text-soft-black outline-none"
+                      />
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="city" className="block text-soft-black mb-1">City *</label>
+                      <input 
+                        type="text" 
+                        id="city"
+                        name="city"
+                        value={shippingAddress.city} 
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-2 border ${validationErrors.city ? 'border-red-500' : 'border-gold/20'} focus:border-burgundy bg-soft-white text-soft-black outline-none`}
+                      />
+                      {validationErrors.city && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.city}</p>
+                      )}
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="state" className="block text-soft-black mb-1">State *</label>
+                      <input 
+                        type="text" 
+                        id="state"
+                        name="state"
+                        value={shippingAddress.state} 
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-2 border ${validationErrors.state ? 'border-red-500' : 'border-gold/20'} focus:border-burgundy bg-soft-white text-soft-black outline-none`}
+                      />
+                      {validationErrors.state && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.state}</p>
+                      )}
+                    </div>
+                    
+                    <div className="form-group">
+                      <label htmlFor="postalCode" className="block text-soft-black mb-1">Postal Code *</label>
+                      <input 
+                        type="text" 
+                        id="postalCode"
+                        name="postalCode"
+                        value={shippingAddress.postalCode} 
+                        onChange={handleInputChange}
+                        className={`w-full px-4 py-2 border ${validationErrors.postalCode ? 'border-red-500' : 'border-gold/20'} focus:border-burgundy bg-soft-white text-soft-black outline-none`}
+                      />
+                      {validationErrors.postalCode && (
+                        <p className="text-red-500 text-sm mt-1">{validationErrors.postalCode}</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 
                 <button
