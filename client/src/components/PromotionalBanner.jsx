@@ -1,48 +1,46 @@
-import { FiStar } from 'react-icons/fi';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const PromotionalBanner = () => {
-    return (
-      // Promotional Banner
-      <section className="relative bg-gradient-to-r from-red-300 via-white to-red-300 py-8 overflow-hidden shadow-lg rounded-lg border border-red-500">
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <h2 
-            className="text-7xl font-extrabold text-red-700 mb-8 transform hover:scale-110 transition-transform duration-300"
-            style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.3)' }}
-          >
-            <span className="flex items-center justify-center">
-              BUY 3 GET 1 FREE
-            </span>
-          </h2>
-          
-          {/* Rotating Stars */}
-          <div className="flex items-center justify-center gap-6 mb-10">
-            {[...Array(5)].map((_, i) => (
-              <div 
-                key={i}
-                className="transform hover:scale-125 transition-transform duration-300"
-              >
-                <FiStar 
-                  className={`w-10 h-10 text-yellow-500 animate-spin-slow fill-current hover:text-yellow-400`}
-                  style={{ 
-                    animationDuration: `${6 + i * 1.5}s`,
-                    animationDirection: i % 2 === 0 ? 'normal' : 'reverse'
-                  }}
-                />
-              </div>
-            ))}
+  return (
+    <section className="py-16 px-4 relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1562887250-9a52e2c99806?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1469&q=80" 
+          alt="Luxury perfume" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-soft-black/60"></div>
+      </div>
+      
+      <div className="max-w-4xl mx-auto relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="bg-cream/90 p-8 md:p-12 text-center"
+        >
+          <div className="flex justify-center mb-4">
+            <span className="inline-block text-gold text-2xl">✦</span>
           </div>
-
-          <p className="text-3xl text-gray-900 mb-10 font-semibold uppercase text-shadow-lg text-red-700">on all products</p>
-          <a 
-            href="/collections" 
-            className="inline-block bg-gradient-to-r from-red-700 to-red-900 text-white py-5 px-12 rounded-full text-lg font-semibold hover:from-red-800 hover:to-red-950 transition-all duration-300 transform hover:scale-110 hover:shadow-xl flex items-center justify-center mx-auto max-w-xs"
+          <h2 className="text-3xl md:text-4xl font-serif text-burgundy mb-4">Exquisite Fragrances</h2>
+          <p className="text-soft-black/80 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Indulge in our collection of handcrafted perfumes, designed to evoke emotions 
+            and create lasting impressions. Each fragrance tells a unique story, crafted with 
+            the finest ingredients from around the world.
+          </p>
+          <Link 
+            to="/collections" 
+            className="btn-primary inline-block"
           >
-            <span className="mr-2 text-2xl">🛒</span> Shop Now
-          </a>
-          <p className="text-xl text-gray-700 mt-8 animate-pulse">Limited Time Offer!</p>
-        </div>
-      </section>
-    );
-}
+            Explore Our Collection
+          </Link>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
 export default PromotionalBanner;

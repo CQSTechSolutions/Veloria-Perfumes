@@ -1,8 +1,11 @@
 import React from 'react';
 
-const FloatingHearts = ({ count = 12 }) => {
+const FloatingHearts = ({ count = 10 }) => {
+  // Unicode decorative symbols that fit with our theme
+  const symbols = ['✦', '✧', '✵', '❋', '❊'];
+  
   return (
-    <div className="fixed inset-0 pointer-events-none">
+    <div className="fixed inset-0 pointer-events-none z-0 opacity-40">
       {Array.from({ length: count }, (_, i) => (
         <div
           key={i}
@@ -10,15 +13,18 @@ const FloatingHearts = ({ count = 12 }) => {
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${15 + Math.random() * 10}s`
+            animationDelay: `${Math.random() * 10}s`,
+            animationDuration: `${25 + Math.random() * 15}s`
           }}
         >
           <span 
-            className="text-red-400 transform rotate-45" 
-            style={{ fontSize: `${Math.random() * 20 + 20}px` }}
+            className="text-gold" 
+            style={{ 
+              fontSize: `${Math.random() * 15 + 10}px`,
+              opacity: Math.random() * 0.5 + 0.2
+            }}
           >
-            ❤️
+            {symbols[Math.floor(Math.random() * symbols.length)]}
           </span>
         </div>
       ))}

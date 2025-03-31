@@ -45,7 +45,7 @@ const AppContent = () => {
   return (
     <>
       {!isAdminRoute && <Header />}
-      <div className={`flex-grow relative ${!isAdminRoute ? 'mt-40' : ''}`}>
+      <div className={`flex-grow relative ${!isAdminRoute ? 'mt-36' : ''} paper-texture min-h-screen`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -73,8 +73,30 @@ const AppContent = () => {
 const App = () => {
   return (
     <>
-      <Toaster position="top-right" />
-      <div className='flex flex-col min-h-screen'>
+      <Toaster 
+        position="top-right" 
+        toastOptions={{
+          style: {
+            background: 'var(--color-soft-white)',
+            color: 'var(--color-soft-black)',
+            border: '1px solid rgba(212, 175, 55, 0.2)',
+            fontFamily: 'var(--font-sans)'
+          },
+          success: {
+            iconTheme: {
+              primary: 'var(--color-burgundy)',
+              secondary: 'var(--color-soft-white)'
+            }
+          },
+          error: {
+            iconTheme: {
+              primary: '#e53e3e',
+              secondary: 'var(--color-soft-white)'
+            }
+          }
+        }}
+      />
+      <div className='flex flex-col min-h-screen bg-cream'>
         <FloatingHearts count={15} />
         <Router>
           <AppContent />

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
-import { FiHeart, FiShoppingBag, FiChevronRight, FiStar, FiArrowLeft, FiPlus, FiMinus } from 'react-icons/fi';
+import { FiHeart, FiShoppingBag, FiChevronRight, FiStar, FiArrowLeft, FiPlus, FiMinus, FiPackage, FiRefreshCw, FiShield, FiTruck, FiAward } from 'react-icons/fi';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -17,6 +17,33 @@ const ProductDetail = () => {
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [cartItemId, setCartItemId] = useState(null);
+    const [activeImageIndex, setActiveImageIndex] = useState(0);
+    const [isZoomed, setIsZoomed] = useState(false);
+    const imageRef = useRef(null);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    
+    // Product images - we'll use the main image and placeholder variations for demo
+    const getProductImages = () => {
+        if (!product) return [];
+        
+        // For now we'll generate multiple angles/variations for demo purposes
+        // In a real app, these would come from the product data
+        return [
+            product.image,
+            product.secondaryImage || product.image,
+            product.tertiaryImage || product.image,
+        ];
+    };
+    
+    const productImages = getProductImages();
+
+    // Benefits data
+    const benefits = [
+        { icon: <FiTruck className="w-5 h-5" />, title: "Free Shipping", description: "On orders over ₹999" },
+        { icon: <FiRefreshCw className="w-5 h-5" />, title: "Easy Returns", description: "30-day return policy" },
+        { icon: <FiShield className="w-5 h-5" />, title: "Secure Checkout", description: "Safe & protected payment" },
+        { icon: <FiAward className="w-5 h-5" />, title: "Authentic Products", description: "100% genuine guarantee" }
+    ];
     
     useEffect(() => {
         // Check if id is undefined or invalid
@@ -206,116 +233,206 @@ const ProductDetail = () => {
             setQuantity(quantity - 1);
         }
     };
+
+    // Handle image zoom
+    const handleMouseMove = (e) => {
+        if (!imageRef.current || !isZoomed) return;
+        
+        const { left, top, width, height } = imageRef.current.getBoundingClientRect();
+        const x = (e.clientX - left) / width;
+        const y = (e.clientY - top) / height;
+        
+        setMousePosition({ x, y });
+    };
+
+    // Calculate discount percentage if original price exists
+    const calculateDiscount = () => {
+        if (product.originalPrice && product.price < product.originalPrice) {
+            return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+        }
+        return null;
+    };
     
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="min-h-screen bg-cream flex items-center justify-center">
+                <div className="flex flex-col items-center">
+                    <div className="w-16 h-16 border-4 border-burgundy border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <p className="text-burgundy">Loading product details...</p>
+                </div>
             </div>
         );
     }
     
     if (error || !product) {
         return (
-            <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Product Not Found</h2>
-                <p className="text-gray-600 mb-8">{error || "We couldn't find the product you're looking for."}</p>
+            <div className="min-h-screen bg-cream flex flex-col items-center justify-center p-4">
+                <h2 className="text-2xl font-serif text-burgundy mb-4">Product Not Found</h2>
+                <p className="text-soft-black/70 mb-8">{error || "We couldn't find the product you're looking for."}</p>
                 <Link 
                     to="/collections" 
-                    className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition flex items-center gap-2"
+                    className="btn-primary flex items-center gap-2"
                 >
-                    <FiArrowLeft /> Back to Collections
+                    <FiArrowLeft /> Browse Collections
                 </Link>
             </div>
         );
     }
+
+    const discount = calculateDiscount();
     
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-cream">
             {/* Breadcrumb */}
-            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center text-sm text-gray-500">
-                <Link to="/" className="hover:text-purple-600 transition">Home</Link>
+            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center text-sm text-soft-black/60">
+                <Link to="/" className="hover:text-burgundy transition-colors">Home</Link>
                 <FiChevronRight className="mx-2" />
-                <Link to="/collections" className="hover:text-purple-600 transition">Collections</Link>
+                <Link to="/collections" className="hover:text-burgundy transition-colors">Collections</Link>
+                {product.category && product.category[0] && (
+                    <>
+                        <FiChevronRight className="mx-2" />
+                        <Link 
+                            to={`/collections?category=${product.category[0]}`} 
+                            className="hover:text-burgundy transition-colors"
+                        >
+                            {product.category[0]}
+                        </Link>
+                    </>
+                )}
                 <FiChevronRight className="mx-2" />
-                <span className="text-gray-900 font-medium">{product.name}</span>
+                <span className="text-burgundy font-medium">{product.name}</span>
             </div>
             
             {/* Product Detail Section */}
             <div className="max-w-7xl mx-auto px-4 py-6">
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="bg-soft-white border border-gold/10 shadow-sm overflow-hidden">
                     <div className="md:flex">
-                        {/* Product Image */}
+                        {/* Product Image Section */}
                         <div className="md:w-1/2 p-6">
-                            <motion.div 
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5 }}
-                                className="bg-gray-100 rounded-xl overflow-hidden aspect-square shadow-inner"
-                            >
-                                <img 
-                                    src={product.image} 
-                                    alt={product.name} 
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        e.target.src = 'https://placehold.co/600x600/lightgray/gray?text=No+Image';
-                                    }}
-                                />
-                            </motion.div>
+                            <div className="relative">
+                                {/* Main Image with Zoom */}
+                                <div 
+                                    ref={imageRef}
+                                    className="bg-gray-50 rounded-sm overflow-hidden aspect-square shadow-inner cursor-zoom-in relative"
+                                    onClick={() => setIsZoomed(!isZoomed)}
+                                    onMouseMove={handleMouseMove}
+                                    onMouseLeave={() => setIsZoomed(false)}
+                                >
+                                    <img 
+                                        src={productImages[activeImageIndex]} 
+                                        alt={product.name} 
+                                        className={`w-full h-full object-cover transition-transform duration-200 ${
+                                            isZoomed ? 'scale-150' : ''
+                                        }`}
+                                        style={
+                                            isZoomed 
+                                            ? { 
+                                                transformOrigin: `${mousePosition.x * 100}% ${mousePosition.y * 100}%`,
+                                            }
+                                            : {}
+                                        }
+                                        onError={(e) => {
+                                            e.target.src = 'https://placehold.co/600x600/f8f5f0/1a1a1a?text=No+Image';
+                                        }}
+                                    />
+                                </div>
+
+                                {/* Discount badge */}
+                                {discount && (
+                                    <div className="absolute top-4 left-4 bg-burgundy text-soft-white px-2 py-1 text-sm font-medium">
+                                        {discount}% OFF
+                                    </div>
+                                )}
+                                
+                                {/* Thumbnail Images */}
+                                <div className="flex gap-2 mt-4">
+                                    {productImages.map((img, index) => (
+                                        <button
+                                            key={index}
+                                            className={`w-20 h-20 border-2 overflow-hidden ${
+                                                activeImageIndex === index 
+                                                ? 'border-burgundy' 
+                                                : 'border-gold/10 hover:border-gold/30'
+                                            } transition-colors`}
+                                            onClick={() => setActiveImageIndex(index)}
+                                        >
+                                            <img 
+                                                src={img} 
+                                                alt={`${product.name} - view ${index + 1}`}
+                                                className="w-full h-full object-cover"
+                                                onError={(e) => {
+                                                    e.target.src = 'https://placehold.co/100x100/f8f5f0/1a1a1a?text=Veloria';
+                                                }}
+                                            />
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                         
                         {/* Product Info */}
-                        <div className="md:w-1/2 p-6 md:p-8">
+                        <div className="md:w-1/2 p-6 md:p-8 border-l border-gold/10">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.1 }}
                             >
-                                <div className="flex items-center mb-4">
+                                <div className="flex flex-wrap gap-2 mb-4">
                                     {product.category && product.category.map((cat, index) => (
                                         <Link 
                                             key={index}
                                             to={`/collections?category=${cat}`}
-                                            className="text-xs font-medium uppercase tracking-wider mr-2 px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full"
+                                            className="text-xs uppercase tracking-widest text-burgundy hover:text-gold transition-colors"
                                         >
                                             {cat}
                                         </Link>
                                     ))}
                                 </div>
                                 
-                                <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+                                <h1 className="text-3xl font-serif text-soft-black mb-2">{product.name}</h1>
                                 
                                 <div className="flex items-center gap-2 mb-4">
                                     <div className="flex items-center">
                                         {[...Array(5)].map((_, i) => (
                                             <FiStar 
                                                 key={i} 
-                                                className={`w-4 h-4 ${i < (product.rating || 5) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                                                className={`w-4 h-4 ${i < (product.rating || 5) ? 'text-gold fill-current' : 'text-soft-black/20'}`} 
                                             />
                                         ))}
                                     </div>
-                                    <span className="text-sm text-gray-500">
+                                    <span className="text-xs text-soft-black/50">
                                         {product.reviews || 0} reviews
                                     </span>
                                 </div>
                                 
-                                <p className="text-gray-600 mb-6 leading-relaxed">
+                                <p className="text-soft-black/70 mb-6 leading-relaxed font-sans">
                                     {product.description}
                                 </p>
                                 
                                 <div className="mb-6">
                                     <div className="flex items-baseline gap-2">
-                                        <span className="text-3xl font-bold text-gray-900">₹{product.price?.toLocaleString()}</span>
-                                        {/* Discount logic can go here */}
+                                        <span className="text-3xl font-serif text-burgundy">₹{product.price?.toLocaleString()}</span>
+                                        
+                                        {discount && (
+                                            <span className="text-soft-black/50 text-lg line-through">
+                                                ₹{product.originalPrice?.toLocaleString()}
+                                            </span>
+                                        )}
                                     </div>
-                                    <div className="mt-1 flex items-center gap-2">
+                                    <div className="mt-2 flex items-center gap-2">
                                         {Number(product.stock) > 0 ? (
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <span className="inline-flex items-center px-2 py-1 text-xs bg-burgundy/10 text-burgundy uppercase tracking-wider">
                                                 In Stock ({product.stock})
                                             </span>
                                         ) : (
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <span className="inline-flex items-center px-2 py-1 text-xs bg-soft-black/10 text-soft-black/70 uppercase tracking-wider">
                                                 Out of Stock
+                                            </span>
+                                        )}
+                                        
+                                        {product.isNew && (
+                                            <span className="inline-flex items-center px-2 py-1 text-xs bg-gold/20 text-gold uppercase tracking-wider">
+                                                New Arrival
                                             </span>
                                         )}
                                     </div>
@@ -323,32 +440,42 @@ const ProductDetail = () => {
                                 
                                 {/* Quantity Selector */}
                                 <div className="flex items-center mb-6">
-                                    <span className="text-gray-700 mr-3">Quantity:</span>
-                                    <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                                    <span className="text-soft-black/70 mr-3 text-sm uppercase tracking-wider">Quantity:</span>
+                                    <div className="quantity-selector">
                                         <button 
                                             onClick={decrementQuantity}
                                             disabled={quantity <= 1}
-                                            className="px-3 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 transition"
+                                            aria-label="Decrease quantity"
                                         >
                                             <FiMinus className="w-4 h-4" />
                                         </button>
                                         <input
-                                            type="number"
+                                            type="text"
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
                                             min="1"
                                             max={product.stock}
                                             value={quantity}
                                             onChange={(e) => {
                                                 const val = parseInt(e.target.value);
-                                                if (val >= 1 && val <= product.stock) {
+                                                if (!isNaN(val) && val >= 1 && val <= product.stock) {
                                                     setQuantity(val);
+                                                } else if (e.target.value === '') {
+                                                    setQuantity('');
                                                 }
                                             }}
-                                            className="w-12 text-center border-0 focus:ring-0"
+                                            onBlur={() => {
+                                                if (quantity === '' || isNaN(quantity)) {
+                                                    setQuantity(1);
+                                                }
+                                            }}
+                                            className="veloria-input"
+                                            aria-label="Quantity"
                                         />
                                         <button 
                                             onClick={incrementQuantity}
                                             disabled={quantity >= product.stock}
-                                            className="px-3 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 transition"
+                                            aria-label="Increase quantity"
                                         >
                                             <FiPlus className="w-4 h-4" />
                                         </button>
@@ -356,103 +483,150 @@ const ProductDetail = () => {
                                 </div>
                                 
                                 {/* Action Buttons */}
-                                <div className="flex flex-col sm:flex-row gap-3">
+                                <div className="flex flex-col sm:flex-row gap-3 mb-8">
                                     <button
                                         onClick={handleAddToCart}
                                         disabled={isAddingToCart || Number(product.stock) <= 0}
-                                        className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium ${
+                                        className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 transition ${
                                             Number(product.stock) <= 0
-                                            ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                                            : 'bg-purple-600 text-white hover:bg-purple-700'
-                                        } transition shadow-sm`}
+                                            ? 'bg-soft-black/10 text-soft-black/50 cursor-not-allowed'
+                                            : 'btn-primary'
+                                        }`}
+                                        aria-label={isInCart ? "Update Cart" : "Add to Cart"}
                                     >
-                                        <FiShoppingBag className={`w-5 h-5 ${isAddingToCart ? 'animate-pulse' : ''}`} />
-                                        {isInCart ? 'Update Cart' : 'Add to Cart'}
+                                        {isAddingToCart ? (
+                                            <div className="flex items-center gap-2">
+                                                <span className="animate-pulse">Adding</span>
+                                                <div className="w-5 h-5 border-2 border-t-soft-white border-soft-white/30 rounded-full animate-spin"></div>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <FiShoppingBag className="w-5 h-5" />
+                                                {isInCart ? 'Update Cart' : 'Add to Cart'}
+                                            </>
+                                        )}
                                     </button>
                                     
                                     <button
                                         onClick={toggleWishlist}
-                                        className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium border ${
+                                        className={`flex items-center justify-center gap-2 px-6 py-3 transition ${
                                             isInWishlist
-                                            ? 'bg-red-50 text-red-600 border-red-200'
-                                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                                        } transition shadow-sm`}
+                                            ? 'bg-burgundy/10 text-burgundy border border-burgundy'
+                                            : 'btn-outline'
+                                        }`}
+                                        aria-label={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
                                     >
-                                        <FiHeart className={`w-5 h-5 ${isInWishlist ? 'fill-current' : ''}`} />
-                                        {isInWishlist ? 'In Wishlist' : 'Add to Wishlist'}
+                                        <FiHeart className={`w-5 h-5 ${isInWishlist ? 'fill-current text-burgundy' : ''}`} />
+                                        {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
                                     </button>
+                                </div>
+
+                                {/* Benefits */}
+                                <div className="border-t border-gold/10 pt-6">
+                                    <h3 className="text-sm uppercase tracking-wider text-gold mb-4">Benefits</h3>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {benefits.map((benefit, index) => (
+                                            <div key={index} className="flex items-start gap-3">
+                                                <div className="text-burgundy mt-1">{benefit.icon}</div>
+                                                <div>
+                                                    <h4 className="text-sm font-medium text-soft-black">{benefit.title}</h4>
+                                                    <p className="text-xs text-soft-black/70">{benefit.description}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </motion.div>
                         </div>
                     </div>
-                    
-                    {/* Product Details Tabs - Future enhancement */}
-                    <div className="border-t border-gray-200 p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">Product Details</h2>
-                        <div className="prose prose-purple max-w-none">
-                            <p>{product.description}</p>
+
+                    {/* Product Details Tabs */}
+                    <div className="border-t border-gold/10 p-6">
+                        <div className="max-w-4xl mx-auto">
+                            <h2 className="text-xl font-serif text-burgundy mb-6">Product Details</h2>
                             
-                            {/* Additional details could be added here */}
-                            <ul className="mt-4">
-                                <li><strong>Category:</strong> {product.category?.join(', ') || 'N/A'}</li>
-                                <li><strong>Stock:</strong> {product.stock}</li>
-                                <li><strong>Product ID:</strong> {product._id}</li>
-                            </ul>
+                            {product.features && product.features.length > 0 && (
+                                <div className="mb-8">
+                                    <h3 className="text-lg font-medium text-soft-black mb-4">Features</h3>
+                                    <ul className="space-y-2">
+                                        {product.features.map((feature, index) => (
+                                            <li key={index} className="flex items-start">
+                                                <span className="text-gold mr-2">•</span>
+                                                <span className="text-soft-black/80">{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                            
+                            <div className="mb-8">
+                                <h3 className="text-lg font-medium text-soft-black mb-4">Additional Information</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="border-b border-gold/10 pb-3">
+                                        <span className="text-soft-black/50 text-sm">Category</span>
+                                        <p className="text-soft-black">{product.category?.join(', ') || 'N/A'}</p>
+                                    </div>
+                                    {product.brand && (
+                                        <div className="border-b border-gold/10 pb-3">
+                                            <span className="text-soft-black/50 text-sm">Brand</span>
+                                            <p className="text-soft-black">{product.brand}</p>
+                                        </div>
+                                    )}
+                                    <div className="border-b border-gold/10 pb-3">
+                                        <span className="text-soft-black/50 text-sm">Stock</span>
+                                        <p className="text-soft-black">{product.stock}</p>
+                                    </div>
+                                    <div className="border-b border-gold/10 pb-3">
+                                        <span className="text-soft-black/50 text-sm">SKU</span>
+                                        <p className="text-soft-black">{product.sku || product._id.slice(-8).toUpperCase()}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            {/* Related Products */}
+            {/* Related Products Section */}
             {relatedProducts.length > 0 && (
                 <div className="max-w-7xl mx-auto px-4 py-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">You May Also Like</h2>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-serif text-burgundy mb-2">You Might Also Like</h2>
+                        <div className="w-24 h-px bg-gold mx-auto"></div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                         {relatedProducts.map((relatedProduct) => (
-                            <motion.div 
+                            <motion.div
                                 key={relatedProduct._id}
-                                whileHover={{ y: -5 }}
-                                transition={{ duration: 0.2 }}
-                                className="bg-white rounded-xl shadow-sm overflow-hidden"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                                viewport={{ once: true }}
+                                className="veloria-card"
                             >
                                 <Link to={`/product/${relatedProduct._id}`}>
                                     <div className="aspect-square overflow-hidden">
                                         <img 
                                             src={relatedProduct.image} 
                                             alt={relatedProduct.name} 
-                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                                             onError={(e) => {
-                                                e.target.src = 'https://placehold.co/300x300/lightgray/gray?text=No+Image';
+                                                e.target.src = 'https://placehold.co/300x300/f8f5f0/1a1a1a?text=No+Image';
                                             }}
                                         />
                                     </div>
-                                </Link>
-                                
-                                <div className="p-4">
-                                    <Link to={`/product/${relatedProduct._id}`}>
-                                        <h3 className="font-medium text-gray-900 hover:text-purple-600 transition mb-1 line-clamp-1">
-                                            {relatedProduct.name}
-                                        </h3>
-                                    </Link>
-                                    
-                                    <p className="text-sm text-gray-500 mb-2 line-clamp-1">
-                                        {relatedProduct.category?.join(', ')}
-                                    </p>
-                                    
-                                    <div className="flex items-center justify-between">
-                                        <span className="font-bold text-gray-900">₹{relatedProduct.price?.toLocaleString()}</span>
-                                        
-                                        <div className="flex items-center gap-1">
-                                            {[...Array(5)].map((_, i) => (
-                                                <FiStar 
-                                                    key={i} 
-                                                    className={`w-3 h-3 ${i < (relatedProduct.rating || 5) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                                                />
-                                            ))}
+                                    <div className="p-4">
+                                        <h3 className="font-serif text-soft-black hover:text-burgundy transition-colors">{relatedProduct.name}</h3>
+                                        <div className="flex items-baseline gap-2 mt-1">
+                                            <p className="text-burgundy">₹{relatedProduct.price?.toLocaleString()}</p>
+                                            {relatedProduct.originalPrice && relatedProduct.price < relatedProduct.originalPrice && (
+                                                <p className="text-soft-black/50 text-xs line-through">
+                                                    ₹{relatedProduct.originalPrice?.toLocaleString()}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             </motion.div>
                         ))}
                     </div>

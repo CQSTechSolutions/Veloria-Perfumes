@@ -25,7 +25,7 @@ const TopBar = () => {
   };
 
   return (
-    <div className="bg-black text-white py-2 text-center text-sm">
+    <div className="bg-burgundy text-soft-white py-2 text-center text-xs tracking-wider font-sans uppercase">
       <Carousel
         responsive={responsive}
         infinite={true}
@@ -35,8 +35,10 @@ const TopBar = () => {
         removeArrowOnDeviceType={["tablet", "mobile", "desktop"]}
       >
         {messages.map((message, index) => (
-          <div key={index}>
+          <div key={index} className="flex items-center justify-center">
+            <span className="inline-block mr-2 text-gold">✦</span>
             <p>{message}</p>
+            <span className="inline-block ml-2 text-gold">✦</span>
           </div>
         ))}
       </Carousel>

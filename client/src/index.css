@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Custom color variables */
+:root {
+  --color-cream: #f8f5f0;
+  --color-gold: #d4af37;
+  --color-rose: #e8c4c4;
+  --color-burgundy: #800020;
+  --color-navy: #0f172a;
+  --color-soft-black: #1a1a1a;
+  --color-soft-white: #faf9f6;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Montserrat', sans-serif;
+}
+
 /* hide scrollbar */
 ::-webkit-scrollbar {
   display: none;
@@ -17,14 +30,15 @@
 }
 
 .admin-section::-webkit-scrollbar-thumb {
-  background-color: rgba(147, 51, 234, 0.5);
+  background-color: rgba(128, 0, 32, 0.5);
   border-radius: 10px;
 }
 
 .admin-section::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(147, 51, 234, 0.7);
+  background-color: rgba(128, 0, 32, 0.7);
 }
 
+/* Custom animations */
 @keyframes float {
   0% {
     transform: translateY(100vh) rotate(0deg);
@@ -64,16 +78,15 @@
 
 /* Replace -ms-high-contrast with modern forced-colors-mode */
 @media (forced-colors: active) {
-  /* Add your forced colors mode styles here */
-  .your-element {
+  .forced-colors-mode {
     forced-color-adjust: auto;
   }
 }
 
-/* Add this to your existing CSS */
+/* Custom scrollbar styles */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(147, 51, 234, 0.5) rgba(31, 41, 55, 0.5);
+  scrollbar-color: rgba(128, 0, 32, 0.5) rgba(31, 41, 55, 0.5);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -87,12 +100,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(147, 51, 234, 0.5);
+  background-color: rgba(128, 0, 32, 0.5);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(147, 51, 234, 0.7);
+  background-color: rgba(128, 0, 32, 0.7);
 }
 
 @keyframes pulse {
@@ -110,12 +123,434 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-/* Add smooth scrolling to the whole page */
+/* Base styles */
 html {
   scroll-behavior: smooth;
+  background-color: var(--color-cream);
+  color: var(--color-soft-black);
+  font-family: var(--font-sans);
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--color-cream);
 }
 
 /* Add a subtle transition to all elements */
 * {
   transition: all 0.3s ease-in-out;
+}
+
+/* Paper texture overlay */
+.paper-texture {
+  background-color: var(--color-cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23a0865e' fill-opacity='0.03'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Section styles */
+.section-padding {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  color: var(--color-burgundy);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  font-family: var(--font-sans);
+  color: var(--color-soft-black);
+  opacity: 0.7;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.section-divider {
+  width: 6rem;
+  height: 1px;
+  background-color: var(--color-gold);
+  margin: 0 auto 2rem;
+}
+
+/* Elegant typography */
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* Text colors */
+.text-soft-white {
+  color: var(--color-soft-white);
+}
+
+.text-soft-black {
+  color: var(--color-soft-black);
+}
+
+.text-gold {
+  color: var(--color-gold);
+}
+
+.text-burgundy {
+  color: var(--color-burgundy);
+}
+
+.text-rose {
+  color: var(--color-rose);
+}
+
+/* Background colors */
+.bg-soft-white {
+  background-color: var(--color-soft-white);
+}
+
+.bg-soft-black {
+  background-color: var(--color-soft-black);
+}
+
+.bg-cream {
+  background-color: var(--color-cream);
+}
+
+.bg-gold {
+  background-color: var(--color-gold);
+}
+
+.bg-burgundy {
+  background-color: var(--color-burgundy);
+}
+
+.bg-rose {
+  background-color: var(--color-rose);
+}
+
+/* Border colors */
+.border-gold {
+  border-color: var(--color-gold);
+}
+
+.border-burgundy {
+  border-color: var(--color-burgundy);
+}
+
+.border-rose {
+  border-color: var(--color-rose);
+}
+
+.border-soft-white {
+  border-color: var(--color-soft-white);
+}
+
+.border-soft-black {
+  border-color: var(--color-soft-black);
+}
+
+/* Card styles */
+.veloria-card {
+  background-color: var(--color-soft-white);
+  border: 1px solid rgba(var(--color-gold-rgb), 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.veloria-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Form styles */
+.veloria-input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.5);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-sans);
+  color: var(--color-soft-black);
+  transition: all 0.3s ease;
+}
+
+.veloria-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-gold-10);
+}
+
+.veloria-input::placeholder {
+  color: rgba(26, 26, 26, 0.4);
+}
+
+/* Button styles */
+.btn-primary {
+  background-color: var(--color-burgundy);
+  color: var(--color-soft-white);
+  border: 1px solid var(--color-burgundy);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0;
+  font-family: var(--font-sans);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-burgundy-dark);
+  border-color: var(--color-burgundy-dark);
+}
+
+.btn-primary:disabled {
+  background-color: rgba(128, 0, 32, 0.3);
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-burgundy);
+  border: 1px solid var(--color-gold);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0;
+  font-family: var(--font-sans);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background-color: var(--color-burgundy);
+  color: var(--color-soft-white);
+  border-color: var(--color-burgundy);
+}
+
+.btn-gold {
+  background-color: var(--color-gold);
+  color: var(--color-soft-black);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0;
+  font-family: var(--font-sans);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-gold:hover {
+  background-color: rgba(212, 175, 55, 0.8);
+}
+
+/* Carousel dots style */
+.custom-dot-list {
+  display: flex !important;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.custom-dot-list li {
+  margin: 0 0.25rem;
+}
+
+.custom-dot-list button {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50%;
+  background-color: rgba(212, 175, 55, 0.3) !important;
+  transition: all 0.3s ease;
+}
+
+.custom-dot-list .react-multi-carousel-dot--active button {
+  background-color: var(--color-gold) !important;
+}
+
+/* Grid layouts */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Utility classes */
+.gold-divider {
+  width: 3rem;
+  height: 1px;
+  background-color: var(--color-gold);
+  margin: 1rem 0;
+}
+
+.text-shadow-light {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .section-padding {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+}
+
+/* Range Slider Styles */
+.veloria-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--color-gold-10);
+  border-radius: 2px;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.veloria-range-slider:hover {
+  opacity: 1;
+}
+
+.veloria-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--color-burgundy);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.veloria-range-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--color-burgundy);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s;
+}
+
+.veloria-range-slider::-webkit-slider-thumb:hover,
+.veloria-range-slider::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+}
+
+.veloria-range-slider::-moz-range-thumb:hover,
+.veloria-range-slider::-moz-range-thumb:active {
+  transform: scale(1.2);
+}
+
+/* Custom Input Styles */
+.veloria-input {
+  outline: none;
+}
+
+.veloria-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-gold-10);
+}
+
+/* Add paper texture background */
+.paper-texture {
+  background-color: var(--color-cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23a0865e' fill-opacity='0.03'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Improve card component with subtle hover effects */
+.veloria-card {
+  background-color: var(--color-soft-white);
+  border: 1px solid rgba(var(--color-gold-rgb), 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.veloria-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Improve button styles */
+.btn-primary {
+  background-color: var(--color-burgundy);
+  color: var(--color-soft-white);
+  border: 1px solid var(--color-burgundy);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-burgundy-dark);
+  border-color: var(--color-burgundy-dark);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-burgundy);
+  border: 1px solid var(--color-gold);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-outline:hover {
+  background-color: var(--color-burgundy);
+  color: var(--color-soft-white);
+  border-color: var(--color-burgundy);
+}
+
+/* Fix for quantity input appearance */
+input[type="text"].veloria-input::-webkit-outer-spin-button,
+input[type="text"].veloria-input::-webkit-inner-spin-button,
+input[type="number"].veloria-input::-webkit-outer-spin-button,
+input[type="number"].veloria-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="text"].veloria-input,
+input[type="number"].veloria-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Fix quantity input border issues */
+.quantity-selector {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid rgba(var(--color-gold-rgb), 0.3);
+  overflow: hidden;
+}
+
+.quantity-selector input {
+  text-align: center;
+  width: 40px;
+  padding: 0;
+  border: none;
+  border-left: 1px solid rgba(var(--color-gold-rgb), 0.3);
+  border-right: 1px solid rgba(var(--color-gold-rgb), 0.3);
+  background-color: transparent;
+}
+
+.quantity-selector button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  background-color: var(--color-soft-white);
+  transition: background-color 0.2s;
+}
+
+.quantity-selector button:hover:not(:disabled) {
+  background-color: var(--color-cream);
+}
+
+.quantity-selector button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

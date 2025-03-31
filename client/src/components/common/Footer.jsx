@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FiInstagram, FiFacebook, FiTwitter, FiYoutube, FiMail, FiPhone, FiClock } from 'react-icons/fi';
+import { FiInstagram, FiFacebook, FiTwitter, FiYoutube, FiMail, FiPhone, FiClock, FiMapPin } from 'react-icons/fi';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -16,48 +16,58 @@ const Footer = () => {
     "CUSTOMER SERVICE": [
       { name: "Track Order", path: "/track-order" },
       { name: "Return Policy", path: "/returns" },
-      { name: "FAQs", path: "/faqs" },
+      { name: "FAQs", path: "/faq" },
       { name: "My Account", path: "/account" },
     ],
     "CATEGORIES": [
-      { name: "Perfumes", path: "/category/perfumes" },
-      { name: "Bath & Body", path: "/category/bath-body" },
-      { name: "Skincare", path: "/category/skincare" },
-      { name: "Gift Sets", path: "/category/gift-sets" },
+      { name: "Perfumes", path: "/collections?category=Perfumes" },
+      { name: "Bath & Body", path: "/collections?category=Bath-Body" },
+      { name: "Skincare", path: "/collections?category=Skincare" },
+      { name: "Gift Sets", path: "/collections?category=Gift-Sets" },
     ]
   };
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-black text-white">
+    <footer className="bg-soft-black text-soft-white relative">
+      {/* Decorative top border */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
+      
       <div className="container mx-auto px-4 py-16">
         {/* Newsletter */}
         <div className="mb-16 text-center max-w-3xl mx-auto">
-          <h3 className="text-3xl font-bold mb-4">Join Our Newsletter</h3>
-          <p className="mb-8 text-gray-300">Stay updated with our latest offers and fragrance releases</p>
-          <div className="flex gap-4 max-w-md mx-auto">
+          <h3 className="text-2xl font-serif text-gold mb-3">Join Our Newsletter</h3>
+          <p className="mb-6 text-soft-white/70 text-sm font-sans">Stay updated with our latest fragrances and exclusive offers</p>
+          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-6 py-3 text-white rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-400 border border-red-500 shadow-md"
+              className="flex-1 px-4 py-3 bg-transparent text-soft-white border-b border-gold/50 focus:border-gold focus:outline-none placeholder-soft-white/40 transition-colors"
               required
             />
-            <button className="bg-gradient-to-r from-red-600 to-red-700 px-8 py-3 rounded-full hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105">
+            <button className="btn-primary whitespace-nowrap">
               Subscribe
             </button>
           </div>
         </div>
 
+        {/* Decorative element */}
+        <div className="flex items-center justify-center mb-12">
+          <div className="h-px w-16 bg-gold/30"></div>
+          <span className="mx-4 text-gold">✦</span>
+          <div className="h-px w-16 bg-gold/30"></div>
+        </div>
+
         {/* Links */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-16">
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <h4 className="font-bold mb-6 text-lg">{title}</h4>
-              <ul className="space-y-4">
+              <h4 className="font-sans text-xs tracking-widest mb-6 text-gold">{title}</h4>
+              <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.name}>
                     <Link 
                       to={link.path} 
-                      className="text-gray-400 hover:text-white transition-colors hover:translate-x-2 inline-block"
+                      className="text-soft-white/70 hover:text-gold text-sm transition-colors inline-block"
                     >
                       {link.name}
                     </Link>
@@ -69,46 +79,72 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-bold mb-6 text-lg">CONTACT US</h4>
-            <ul className="space-y-4 text-gray-400">
-              <li className="flex items-center">
-                <FiMail className="mr-3" />
-                <a href="mailto:support@veloriacollections.com" className="hover:text-white transition-colors">support@veloriacollections.com</a>
+            <h4 className="font-sans text-xs tracking-widest mb-6 text-gold">CONTACT US</h4>
+            <ul className="space-y-4 text-soft-white/70 text-sm">
+              <li className="flex items-start">
+                <FiMail className="mr-3 text-gold mt-1 flex-shrink-0" />
+                <a href="mailto:support@veloriaperfumes.com" className="hover:text-gold transition-colors">
+                  support@veloriaperfumes.com
+                </a>
               </li>
-              <li className="flex items-center">
-                <FiPhone className="mr-3" />
-                <span>+1 (555) 123-4567</span>
+              <li className="flex items-start">
+                <FiPhone className="mr-3 text-gold mt-1 flex-shrink-0" />
+                <a href="tel:+15551234567" className="hover:text-gold transition-colors">
+                  +1 (555) 123-4567
+                </a>
               </li>
-              <li className="flex items-center">
-                <FiClock className="mr-3" />
+              <li className="flex items-start">
+                <FiClock className="mr-3 text-gold mt-1 flex-shrink-0" />
                 <span>Mon - Fri: 9:00 AM - 6:00 PM</span>
+              </li>
+              <li className="flex items-start">
+                <FiMapPin className="mr-3 text-gold mt-1 flex-shrink-0" />
+                <address className="not-italic">
+                  123 Fragrance Boulevard<br />
+                  Scent City, SC 90210
+                </address>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Social Links */}
-        <div className="flex justify-center space-x-8 mb-12">
+        <div className="flex justify-center space-x-6 mb-12">
           {[
-            { Icon: FiInstagram, label: 'Instagram' },
-            { Icon: FiFacebook, label: 'Facebook' },
-            { Icon: FiTwitter, label: 'Twitter' },
-            { Icon: FiYoutube, label: 'YouTube' }
-          ].map(({ Icon, label }) => (
+            { Icon: FiInstagram, label: 'Instagram', url: 'https://instagram.com' },
+            { Icon: FiFacebook, label: 'Facebook', url: 'https://facebook.com' },
+            { Icon: FiTwitter, label: 'Twitter', url: 'https://twitter.com' },
+            { Icon: FiYoutube, label: 'YouTube', url: 'https://youtube.com' }
+          ].map(({ Icon, label, url }) => (
             <a
               key={label}
-              href="#"
-              className="text-gray-400 hover:text-white transition-colors transform hover:scale-110"
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-soft-white/60 hover:text-gold transition-colors w-10 h-10 flex items-center justify-center border border-soft-white/20 hover:border-gold"
               aria-label={label}
             >
-              <Icon className="w-6 h-6" />
+              <Icon className="w-5 h-5" />
             </a>
           ))}
         </div>
 
+        {/* Payment methods */}
+        <div className="flex justify-center items-center gap-4 mb-12">
+          <span className="text-soft-white/40 text-xs">Payment Methods:</span>
+          <div className="flex gap-3">
+            {['Visa', 'Mastercard', 'Amex', 'PayPal'].map(method => (
+              <span key={method} className="px-2 py-1 bg-soft-white/5 border border-soft-white/10 text-soft-white/60 text-xs rounded-sm">
+                {method}
+              </span>
+            ))}
+          </div>
+        </div>
+
         {/* Copyright */}
-        <div className="text-center text-gray-500 text-sm pt-8 border-t border-gray-800">
-          <p>&copy; {currentYear} Veloria Collections. All rights reserved.</p>
+        <div className="text-center text-soft-white/40 text-xs pt-8 border-t border-soft-white/10">
+          <p className="mb-2">&copy; {currentYear} Veloria Perfumes. All rights reserved.</p>
+          <p>Designed with ♥ for the finest fragrances</p>
         </div>
       </div>
     </footer>

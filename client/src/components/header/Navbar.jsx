@@ -43,7 +43,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b sticky top-0 z-50">
+    <nav className="bg-soft-white border-b border-gold/20 sticky top-0 z-50 paper-texture">
       {/* Main Navigation */}
       <div className="max-w-[1440px] mx-auto px-4">
         {/* Upper Nav - Logo and Icons */}
@@ -51,26 +51,29 @@ const Navbar = () => {
           {/* Search Icon */}
           <button 
             onClick={() => setIsSearchOpen(true)}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-cream rounded-full transition-colors"
+            aria-label="Search"
           >
-            <FiSearch className="w-6 h-6" />
+            <FiSearch className="w-5 h-5 text-soft-black" />
           </button>
 
           {/* Logo */}
           <Link to="/" className="flex-shrink-0">
-            <h1 className="text-2xl font-bold">VELORIA COLLECTIONS</h1>
+            <h1 className="text-xl md:text-2xl font-serif font-bold tracking-wider text-burgundy">
+              VELORIA <span className="text-gold">PERFUMES</span>
+            </h1>
           </Link>
 
           {/* Right Icons */}
-          <div className="flex items-center gap-4">
-            <Link to="/wishlist" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <FiHeart className="w-6 h-6" />
+          <div className="flex items-center gap-2">
+            <Link to="/wishlist" className="p-2 hover:bg-cream rounded-full transition-colors" aria-label="Wishlist">
+              <FiHeart className="w-5 h-5 text-soft-black" />
             </Link>
-            <Link to="/cart" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <FiShoppingBag className="w-6 h-6" />
+            <Link to="/cart" className="p-2 hover:bg-cream rounded-full transition-colors" aria-label="Shopping Bag">
+              <FiShoppingBag className="w-5 h-5 text-soft-black" />
             </Link>
-            <Link to="/account" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <FiUser className="w-6 h-6" />
+            <Link to="/account" className="p-2 hover:bg-cream rounded-full transition-colors" aria-label="Account">
+              <FiUser className="w-5 h-5 text-soft-black" />
             </Link>
           </div>
         </div>
@@ -82,17 +85,18 @@ const Navbar = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="fixed inset-0 bg-black/50 z-50"
+              className="fixed inset-0 bg-soft-black/80 z-50 backdrop-blur-sm"
             >
-              <div className="bg-white p-4">
+              <div className="bg-soft-white p-6">
                 <div className="max-w-3xl mx-auto">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold">Search Products</h2>
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-lg font-serif text-burgundy">Search Our Collection</h2>
                     <button 
                       onClick={() => setIsSearchOpen(false)}
-                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                      className="p-2 hover:bg-cream rounded-full transition-colors"
+                      aria-label="Close search"
                     >
-                      <FiX className="w-6 h-6" />
+                      <FiX className="w-5 h-5 text-soft-black" />
                     </button>
                   </div>
                   <div className="relative">
@@ -102,17 +106,18 @@ const Navbar = () => {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={handleSearchKeyPress}
                       placeholder="Search for perfumes, gift sets..."
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none"
+                      className="w-full px-4 py-3 border-b-2 border-gold/50 bg-transparent rounded-none focus:border-burgundy focus:outline-none font-sans placeholder-soft-black/50"
                       autoFocus
                     />
                     <button
                       onClick={handleSearch}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-burgundy hover:text-gold transition-colors"
+                      aria-label="Submit search"
                     >
                       <FiSearch className="w-5 h-5" />
                     </button>
                   </div>
-                  <p className="mt-2 text-sm text-gray-500">
+                  <p className="mt-2 text-xs text-soft-black/60 font-sans">
                     Press Enter to search
                   </p>
                 </div>
@@ -127,10 +132,13 @@ const Navbar = () => {
             <Link
               key={category.name}
               to={category.path}
-              className={`text-sm font-medium hover:text-purple-600 transition-colors
-                ${location.pathname === category.path ? 'text-purple-600' : 'text-gray-600'}`}
+              className={`text-xs font-sans tracking-widest hover:text-burgundy transition-colors relative
+                ${location.pathname === category.path ? 'text-burgundy font-medium' : 'text-soft-black'}`}
             >
               {category.name}
+              {location.pathname === category.path && (
+                <span className="absolute -bottom-1 left-0 right-0 h-px bg-gold"></span>
+              )}
             </Link>
           ))}
         </div>
