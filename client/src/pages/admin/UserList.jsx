@@ -76,11 +76,11 @@ const UserList = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-900">
+      <div className="flex h-screen bg-cream paper-texture">
         <AdminSidebar />
         <div className="flex-1 p-8">
           <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-burgundy"></div>
           </div>
         </div>
       </div>
@@ -88,45 +88,45 @@ const UserList = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-900">
+    <div className="flex h-screen bg-cream paper-texture">
       <AdminSidebar />
       <div className="flex-1 overflow-auto p-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white">Users</h1>
+          <h1 className="text-3xl font-serif text-burgundy">Users</h1>
         </div>
         
-        <div className="bg-gray-800 rounded-lg shadow-lg">
+        <div className="bg-white rounded-lg shadow-md border border-gold/20">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-700">
+              <thead className="bg-cream">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">User</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Email</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Phone</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-soft-black uppercase tracking-wider">User</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-soft-black uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-soft-black uppercase tracking-wider">Phone</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-soft-black uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700">
+              <tbody className="divide-y divide-gold/10">
                 {users.map((user) => (
-                  <tr key={user._id} className="hover:bg-gray-700 transition-colors">
+                  <tr key={user._id} className="hover:bg-cream/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="h-10 w-10 rounded-full bg-purple-600 flex items-center justify-center">
+                        <div className="h-10 w-10 rounded-full bg-burgundy flex items-center justify-center">
                           <FiUser className="text-white" />
                         </div>
-                        <span className="ml-4 font-medium text-white">
+                        <span className="ml-4 font-medium text-soft-black">
                           {user.fullName}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center text-soft-black/70">
                         <FiMail className="mr-2" />
                         {user.email}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center text-gray-300">
+                      <div className="flex items-center text-soft-black/70">
                         <FiPhone className="mr-2" />
                         {user.phone}
                       </div>
@@ -135,13 +135,13 @@ const UserList = () => {
                       <div className="flex space-x-3">
                         <button 
                           onClick={() => handleEdit(user)}
-                          className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                          className="px-3 py-1 bg-gold text-soft-black rounded-md hover:bg-gold/80 transition-colors"
                         >
                           Edit
                         </button>
                         <button 
                           onClick={() => handleDelete(user._id)}
-                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                          className="px-3 py-1 bg-burgundy text-white rounded-md hover:bg-burgundy/90 transition-colors"
                         >
                           Delete
                         </button>

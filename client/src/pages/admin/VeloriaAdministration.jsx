@@ -55,51 +55,36 @@ const VeloriaAdministration = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-900">
+      <div className="flex h-screen bg-cream paper-texture">
         <AdminSidebar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-16 h-16 border-4 border-burgundy border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white overflow-hidden">
+    <div className="flex h-screen bg-cream paper-texture">
       <AdminSidebar />
-      <div className="flex-1 overflow-y-auto p-8">
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="mb-8"
-        >
-          <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-          <p className="text-gray-400">Welcome to Veloria Admin Panel</p>
-        </motion.div>
 
-        {/* Time filter */}
-        <div className="mb-6 flex items-center space-x-2">
-          <FiCalendar className="text-gray-400" />
-          <span className="text-gray-400 mr-2">Time Period:</span>
-          <div className="flex bg-gray-800 rounded-lg p-1">
-            {['day', 'week', 'month', 'year'].map((period) => (
-              <button
-                key={period}
-                onClick={() => setTimeframe(period)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  timeframe === period 
-                    ? 'bg-purple-600 text-white' 
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                {period.charAt(0).toUpperCase() + period.slice(1)}
-              </button>
-            ))}
-          </div>
+      <div className="flex-1 p-6 overflow-y-auto admin-section">
+        <h1 className="text-3xl font-serif text-burgundy mb-6">Admin Dashboard</h1>
+
+        <div className="flex items-center gap-4 mb-6">
+          <select
+            value={timeframe}
+            onChange={e => setTimeframe(e.target.value)}
+            className="veloria-input border border-gold/30 bg-soft-white p-2"
+          >
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+            <option value="all">All Time</option>
+          </select>
+          <span className="text-soft-black/70">Select timeframe for stats</span>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -110,11 +95,11 @@ const VeloriaAdministration = () => {
               title="Total Products"
               value={stats.totalProducts}
               icon={<FiBox className="w-6 h-6" />}
-              change={5.2}
-              color="from-blue-500 to-blue-600"
+              change={8.2}
+              color="from-burgundy/80 to-burgundy"
             />
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -125,10 +110,10 @@ const VeloriaAdministration = () => {
               value={stats.totalOrders}
               icon={<FiShoppingBag className="w-6 h-6" />}
               change={12.5}
-              color="from-green-500 to-green-600"
+              color="from-burgundy/70 to-burgundy/90"
             />
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,11 +123,11 @@ const VeloriaAdministration = () => {
               title="Total Users"
               value={stats.totalUsers}
               icon={<FiUsers className="w-6 h-6" />}
-              change={8.1}
-              color="from-yellow-500 to-yellow-600"
+              change={5.1}
+              color="from-burgundy/60 to-burgundy/80"
             />
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -153,7 +138,7 @@ const VeloriaAdministration = () => {
               value={`₹${stats.totalRevenue.toLocaleString()}`}
               icon={<FiTrendingUp className="w-6 h-6" />}
               change={15.3}
-              color="from-purple-500 to-purple-600"
+              color="from-gold/60 to-gold"
             />
           </motion.div>
         </div>
@@ -163,9 +148,9 @@ const VeloriaAdministration = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.5 }}
-          className="bg-gray-800 rounded-xl p-6 mb-8"
+          className="bg-soft-white border border-gold/10 shadow-sm p-6 mb-8"
         >
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <h2 className="text-xl font-serif text-burgundy mb-4 flex items-center">
             <FiShoppingBag className="mr-2" /> Recent Orders
           </h2>
           <RecentOrders />
@@ -176,9 +161,9 @@ const VeloriaAdministration = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.6 }}
-          className="bg-gray-800 rounded-xl p-6"
+          className="bg-soft-white border border-gold/10 shadow-sm p-6"
         >
-          <h2 className="text-xl font-semibold mb-4 flex items-center">
+          <h2 className="text-xl font-serif text-burgundy mb-4 flex items-center">
             <FiBox className="mr-2" /> Popular Products
           </h2>
           <ProductsTable />

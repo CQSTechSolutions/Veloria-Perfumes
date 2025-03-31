@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FiUser, FiMail, FiLock, FiPhone, FiEye, FiEyeOff, FiShoppingBag, FiClock, FiCalendar } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiPhone, FiEye, FiEyeOff, FiShoppingBag, FiClock, FiCalendar, FiMapPin, FiEdit, FiCheckCircle } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,9 +8,9 @@ import { jwtDecode } from 'jwt-decode';
 
 const InputField = ({ icon, label, type, value, onChange, error, placeholder, className = "w-full" }) => (
   <div className={className}>
-    <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
+    <label className="block text-sm font-medium text-soft-black/70 mb-1">{label}</label>
     <div className="relative">
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-soft-black/50">
         {icon}
       </div>
       <input
@@ -18,13 +18,13 @@ const InputField = ({ icon, label, type, value, onChange, error, placeholder, cl
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`w-full pl-10 pr-4 py-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200`}
+        className={`w-full pl-10 pr-4 py-2 border ${error ? 'border-burgundy' : 'border-gold/30'} rounded-lg focus:ring-2 focus:ring-burgundy focus:border-transparent transition-all duration-200 bg-transparent`}
       />
       {error && (
         <motion.p
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-red-500 text-xs mt-1"
+          className="text-burgundy text-xs mt-1"
         >
           {error}
         </motion.p>
@@ -48,7 +48,14 @@ const Account = () => {
     phone: '',
     countryCode: '',
     createdAt: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
   });
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const navigate = useNavigate();
 
@@ -72,6 +79,10 @@ const Account = () => {
             phone: response.data.phone || '',
             countryCode: response.data.countryCode || '+91',
             createdAt: response.data.createdAt || '',
+            address: response.data.address || '',
+            city: response.data.city || '',
+            state: response.data.state || '',
+            zipCode: response.data.zipCode || '',
           }));
           setIsLogin(true);
         }
@@ -94,6 +105,19 @@ const Account = () => {
       style: { background: '#333', color: '#fff' }
     });
     setIsLogin(false);
+    setFormData({
+      fullName: '',
+      email: '',
+      countryCode: '+91',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      createdAt: '',
+    });
     navigate('/');
   };
 
@@ -130,6 +154,10 @@ const Account = () => {
           password: '',
           confirmPassword: '',
           createdAt: userResponse.data.createdAt || '',
+          address: userResponse.data.address || '',
+          city: userResponse.data.city || '',
+          state: userResponse.data.state || '',
+          zipCode: userResponse.data.zipCode || '',
         });
 
         localStorage.setItem('token', response.data.token);
@@ -151,7 +179,11 @@ const Account = () => {
         password: formData.password,
         phone: formData.phone,
         countryCode: formData.countryCode || '+91',
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        address: formData.address || '',
+        city: formData.city || '',
+        state: formData.state || '',
+        zipCode: formData.zipCode || '',
       };
 
       const response = await axios.post(
@@ -173,6 +205,10 @@ const Account = () => {
           password: '',
           confirmPassword: '',
           createdAt: userResponse.data.createdAt || '',
+          address: userResponse.data.address || '',
+          city: userResponse.data.city || '',
+          state: userResponse.data.state || '',
+          zipCode: userResponse.data.zipCode || '',
         });
 
         localStorage.setItem('token', response.data.token);
@@ -215,6 +251,22 @@ const Account = () => {
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+
+    // Clear error when field is being edited
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: ''
+      });
+    }
+  };
+
   return (
     <AnimatePresence mode="wait">
       {isLogin ? (
@@ -223,117 +275,272 @@ const Account = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 py-12 px-4 sm:px-6 lg:px-8"
+          className="min-h-screen bg-cream paper-texture py-12 px-4 sm:px-6 lg:px-8"
         >
           <div className="max-w-4xl mx-auto">
             <motion.div 
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20"
+              className="bg-soft-white border border-gold/10 shadow-sm"
             >
               <div className="p-8">
-                <div className="flex items-center gap-6 mb-8">
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="w-24 h-24 bg-purple-600 rounded-full flex items-center justify-center"
-                  >
-                    <FiUser className="w-12 h-12 text-white" />
-                  </motion.div>
-                  <div>
-                    <motion.h1 
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.4 }}
-                      className="text-3xl font-bold text-white"
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-6">
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.3 }}
+                      className="w-24 h-24 bg-burgundy rounded-full flex items-center justify-center"
                     >
-                      {formData.fullName}
-                    </motion.h1>
-                    <motion.p 
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.5 }}
-                      className="text-purple-200"
-                    >
-                      {formData.email}
-                    </motion.p>
+                      <FiUser className="w-12 h-12 text-soft-white" />
+                    </motion.div>
+                    <div>
+                      <motion.h1 
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                        className="text-3xl font-serif text-burgundy"
+                      >
+                        {formData.fullName}
+                      </motion.h1>
+                      <motion.p 
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="text-soft-black/70"
+                      >
+                        {formData.email}
+                      </motion.p>
+                    </div>
                   </div>
+                  <button 
+                    onClick={() => setEditMode(!editMode)}
+                    className="btn-outline flex items-center gap-2 px-4 py-2"
+                  >
+                    <FiEdit className="w-4 h-4" />
+                    {editMode ? 'Cancel Edit' : 'Edit Profile'}
+                  </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <motion.div 
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.6 }}
-                    className="bg-white/5 p-6 rounded-xl border border-white/10"
-                  >
-                    <div className="flex items-center gap-4 mb-4">
-                      <FiPhone className="w-5 h-5 text-purple-300" />
-                      <h2 className="text-lg font-semibold text-white">Contact Details</h2>
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-purple-200">
-                        <span className="text-purple-400">Email:</span> {formData.email}
-                      </p>
-                      <p className="text-purple-200">
-                        <span className="text-purple-400">Phone:</span> {formData.countryCode} {formData.phone}
-                      </p>
-                    </div>
-                  </motion.div>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <motion.div 
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.6 }}
+                      className="bg-cream/50 p-6 border border-gold/10"
+                    >
+                      <div className="flex items-center gap-4 mb-4">
+                        <FiUser className="w-5 h-5 text-burgundy" />
+                        <h2 className="text-lg font-serif text-soft-black">Personal Details</h2>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-soft-black/70 mb-1">Full Name</label>
+                          <input 
+                            type="text"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleInputChange}
+                            disabled={!editMode}
+                            className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} ${errors.fullName ? 'border-burgundy' : 'border-gold/30'}`}
+                          />
+                          {errors.fullName && <p className="mt-1 text-burgundy text-sm">{errors.fullName}</p>}
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-soft-black/70 mb-1">Email</label>
+                          <input 
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            disabled={!editMode}
+                            className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} ${errors.email ? 'border-burgundy' : 'border-gold/30'}`}
+                          />
+                          {errors.email && <p className="mt-1 text-burgundy text-sm">{errors.email}</p>}
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-soft-black/70 mb-1">Phone</label>
+                          <div className="flex">
+                            <select 
+                              name="countryCode"
+                              value={formData.countryCode}
+                              onChange={handleInputChange}
+                              disabled={!editMode}
+                              className={`veloria-input w-20 ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                            >
+                              <option value="+91">+91</option>
+                              <option value="+1">+1</option>
+                              <option value="+44">+44</option>
+                            </select>
+                            <input 
+                              type="tel"
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleInputChange}
+                              disabled={!editMode}
+                              className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} ${errors.phone ? 'border-burgundy' : 'border-gold/30'}`}
+                            />
+                          </div>
+                          {errors.phone && <p className="mt-1 text-burgundy text-sm">{errors.phone}</p>}
+                        </div>
+                      </div>
+                    </motion.div>
 
-                  <motion.div 
-                    initial={{ x: 20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                    className="bg-white/5 p-6 rounded-xl border border-white/10"
-                  >
-                    <div className="flex items-center gap-4 mb-4">
-                      <FiCalendar className="w-5 h-5 text-purple-300" />
-                      <h2 className="text-lg font-semibold text-white">Account Info</h2>
-                    </div>
-                    <div className="space-y-2">
-                      <p className="text-purple-200">
-                        <span className="text-purple-400">Member since:</span>{' '}
-                        {new Date(formData.createdAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </p>
-                      <p className="text-purple-200">
-                        <span className="text-purple-400">Account status:</span>{' '}
-                        <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
-                          Active
-                        </span>
-                      </p>
-                    </div>
-                  </motion.div>
-                </div>
+                    <motion.div 
+                      initial={{ x: 20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.7 }}
+                      className="bg-cream/50 p-6 border border-gold/10"
+                    >
+                      <div className="flex items-center gap-4 mb-4">
+                        <FiMapPin className="w-5 h-5 text-burgundy" />
+                        <h2 className="text-lg font-serif text-soft-black">Address Information</h2>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-soft-black/70 mb-1">Address</label>
+                          <input 
+                            type="text"
+                            name="address"
+                            value={formData.address || ''}
+                            onChange={handleInputChange}
+                            disabled={!editMode}
+                            className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-soft-black/70 mb-1">City</label>
+                            <input 
+                              type="text"
+                              name="city"
+                              value={formData.city || ''}
+                              onChange={handleInputChange}
+                              disabled={!editMode}
+                              className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-soft-black/70 mb-1">State</label>
+                            <input 
+                              type="text"
+                              name="state"
+                              value={formData.state || ''}
+                              onChange={handleInputChange}
+                              disabled={!editMode}
+                              className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-soft-black/70 mb-1">ZIP Code</label>
+                          <input 
+                            type="text"
+                            name="zipCode"
+                            value={formData.zipCode || ''}
+                            onChange={handleInputChange}
+                            disabled={!editMode}
+                            className={`veloria-input w-full ${editMode ? 'bg-soft-white' : 'bg-transparent'} border-gold/30`}
+                          />
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
 
-                <div className="mt-8 flex gap-4">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex-1 bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-all duration-200"
-                    onClick={() => navigate('/cart')}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <FiShoppingBag className="w-5 h-5" />
-                      <span>View Cart</span>
-                    </div>
-                  </motion.button>
+                  {editMode && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="bg-cream/50 p-6 border border-gold/10"
+                    >
+                      <div className="flex items-center gap-4 mb-4">
+                        <FiLock className="w-5 h-5 text-burgundy" />
+                        <h2 className="text-lg font-serif text-soft-black">Change Password (optional)</h2>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-soft-black/70 mb-1">New Password</label>
+                          <div className="relative">
+                            <input 
+                              type={showPassword ? "text" : "password"}
+                              name="password"
+                              value={formData.password}
+                              onChange={handleInputChange}
+                              className={`veloria-input w-full bg-soft-white ${errors.password ? 'border-burgundy' : 'border-gold/30'}`}
+                            />
+                            <button 
+                              type="button"
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-soft-black/50 hover:text-burgundy"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? <FiEyeOff /> : <FiEye />}
+                            </button>
+                          </div>
+                          {errors.password && <p className="mt-1 text-burgundy text-sm">{errors.password}</p>}
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-soft-black/70 mb-1">Confirm New Password</label>
+                          <div className="relative">
+                            <input 
+                              type={showPassword ? "text" : "password"}
+                              name="confirmPassword"
+                              value={formData.confirmPassword}
+                              onChange={handleInputChange}
+                              className={`veloria-input w-full bg-soft-white ${errors.confirmPassword ? 'border-burgundy' : 'border-gold/30'}`}
+                            />
+                            <button 
+                              type="button"
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-soft-black/50 hover:text-burgundy"
+                              onClick={() => setShowPassword(!showPassword)}
+                            >
+                              {showPassword ? <FiEyeOff /> : <FiEye />}
+                            </button>
+                          </div>
+                          {errors.confirmPassword && <p className="mt-1 text-burgundy text-sm">{errors.confirmPassword}</p>}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
 
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex-1 border border-white/20 text-white py-3 px-6 rounded-lg hover:bg-white/5 transition-all duration-200"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </motion.button>
-                </div>
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-4 border-t border-gold/10">
+                    <div className="text-soft-black/70 flex items-center gap-2">
+                      <FiCalendar className="w-4 h-4 text-burgundy" />
+                      <span>Member since: {new Date(formData.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}</span>
+                    </div>
+                    
+                    <div className="flex gap-4">
+                      {editMode && (
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          type="submit"
+                          className="btn-primary px-6 py-2 flex items-center gap-2"
+                          disabled={loading}
+                        >
+                          {loading ? 'Saving...' : 'Save Changes'}
+                          <FiCheckCircle className="w-4 h-4" />
+                        </motion.button>
+                      )}
+                      
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        type="button"
+                        onClick={handleLogout}
+                        className="btn-outline px-6 py-2"
+                      >
+                        Logout
+                      </motion.button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </motion.div>
           </div>
@@ -344,127 +551,169 @@ const Account = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 py-12 px-4 sm:px-6 lg:px-8"
+          className="min-h-screen bg-cream paper-texture py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center"
         >
-          <div className="max-w-md mx-auto">
-            <motion.div 
+          <div className="max-w-md w-full">
+            <div className="text-center mb-8">
+              <motion.h1
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="text-3xl font-serif text-burgundy mb-2"
+              >
+                {isSignUp ? 'Create Account' : 'Welcome Back'}
+              </motion.h1>
+              <motion.p
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="text-soft-black/70"
+              >
+                {isSignUp ? 'Join the luxury fragrance experience' : 'Sign in to your account'}
+              </motion.p>
+            </div>
+            
+            <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20"
+              transition={{ delay: 0.2 }}
+              className="bg-soft-white border border-gold/10 shadow-sm p-8"
             >
-              <div className="flex border-b border-white/10">
-                <motion.button
-                  whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-                  className={`flex-1 py-4 text-center font-semibold ${loginTab ? 'text-white border-b-2 border-purple-500' : 'text-purple-200'}`}
-                  onClick={() => setLoginTab(true)}
-                >
-                  Login
-                </motion.button>
-                <motion.button
-                  whileHover={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
-                  className={`flex-1 py-4 text-center font-semibold ${!loginTab ? 'text-white border-b-2 border-purple-500' : 'text-purple-200'}`}
-                  onClick={() => setLoginTab(false)}
-                >
-                  Register
-                </motion.button>
-              </div>
-
-              <div className="p-8">
-                <motion.form 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  onSubmit={handleSubmit}
-                  className="space-y-6"
-                >
-                  {loginTab ? null : (
-                    <InputField
-                      icon={<FiUser />}
-                      label="Full Name"
-                      type="text"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                      error={errors.fullName}
-                      placeholder="Enter your full name"
-                    />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <AnimatePresence mode="wait">
+                  {isSignUp && (
+                    <motion.div
+                      key="fullName"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Full Name</label>
+                      <input 
+                        type="text"
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleInputChange}
+                        className={`veloria-input w-full bg-transparent ${errors.fullName ? 'border-burgundy' : 'border-gold/30'}`}
+                      />
+                      {errors.fullName && <p className="mt-1 text-burgundy text-sm">{errors.fullName}</p>}
+                    </motion.div>
                   )}
-
-                  <InputField
-                    icon={<FiMail />}
-                    label="Email"
+                </AnimatePresence>
+                
+                <div>
+                  <label className="block text-sm font-medium text-soft-black/70 mb-1">Email</label>
+                  <input 
                     type="email"
+                    name="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    error={errors.email}
-                    placeholder="Enter your email address"
+                    onChange={handleInputChange}
+                    className={`veloria-input w-full bg-transparent ${errors.email ? 'border-burgundy' : 'border-gold/30'}`}
                   />
-
+                  {errors.email && <p className="mt-1 text-burgundy text-sm">{errors.email}</p>}
+                </div>
+                
+                <AnimatePresence mode="wait">
+                  {isSignUp && (
+                    <motion.div
+                      key="phone"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Phone</label>
+                      <div className="flex">
+                        <select 
+                          name="countryCode"
+                          value={formData.countryCode}
+                          onChange={handleInputChange}
+                          className="veloria-input w-20 bg-transparent border-gold/30"
+                        >
+                          <option value="+91">+91</option>
+                          <option value="+1">+1</option>
+                          <option value="+44">+44</option>
+                        </select>
+                        <input 
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          className={`veloria-input w-full bg-transparent ${errors.phone ? 'border-burgundy' : 'border-gold/30'}`}
+                        />
+                      </div>
+                      {errors.phone && <p className="mt-1 text-burgundy text-sm">{errors.phone}</p>}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                
+                <div>
+                  <label className="block text-sm font-medium text-soft-black/70 mb-1">Password</label>
                   <div className="relative">
-                    <InputField
-                      icon={<FiLock />}
-                      label="Password"
+                    <input 
                       type={showPassword ? "text" : "password"}
+                      name="password"
                       value={formData.password}
-                      onChange={(e) => setFormData({...formData, password: e.target.value})}
-                      error={errors.password}
-                      placeholder="Enter your password"
-                      rightIcon={
-                        <button
+                      onChange={handleInputChange}
+                      className={`veloria-input w-full bg-transparent ${errors.password ? 'border-burgundy' : 'border-gold/30'}`}
+                    />
+                    <button 
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-soft-black/50 hover:text-burgundy"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <FiEyeOff /> : <FiEye />}
+                    </button>
+                  </div>
+                  {errors.password && <p className="mt-1 text-burgundy text-sm">{errors.password}</p>}
+                </div>
+                
+                <AnimatePresence mode="wait">
+                  {isSignUp && (
+                    <motion.div
+                      key="confirmPassword"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      <label className="block text-sm font-medium text-soft-black/70 mb-1">Confirm Password</label>
+                      <div className="relative">
+                        <input 
+                          type={showPassword ? "text" : "password"}
+                          name="confirmPassword"
+                          value={formData.confirmPassword}
+                          onChange={handleInputChange}
+                          className={`veloria-input w-full bg-transparent ${errors.confirmPassword ? 'border-burgundy' : 'border-gold/30'}`}
+                        />
+                        <button 
                           type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-soft-black/50 hover:text-burgundy"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
                         >
                           {showPassword ? <FiEyeOff /> : <FiEye />}
                         </button>
-                      }
-                    />
-                  </div>
-
-                  {!loginTab && (
-                    <>
-                      <InputField
-                        icon={<FiLock />}
-                        label="Confirm Password"
-                        type="password"
-                        value={formData.confirmPassword}
-                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                        error={errors.confirmPassword}
-                        placeholder="Confirm your password"
-                      />
-
-                      <div className="flex space-x-2">
-                        <InputField
-                          icon={<FiPhone />}
-                          label="Country Code"
-                          type="text"
-                          value={formData.countryCode}
-                          onChange={(e) => setFormData({...formData, countryCode: e.target.value})}
-                          error={errors.phone}
-                          placeholder="+1"
-                          className="w-1/3"
-                        />
-                        <InputField
-                          icon={<FiPhone />}
-                          label="Phone Number"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                          error={errors.phone}
-                          placeholder="10-digit number"
-                          className="w-2/3"
-                        />
                       </div>
-                    </>
+                      {errors.confirmPassword && <p className="mt-1 text-burgundy text-sm">{errors.confirmPassword}</p>}
+                    </motion.div>
                   )}
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-all duration-200"
-                  >
-                    <span>{loginTab ? 'Sign In' : 'Create Account'}</span>
-                  </motion.button>
-                </motion.form>
+                </AnimatePresence>
+                
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="btn-primary w-full py-3"
+                  disabled={loading}
+                >
+                  {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : 'Sign In')}
+                </motion.button>
+              </form>
+              
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => setIsSignUp(!isSignUp)}
+                  className="text-burgundy hover:text-gold transition-colors"
+                >
+                  {isSignUp ? 'Already have an account? Sign in' : 'Need an account? Sign up'}
+                </button>
               </div>
             </motion.div>
           </div>

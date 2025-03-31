@@ -29,10 +29,7 @@ const FAQ = () => {
     const [openIndex, setOpenIndex] = useState(null);
     
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-800 via-purple-600 to-blue-700">
-            {/* Decorative overlay pattern */}
-            <div className="absolute inset-0 opacity-10 bg-[url('/pattern.png')] pointer-events-none" />
-            
+        <div className="min-h-screen bg-cream paper-texture">
             <div className="relative container mx-auto px-4 py-16">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -40,11 +37,11 @@ const FAQ = () => {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
-                    <h1 className="text-5xl md:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
+                    <h1 className="text-5xl md:text-6xl font-serif mb-4 text-burgundy">
                         Frequently Asked Questions
                     </h1>
-                    <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-blue-400 mx-auto mb-6 rounded-full" />
-                    <p className="text-xl text-purple-100">
+                    <div className="w-24 h-1 bg-gold mx-auto mb-6" />
+                    <p className="text-xl text-soft-black/70">
                         Find answers to common questions about our fragrances
                     </p>
                 </motion.div>
@@ -59,20 +56,20 @@ const FAQ = () => {
                         <motion.div
                             key={index}
                             variants={itemVariants}
-                            className="bg-white/10 backdrop-blur-md rounded-xl overflow-hidden"
+                            className="bg-soft-white border border-gold/10 shadow-sm"
                         >
                             <div
                                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
                                 className="p-6 flex justify-between items-center cursor-pointer group"
                             >
-                                <h2 className="text-xl font-semibold text-white group-hover:text-purple-200 transition-colors">
+                                <h2 className="text-xl font-serif text-soft-black group-hover:text-burgundy transition-colors">
                                     {item.question}
                                 </h2>
                                 <motion.div
                                     animate={{ rotate: openIndex === index ? 180 : 0 }}
                                     transition={{ duration: 0.3 }}
                                 >
-                                    <FaChevronDown className="text-purple-300 text-xl" />
+                                    <FaChevronDown className="text-gold text-xl" />
                                 </motion.div>
                             </div>
                             
@@ -106,7 +103,7 @@ const FAQ = () => {
                                             }
                                         }}
                                     >
-                                        <div className="px-6 pb-6 text-purple-100">
+                                        <div className="px-6 pb-6 text-soft-black/70">
                                             {item.answer}
                                         </div>
                                     </motion.div>

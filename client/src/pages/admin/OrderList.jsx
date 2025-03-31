@@ -55,17 +55,17 @@ const OrderList = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-gold/20 text-gold';
       case 'processing':
         return 'bg-blue-100 text-blue-800';
       case 'shipped':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-burgundy/20 text-burgundy';
       case 'delivered':
         return 'bg-green-100 text-green-800';
       case 'cancelled':
-        return 'bg-red-100 text-red-800';
+        return 'bg-burgundy/30 text-burgundy';
       case 'refunded':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-gold/30 text-gold/90';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -109,22 +109,22 @@ const OrderList = () => {
 
   if (loading) {
     return (
-      <div className="flex h-screen bg-gray-900">
+      <div className="flex h-screen bg-cream paper-texture">
         <AdminSidebar />
         <div className="flex-1 p-8 flex justify-center items-center">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-burgundy border-t-transparent rounded-full animate-spin"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-gray-900 overflow-hidden">
+    <div className="flex h-screen bg-cream paper-texture overflow-hidden">
       <AdminSidebar />
       <div className="flex-1 p-8 overflow-y-auto custom-scrollbar">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Order Management</h1>
-          <p className="text-gray-400">View and manage all customer orders</p>
+          <h1 className="text-3xl font-serif text-burgundy mb-2">Order Management</h1>
+          <p className="text-soft-black/70">View and manage all customer orders</p>
         </div>
 
         {/* Filter Controls */}
@@ -133,8 +133,8 @@ const OrderList = () => {
             onClick={() => setFilterStatus('all')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               filterStatus === 'all' 
-                ? 'bg-purple-600 text-white' 
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ? 'bg-burgundy text-white' 
+                : 'bg-cream text-soft-black hover:bg-cream/80'
             }`}
           >
             All Orders
@@ -145,8 +145,8 @@ const OrderList = () => {
               onClick={() => setFilterStatus(status)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filterStatus === status 
-                  ? 'bg-purple-600 text-white' 
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-burgundy text-white' 
+                  : 'bg-cream text-soft-black hover:bg-cream/80'
               }`}
             >
               {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -155,10 +155,10 @@ const OrderList = () => {
         </div>
 
         {filteredOrders.length === 0 ? (
-          <div className="bg-gray-800 rounded-lg p-8 text-center">
-            <FiPackage className="mx-auto text-4xl text-gray-400 mb-4" />
-            <h3 className="text-xl font-medium text-white mb-2">No Orders Found</h3>
-            <p className="text-gray-400">
+          <div className="bg-white rounded-lg p-8 text-center border border-gold/20 paper-texture">
+            <FiPackage className="mx-auto text-4xl text-gold mb-4" />
+            <h3 className="text-xl font-medium text-soft-black mb-2">No Orders Found</h3>
+            <p className="text-soft-black/70">
               {filterStatus === 'all' 
                 ? 'There are no orders in the system yet.' 
                 : `There are no orders with status "${filterStatus}".`}
@@ -171,25 +171,25 @@ const OrderList = () => {
                 key={order._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gray-800 rounded-lg overflow-hidden shadow-lg"
+                className="bg-white rounded-lg overflow-hidden shadow-md border border-gold/20 paper-texture"
               >
                 {/* Order Header */}
                 <div 
-                  className="p-4 bg-gray-700 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer"
+                  className="p-4 bg-cream flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer"
                   onClick={() => toggleOrderExpand(order._id)}
                 >
                   <div className="flex items-center mb-2 md:mb-0">
-                    <FiPackage className="text-purple-400 mr-2" />
+                    <FiPackage className="text-burgundy mr-2" />
                     <div>
-                      <h3 className="text-white font-medium">Order #{order._id.slice(-8)}</h3>
-                      <p className="text-gray-400 text-sm">{formatDate(order.createdAt)}</p>
+                      <h3 className="text-soft-black font-medium">Order #{order._id.slice(-8)}</h3>
+                      <p className="text-soft-black/70 text-sm">{formatDate(order.createdAt)}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-4">
                     <div className="flex items-center">
-                      <FiDollarSign className="text-green-400 mr-1" />
-                      <span className="text-white font-medium">₹{order.totalAmount.toFixed(2)}</span>
+                      <FiDollarSign className="text-gold mr-1" />
+                      <span className="text-soft-black font-medium">₹{order.totalAmount.toFixed(2)}</span>
                     </div>
                     
                     <div className={`px-3 py-1 rounded-full text-xs font-medium flex items-center ${getStatusColor(order.status)}`}>
@@ -198,9 +198,9 @@ const OrderList = () => {
                     </div>
                     
                     {expandedOrder === order._id ? (
-                      <FiChevronUp className="text-gray-400" />
+                      <FiChevronUp className="text-soft-black" />
                     ) : (
-                      <FiChevronDown className="text-gray-400" />
+                      <FiChevronDown className="text-soft-black" />
                     )}
                   </div>
                 </div>
