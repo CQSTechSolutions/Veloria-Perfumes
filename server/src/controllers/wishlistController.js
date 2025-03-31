@@ -16,16 +16,18 @@ exports.getWishlist = async (req, res) => {
         res.json({
             success: true,
             wishlist: {
-                items: wishlist.items.map(item => ({
-                    product: {
-                        _id: item.product._id,
-                        name: item.product.name,
-                        price: item.product.price,
-                        description: item.product.description,
-                        image: item.product.image,
-                        stock: item.product.stock
-                    }
-                }))
+                items: wishlist.items
+                    .filter(item => item.product)
+                    .map(item => ({
+                        product: {
+                            _id: item.product._id,
+                            name: item.product.name,
+                            price: item.product.price,
+                            description: item.product.description,
+                            image: item.product.image,
+                            stock: item.product.stock
+                        }
+                    }))
             }
         });
     } catch (error) {

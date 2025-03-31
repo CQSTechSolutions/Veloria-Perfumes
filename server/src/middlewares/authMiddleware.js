@@ -58,11 +58,21 @@ const isAdmin = (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
+        
+        // Check if ADMIN_ID is defined
+        if (!process.env.ADMIN_ID) {
+            console.warn('ADMIN_ID environment variable is not defined');
+            return res.status(403).json({
+                success: false,
+                message: 'Admin access is not configured on the server'
+            });
+        }
+        
         const adminIds = process.env.ADMIN_ID.split(',');
 
-        console.log(process.env.ADMIN_ID);
-        console.log(decoded.id);
-        console.log(userId, adminIds);
+        console.log('ADMIN_ID:', process.env.ADMIN_ID);
+        console.log('User ID:', decoded.id);
+        console.log('Admin IDs:', adminIds);
 
         if (adminIds.includes(userId)) {
             next();

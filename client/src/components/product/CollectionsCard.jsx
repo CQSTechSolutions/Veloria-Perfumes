@@ -274,7 +274,7 @@ const CollectionsCard = ({
                             )}
                         </motion.button>
                         <Link 
-                            to={`/collection/${_id}`}
+                            to={`/product/${_id}`}
                             className="p-3 bg-purple-500/20 rounded-full text-purple-300 hover:bg-purple-500/30 transition-all duration-300"
                         >
                             <FiArrowRight className="w-5 h-5" />

@@ -13,15 +13,17 @@ exports.getCart = async (req, res) => {
         res.json({
             success: true,
             cart: {
-                items: cart.items.map(item => ({
-                    id: item._id,
-                    productId: item.product._id,
-                    name: item.product.name,
-                    price: item.product.price,
-                    image: item.product.image,
-                    quantity: item.quantity,
-                    stock: item.product.stock
-                })),
+                items: cart.items
+                    .filter(item => item.product) // Filter out items with null products
+                    .map(item => ({
+                        id: item._id,
+                        productId: item.product._id,
+                        name: item.product.name,
+                        price: item.product.price,
+                        image: item.product.image,
+                        quantity: item.quantity,
+                        stock: item.product.stock
+                    })),
                 total: cart.total
             }
         });
@@ -93,15 +95,17 @@ exports.addToCart = async (req, res) => {
             success: true,
             message: 'Item added to cart',
             cart: {
-                items: cart.items.map(item => ({
-                    id: item._id,
-                    productId: item.product._id,
-                    name: item.product.name,
-                    price: item.product.price,
-                    image: item.product.image,
-                    quantity: item.quantity,
-                    stock: item.product.stock
-                })),
+                items: cart.items
+                    .filter(item => item.product) // Filter out items with null products
+                    .map(item => ({
+                        id: item._id,
+                        productId: item.product._id,
+                        name: item.product.name,
+                        price: item.product.price,
+                        image: item.product.image,
+                        quantity: item.quantity,
+                        stock: item.product.stock
+                    })),
                 total: cart.total
             }
         });
@@ -147,15 +151,17 @@ exports.updateCartItem = async (req, res) => {
         res.json({
             success: true,
             cart: {
-                items: cart.items.map(item => ({
-                    id: item._id,
-                    productId: item.product._id,
-                    name: item.product.name,
-                    price: item.product.price,
-                    image: item.product.image,
-                    quantity: item.quantity,
-                    stock: item.product.stock
-                })),
+                items: cart.items
+                    .filter(item => item.product) // Filter out items with null products
+                    .map(item => ({
+                        id: item._id,
+                        productId: item.product._id,
+                        name: item.product.name,
+                        price: item.product.price,
+                        image: item.product.image,
+                        quantity: item.quantity,
+                        stock: item.product.stock
+                    })),
                 total: cart.total
             }
         });

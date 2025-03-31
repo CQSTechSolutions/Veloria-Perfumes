@@ -1,13 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HomeCarousel from '../components/header/HomeCarousel';
 import Card from '../components/product/Card';
-import productData from '../data/products.json';
 import categoryData from "./categories.json"
 import PromotionalBanner from '../components/PromotionalBanner';
 import Reviews from '../components/Reviews';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const Home = () => {
+    const [bestSellers, setBestSellers] = useState([]);
+    const [newArrivals, setNewArrivals] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                setLoading(true);
+                // Fetch best sellers
+                const bestSellersResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/collection?category=Best Sellers`);
+                setBestSellers(bestSellersResponse.data.slice(0, 4)); // Limit to 4 products
+                
+                // Fetch new arrivals
+                const newArrivalsResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/collection?category=New Arrivals`);
+                setNewArrivals(newArrivalsResponse.data.slice(0, 4)); // Limit to 4 products
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                toast.error('Failed to load products');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
     return (
         <div className="min-h-screen">
             <HomeCarousel />
@@ -28,16 +55,22 @@ const Home = () => {
             {/* Bestsellers */}
             <section className="py-12 px-4 bg-gray-50">
                 <h2 className="text-3xl font-bold text-center mb-8">BEST SELLERS</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {productData.bestsellers.map((product) => (
-                        <Card key={product.id} product={product} />
-                    ))}
-                </div>
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {bestSellers.map((product) => (
+                            <Card key={product._id} product={product} />
+                        ))}
+                    </div>
+                )}
             </section>
             <div className="text-center my-8">
-                <a href="/collections" className="inline-block border border-black text-black py-3 px-6 rounded-lg transition duration-300 hover:bg-gray-200">
+                <Link to="/collections?category=Best Sellers" className="inline-block border border-black text-black py-3 px-6 rounded-lg transition duration-300 hover:bg-gray-200">
                     VIEW ALL
-                </a>
+                </Link>
             </div>
 
             {/* <PromotionalBanner /> */}
@@ -45,12 +78,23 @@ const Home = () => {
             {/* New Arrivals */}
             <section className="py-12 px-4">
                 <h2 className="text-3xl font-bold text-center mb-8">NEW ARRIVALS</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {productData.newArrivals.map((product) => (
-                        <Card key={product.id} product={product} />
-                    ))}
-                </div>
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <div className="w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {newArrivals.map((product) => (
+                            <Card key={product._id} product={product} />
+                        ))}
+                    </div>
+                )}
             </section>
+            <div className="text-center my-8">
+                <Link to="/collections?category=New Arrivals" className="inline-block border border-black text-black py-3 px-6 rounded-lg transition duration-300 hover:bg-gray-200">
+                    VIEW ALL
+                </Link>
+            </div>
 
             <Reviews />
         </div>

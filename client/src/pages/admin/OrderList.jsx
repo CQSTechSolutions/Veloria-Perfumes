@@ -288,7 +288,7 @@ const OrderList = () => {
                                                 className="h-10 w-10 rounded-md object-cover" 
                                                 src={item.product.images && item.product.images.length > 0 
                                                   ? item.product.images[0] 
-                                                  : '/placeholder.jpg'} 
+                                                  : 'https://placehold.co/100x100/lightgray/gray?text=No+Image'} 
                                                 alt={item.product.name} 
                                               />
                                             </div>

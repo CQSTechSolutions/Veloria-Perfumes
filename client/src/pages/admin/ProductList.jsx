@@ -106,7 +106,7 @@ const ProductList = () => {
                             alt={product.name}
                             className="h-10 w-10 rounded-lg object-cover"
                             onError={(e) => {
-                              e.target.src = 'https://via.placeholder.com/100?text=No+Image';
+                              e.target.src = 'https://placehold.co/100x100/lightgray/gray?text=No+Image';
                             }}
                           />
                           <div className="ml-4">

@@ -25,7 +25,7 @@ const ProductForm = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/collection/getcollection/${id}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/collection/${id}`);
       setProduct(response.data);
     } catch (error) {
       toast.error('Failed to fetch product');
@@ -43,7 +43,7 @@ const ProductForm = () => {
 
       if (id) {
         await axios.put(
-          `${import.meta.env.VITE_API_URL}/api/collections/${id}`,
+          `${import.meta.env.VITE_API_URL}/api/collection/${id}`,
           product,
           { headers }
         );

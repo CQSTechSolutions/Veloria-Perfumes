@@ -60,8 +60,12 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        const adminIds = process.env.ADMIN_ID.split(',');
-        const isAdmin = adminIds.includes(user._id.toString());
+        // Check if user is admin - handle undefined ADMIN_ID
+        let isAdmin = false;
+        if (process.env.ADMIN_ID) {
+            const adminIds = process.env.ADMIN_ID.split(',');
+            isAdmin = adminIds.includes(user._id.toString());
+        }
 
         const token = jwt.sign({ id: user._id, admin: isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
         

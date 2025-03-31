@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import Card from '../components/product/CollectionsCard';
+import Card from '../components/product/Card';
 import { FiPackage, FiFilter, FiGrid, FiList, FiSearch } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
 
@@ -37,7 +37,7 @@ const Collections = () => {
             searchParams.delete('category');
             setSearchParams(searchParams);
         } else {
-            // Set category param for specific category
+            // Set category param for specific category - preserve original case
             setSearchParams({ ...Object.fromEntries(searchParams), category });
         }
         setSelectedCategory(category);
@@ -82,6 +82,7 @@ const Collections = () => {
 
     const searchQuery = searchParams.get('search') || '';
 
+    // Modified filtering logic - case insensitive
     const filteredCollections = collections.filter(collection => {
         console.log("Collection Category:", collection.category);
         console.log("Selected Category:", selectedCategory);
@@ -93,7 +94,7 @@ const Collections = () => {
     
         if (Array.isArray(collection.category)) {
             const matches = collection.category.some(cat => 
-                cat.toLowerCase() === selectedCategory.toLowerCase()
+                typeof cat === 'string' && cat.toLowerCase() === selectedCategory.toLowerCase()
             );
             console.log("Array category match:", matches);
             return matches;
@@ -228,26 +229,25 @@ const Collections = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-800 via-purple-600 to-blue-700">
-            {/* Decorative overlay pattern */}
-            <div className="absolute inset-0 opacity-10 bg-[url('/pattern.png')] pointer-events-none" />
-            
-            <div className="relative container mx-auto px-4 py-16">
+        <div className="min-h-screen bg-gray-50">
+            <div className="max-w-7xl mx-auto px-4 py-12">
                 {/* Header Section */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
+                    className="text-center mb-12"
                 >
-                    <h1 className="text-3xl md:text-4xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
+                    <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
                         {searchQuery 
                             ? `Search Results for "${searchQuery}"`
-                            : "Our Collections"
+                            : selectedCategory !== 'all' 
+                              ? `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Collection`
+                              : "Our Collection"
                         }
                     </h1>
-                        <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-blue-400 mx-auto mb-6 rounded-full" />
-                    <p className="text-xl text-purple-100 my-4">
+                    <div className="w-24 h-1 bg-purple-600 mx-auto mb-6 rounded-full" />
+                    <p className="text-lg text-gray-600 my-4">
                         {searchQuery 
                             ? `Found ${filteredCollections.length} items`
                             : "Discover our exquisite range of fragrances"
@@ -255,77 +255,70 @@ const Collections = () => {
                     </p>
                 </motion.div>
 
-                {/* Filters and Controls */}
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="bg-white/10 backdrop-blur-md rounded-xl p-4 mb-8"
-                >
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                        {/* Category Filters */}
-                        {!searchQuery && (
-                            <div className="flex items-center justify-center gap-4 flex-wrap">
-                                <FiFilter className="text-white" />
-                                <button
-                                    onClick={() => handleCategoryChange('all')}
-                                    className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300
-                                        ${selectedCategory === 'all' 
-                                            ? 'bg-white text-purple-800' 
-                                            : 'bg-white/10 text-white hover:bg-white/20'}`}
-                                >
-                                    All
-                                </button>
-                                {availableCategories.map((category) => (
-                                    <button
-                                        key={category}
-                                        onClick={() => handleCategoryChange(category.toLowerCase())}
-                                        className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300
-                                            ${selectedCategory === category.toLowerCase() 
-                                                ? 'bg-white text-purple-800' 
-                                                : 'bg-white/10 text-white hover:bg-white/20'}`}
-                                    >
-                                        {category.charAt(0).toUpperCase() + category.slice(1)}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* View and Sort Controls */}
-                        <div className="flex items-center gap-4">
-                            {/* View Mode Toggle */}
-                            <div className="bg-white/10 rounded-lg p-1 flex">
-                                <button
-                                    onClick={() => setViewMode('grid')}
-                                    className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white/20' : ''}`}
-                                    title="Grid View"
-                                >
-                                    <FiGrid className="text-white" />
-                                </button>
-                                <button
-                                    onClick={() => setViewMode('list')}
-                                    className={`p-2 rounded ${viewMode === 'list' ? 'bg-white/20' : ''}`}
-                                    title="List View"
-                                >
-                                    <FiList className="text-white" />
-                                </button>
-                            </div>
-
-                            {/* Sort Dropdown */}
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="bg-white/10 text-white border-none rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white/30"
+                {/* Filters and Controls Section */}
+                <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    {/* Category Filters */}
+                    <div className="overflow-x-auto pb-2 md:pb-0">
+                        <div className="flex space-x-2">
+                            <button
+                                onClick={() => handleCategoryChange('all')}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-300
+                                    ${selectedCategory === 'all' 
+                                        ? 'bg-purple-600 text-white' 
+                                        : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'}`}
                             >
-                                <option value="newest" className="bg-purple-800">Newest First</option>
-                                <option value="price-low" className="bg-purple-800">Price: Low to High</option>
-                                <option value="price-high" className="bg-purple-800">Price: High to Low</option>
-                                <option value="name-asc" className="bg-purple-800">Name: A to Z</option>
-                                <option value="name-desc" className="bg-purple-800">Name: Z to A</option>
-                            </select>
+                                All Products
+                            </button>
+                            
+                            {availableCategories.map((category) => (
+                                <button
+                                    key={category}
+                                    onClick={() => handleCategoryChange(category)}
+                                    className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-300
+                                        ${selectedCategory.toLowerCase() === category.toLowerCase() 
+                                            ? 'bg-purple-600 text-white' 
+                                            : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'}`}
+                                >
+                                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                                </button>
+                            ))}
                         </div>
                     </div>
-                </motion.div>
+
+                    {/* View and Sort Controls */}
+                    <div className="flex items-center gap-4">
+                        {/* Sort Dropdown */}
+                        <select 
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="bg-white border border-gray-200 text-gray-700 py-2 px-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        >
+                            <option value="newest">Newest</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name-asc">Name: A to Z</option>
+                            <option value="name-desc">Name: Z to A</option>
+                        </select>
+                        
+                        {/* View Mode Toggle */}
+                        <div className="bg-white border border-gray-200 rounded-lg p-1 flex">
+                            <button
+                                onClick={() => setViewMode('grid')}
+                                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-purple-100 text-purple-600' : 'text-gray-500'}`}
+                                title="Grid View"
+                            >
+                                <FiGrid />
+                            </button>
+                            <button
+                                onClick={() => setViewMode('list')}
+                                className={`p-2 rounded ${viewMode === 'list' ? 'bg-purple-100 text-purple-600' : 'text-gray-500'}`}
+                                title="List View"
+                            >
+                                <FiList />
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Collections Grid/List */}
                 <motion.div
@@ -345,92 +338,64 @@ const Collections = () => {
                             transition={{ duration: 0.6 }}
                             className={viewMode === 'list' ? "w-full" : ""}
                         >
-                                <Card 
-                                    product={collection}
-                                    onCartUpdate={fetchUserData}
-                                    isInCart={cartItems.some(item => item.productId === collection._id)}
-                                    onWishlistUpdate={toggleWishlist}
-                                    isInWishlist={wishlistItems.includes(collection._id)}
-                                />
-                            </motion.div>
-                        ))}
-                    </motion.div>
+                            <Card 
+                                product={collection}
+                                onCartUpdate={fetchUserData}
+                                isInCart={cartItems.some(item => item.productId === collection._id)}
+                                onWishlistUpdate={toggleWishlist}
+                                isInWishlist={wishlistItems.includes(collection._id)}
+                            />
+                        </motion.div>
+                    ))}
+                </motion.div>
         
-                        {/* Empty State */}
-                        {filteredCollections.length === 0 && (
-                            <motion.div 
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5 }}
-                                className="text-center text-white py-20 bg-white/10 backdrop-blur-sm rounded-xl p-8"
-                            >
-                                <FiPackage className="w-16 h-16 mx-auto mb-4" />
-                                <h3 className="text-2xl font-bold mb-2">No Collections Found</h3>
-                                <p className="text-purple-200 mb-6">
-                                    Try adjusting your search or filter criteria
-                                </p>
-                                <button 
-                                    onClick={() => setSelectedCategory('all')}
-                                    className="px-6 py-3 bg-white text-purple-800 rounded-full font-medium hover:bg-purple-100 transition-colors"
-                                >
-                                    View All Collections
-                                </button>
-                            </motion.div>
-                        )}
+                {/* Empty State */}
+                {filteredCollections.length === 0 && (
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-center py-20 bg-white shadow-sm rounded-xl p-8"
+                    >
+                        <FiPackage className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                        <h3 className="text-2xl font-bold mb-2 text-gray-900">No Products Found</h3>
+                        <p className="text-gray-600 mb-6">
+                            Try adjusting your search or filter criteria
+                        </p>
+                        <button 
+                            onClick={() => setSelectedCategory('all')}
+                            className="px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                        >
+                            View All Products
+                        </button>
+                    </motion.div>
+                )}
 
-                        {/* Pagination - if needed */}
-                        {filteredCollections.length > 0 && (
-                            <div className="mt-12 flex justify-center">
-                                <div className="inline-flex rounded-md shadow-sm">
-                                    <button className="px-4 py-2 text-sm font-medium text-white bg-white/10 rounded-l-lg hover:bg-white/20">
-                                        Previous
-                                    </button>
-                                    <button className="px-4 py-2 text-sm font-medium text-purple-800 bg-white">
-                                        1
-                                    </button>
-                                    <button className="px-4 py-2 text-sm font-medium text-white bg-white/10 hover:bg-white/20">
-                                        2
-                                    </button>
-                                    <button className="px-4 py-2 text-sm font-medium text-white bg-white/10 hover:bg-white/20">
-                                        3
-                                    </button>
-                                    <button className="px-4 py-2 text-sm font-medium text-white bg-white/10 rounded-r-lg hover:bg-white/20">
-                                        Next
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Newsletter Subscription */}
-                    <div className="bg-white/5 backdrop-blur-md py-16 mt-16">
-                        <div className="container mx-auto px-4">
-                            <motion.div 
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6 }}
-                                viewport={{ once: true }}
-                                className="max-w-2xl mx-auto text-center"
-                            >
-                                <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
-                                <p className="text-purple-200 mb-8">
-                                    Subscribe to our newsletter for exclusive offers and updates on new collections
-                                </p>
-                                <div className="flex flex-col sm:flex-row gap-2">
-                                    <input 
-                                        type="email" 
-                                        placeholder="Your email address" 
-                                        className="flex-1 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-                                    />
-                                    <button className="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium rounded-lg hover:opacity-90 transition-opacity">
-                                        Subscribe
-                                    </button>
-                                </div>
-                            </motion.div>
+                {/* Pagination - if needed */}
+                {filteredCollections.length > 12 && (
+                    <div className="mt-12 flex justify-center">
+                        <div className="inline-flex rounded-md shadow-sm">
+                            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-50">
+                                Previous
+                            </button>
+                            <button className="px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-purple-600">
+                                1
+                            </button>
+                            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
+                                2
+                            </button>
+                            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50">
+                                3
+                            </button>
+                            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-50">
+                                Next
+                            </button>
                         </div>
                     </div>
-                </div>
-            );
-        };
-        
-        export default Collections;
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default Collections;

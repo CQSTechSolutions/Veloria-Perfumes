@@ -239,7 +239,7 @@ const ProductsTable = () => {
                         <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-md border border-gray-200 dark:border-gray-600">
                           <img 
                             className="h-12 w-12 object-cover" 
-                            src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg'} 
+                            src={product.images && product.images.length > 0 ? product.images[0] : 'https://placehold.co/100x100/lightgray/gray?text=No+Image'} 
                             alt={product.name} 
                           />
                         </div>

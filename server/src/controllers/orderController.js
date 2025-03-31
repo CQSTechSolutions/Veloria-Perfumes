@@ -4,10 +4,37 @@ const Collection = require('../models/collectionModel');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+// Initialize Razorpay with error handling for missing keys
+let razorpay;
+try {
+    if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+        razorpay = new Razorpay({
+            key_id: process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET
+        });
+        console.log('Razorpay initialized successfully');
+    } else {
+        console.warn('Razorpay keys missing from environment variables');
+        // Initialize with dummy values for development
+        razorpay = {
+            orders: {
+                create: async () => ({ 
+                    id: `mock_order_${Date.now()}` 
+                })
+            }
+        };
+    }
+} catch (error) {
+    console.error('Failed to initialize Razorpay:', error);
+    // Initialize with dummy implementation
+    razorpay = {
+        orders: {
+            create: async () => ({ 
+                id: `mock_order_${Date.now()}` 
+            })
+        }
+    };
+}
 
 exports.createOrder = async (req, res) => {
     try {

@@ -18,6 +18,7 @@ import Account from './pages/Account';
 import Cart from './pages/Cart';
 import FAQ from './pages/FAQ';
 import Wishlist from './pages/Wishlist';
+import ProductDetail from './pages/ProductDetail';
 import { Toaster } from 'react-hot-toast';
 
 // Create a separate component for the app content
@@ -61,6 +62,7 @@ const AppContent = () => {
           <Route path="/account" element={<Account />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
       </div>
       {!isAdminRoute && <Footer />}
