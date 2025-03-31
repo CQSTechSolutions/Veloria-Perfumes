@@ -14,7 +14,7 @@ const Footer = () => {
       { name: "Shipping Policy", path: "/shipping" },
     ],
     "CUSTOMER SERVICE": [
-      { name: "Track Order", path: "/track-order" },
+      // { name: "Track Order", path: "/track-order" },
       { name: "Return Policy", path: "/returns" },
       { name: "FAQs", path: "/faq" },
       { name: "My Account", path: "/account" },

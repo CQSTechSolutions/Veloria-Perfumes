@@ -19,6 +19,10 @@ import Cart from './pages/Cart';
 import FAQ from './pages/FAQ';
 import Wishlist from './pages/Wishlist';
 import ProductDetail from './pages/ProductDetail';
+import TermsAndConditions from './pages/TermsAndConditions';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import ShippingPolicy from './pages/ShippingPolicy';
+import ReturnPolicy from './pages/ReturnPolicy';
 import { Toaster } from 'react-hot-toast';
 
 // Create a separate component for the app content
@@ -63,6 +67,10 @@ const AppContent = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/shipping" element={<ShippingPolicy />} />
+          <Route path="/returns" element={<ReturnPolicy />} />
         </Routes>
       </div>
       {!isAdminRoute && <Footer />}
