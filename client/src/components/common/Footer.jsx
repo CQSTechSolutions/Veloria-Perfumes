@@ -32,11 +32,11 @@ const Footer = () => {
       {/* Decorative top border */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold/50 to-transparent"></div>
       
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-12 md:py-16">
         {/* Newsletter */}
-        <div className="mb-16 text-center max-w-3xl mx-auto">
-          <h3 className="text-2xl font-serif text-gold mb-3">Join Our Newsletter</h3>
-          <p className="mb-6 text-soft-white/70 text-sm font-sans">Stay updated with our latest fragrances and exclusive offers</p>
+        <div className="mb-12 md:mb-16 text-center max-w-3xl mx-auto">
+          <h3 className="text-xl md:text-2xl font-serif text-gold mb-2 md:mb-3">Join Our Newsletter</h3>
+          <p className="mb-4 md:mb-6 text-soft-white/70 text-sm font-sans">Stay updated with our latest fragrances and exclusive offers</p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input
               type="email"
@@ -51,18 +51,18 @@ const Footer = () => {
         </div>
 
         {/* Decorative element */}
-        <div className="flex items-center justify-center mb-12">
-          <div className="h-px w-16 bg-gold/30"></div>
-          <span className="mx-4 text-gold">✦</span>
-          <div className="h-px w-16 bg-gold/30"></div>
+        <div className="flex items-center justify-center mb-8 md:mb-12">
+          <div className="h-px w-12 md:w-16 bg-gold/30"></div>
+          <span className="mx-3 md:mx-4 text-gold">✦</span>
+          <div className="h-px w-12 md:w-16 bg-gold/30"></div>
         </div>
 
         {/* Links */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-16">
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h4 className="font-sans text-xs tracking-widest mb-6 text-gold">{title}</h4>
-              <ul className="space-y-3">
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 mb-12 md:mb-16">
+          {Object.entries(footerLinks).map(([title, links], index) => (
+            <div key={title} className={index === 0 ? "col-span-1" : ""}>
+              <h4 className="font-sans text-xs tracking-widest mb-4 md:mb-6 text-gold">{title}</h4>
+              <ul className="space-y-2 md:space-y-3">
                 {links.map((link) => (
                   <li key={link.name}>
                     <Link 
@@ -78,9 +78,9 @@ const Footer = () => {
           ))}
 
           {/* Contact Info */}
-          <div>
-            <h4 className="font-sans text-xs tracking-widest mb-6 text-gold">CONTACT US</h4>
-            <ul className="space-y-4 text-soft-white/70 text-sm">
+          <div className="col-span-1 xs:col-span-2 md:col-span-1">
+            <h4 className="font-sans text-xs tracking-widest mb-4 md:mb-6 text-gold">CONTACT US</h4>
+            <ul className="space-y-3 md:space-y-4 text-soft-white/70 text-sm">
               <li className="flex items-start">
                 <FiMail className="mr-3 text-gold mt-1 flex-shrink-0" />
                 <a href="mailto:support@veloriaperfumes.com" className="hover:text-gold transition-colors">
@@ -109,7 +109,7 @@ const Footer = () => {
         </div>
 
         {/* Social Links */}
-        <div className="flex justify-center space-x-6 mb-12">
+        <div className="flex justify-center space-x-4 md:space-x-6 mb-8 md:mb-12">
           {[
             { Icon: FiInstagram, label: 'Instagram', url: 'https://instagram.com' },
             { Icon: FiFacebook, label: 'Facebook', url: 'https://facebook.com' },
@@ -121,18 +121,18 @@ const Footer = () => {
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-soft-white/60 hover:text-gold transition-colors w-10 h-10 flex items-center justify-center border border-soft-white/20 hover:border-gold"
+              className="text-soft-white/60 hover:text-gold transition-colors w-8 h-8 md:w-10 md:h-10 flex items-center justify-center border border-soft-white/20 hover:border-gold"
               aria-label={label}
             >
-              <Icon className="w-5 h-5" />
+              <Icon className="w-4 h-4 md:w-5 md:h-5" />
             </a>
           ))}
         </div>
 
         {/* Payment methods */}
-        <div className="flex justify-center items-center gap-4 mb-12">
-          <span className="text-soft-white/40 text-xs">Payment Methods:</span>
-          <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 mb-8 md:mb-12">
+          <span className="text-soft-white/40 text-xs mb-2 sm:mb-0">Payment Methods:</span>
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
             {['Visa', 'Mastercard', 'Amex', 'PayPal'].map(method => (
               <span key={method} className="px-2 py-1 bg-soft-white/5 border border-soft-white/10 text-soft-white/60 text-xs rounded-sm">
                 {method}
@@ -142,8 +142,8 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-soft-white/40 text-xs pt-8 border-t border-soft-white/10">
-          <p className="mb-2">&copy; {currentYear} Veloria Perfumes. All rights reserved.</p>
+        <div className="text-center text-soft-white/40 text-xs pt-6 md:pt-8 border-t border-soft-white/10">
+          <p className="mb-1 md:mb-2">&copy; {currentYear} Veloria Perfumes. All rights reserved.</p>
           <p>Designed with ♥ for the finest fragrances</p>
         </div>
       </div>

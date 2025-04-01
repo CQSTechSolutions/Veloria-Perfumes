@@ -14,6 +14,7 @@ import CollectionForm from './pages/admin/CollectionForm';
 import OrderList from './pages/admin/OrderList';
 import UserList from './pages/admin/UserList';
 import Settings from './pages/admin/Settings';
+import CategoryManagement from './pages/admin/CategoryManagement';
 import Account from './pages/Account';
 import Cart from './pages/Cart';
 import FAQ from './pages/FAQ';
@@ -58,10 +59,14 @@ const AppContent = () => {
           <Route path="/admin" element={<VeloriaAdministration />} />
           <Route path="/admin/products" element={<ProductList />} />
           <Route path="/admin/products/new" element={<ProductForm />} />
+          <Route path="/admin/products/edit/:id" element={<ProductForm />} />
+          <Route path="/admin/collections" element={<ProductList />} />
+          <Route path="/admin/collections/new" element={<CollectionForm />} />
           <Route path="/admin/collection/edit/:id" element={<CollectionForm />} />
           <Route path="/admin/orders" element={<OrderList />} />
           <Route path="/admin/users" element={<UserList />} />
           <Route path="/admin/settings" element={<Settings />} />
+          <Route path="/admin/categories" element={<CategoryManagement />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/account" element={<Account />} />
           <Route path="/cart" element={<Cart />} />

@@ -30,18 +30,18 @@ const FAQ = () => {
     
     return (
         <div className="min-h-screen bg-cream paper-texture">
-            <div className="relative container mx-auto px-4 py-16">
+            <div className="relative container mx-auto px-4 py-8 sm:py-12 md:py-16">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
+                    className="text-center mb-8 sm:mb-12 md:mb-16"
                 >
-                    <h1 className="text-5xl md:text-6xl font-serif mb-4 text-burgundy">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif mb-3 md:mb-4 text-burgundy">
                         Frequently Asked Questions
                     </h1>
-                    <div className="w-24 h-1 bg-gold mx-auto mb-6" />
-                    <p className="text-xl text-soft-black/70">
+                    <div className="w-16 sm:w-20 md:w-24 h-0.5 md:h-1 bg-gold mx-auto mb-4 md:mb-6" />
+                    <p className="text-base sm:text-lg md:text-xl text-soft-black/70 px-2">
                         Find answers to common questions about our fragrances
                     </p>
                 </motion.div>
@@ -50,7 +50,7 @@ const FAQ = () => {
                     variants={containerVariants}
                     initial="hidden"
                     animate="show"
-                    className="max-w-4xl mx-auto space-y-4"
+                    className="max-w-4xl mx-auto space-y-3 sm:space-y-4"
                 >
                     {faq.map((item, index) => (
                         <motion.div
@@ -60,16 +60,17 @@ const FAQ = () => {
                         >
                             <div
                                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                className="p-6 flex justify-between items-center cursor-pointer group"
+                                className="p-4 sm:p-5 md:p-6 flex justify-between items-center cursor-pointer group"
                             >
-                                <h2 className="text-xl font-serif text-soft-black group-hover:text-burgundy transition-colors">
+                                <h2 className="text-base sm:text-lg md:text-xl font-serif text-soft-black group-hover:text-burgundy transition-colors pr-4">
                                     {item.question}
                                 </h2>
                                 <motion.div
                                     animate={{ rotate: openIndex === index ? 180 : 0 }}
                                     transition={{ duration: 0.3 }}
+                                    className="flex-shrink-0"
                                 >
-                                    <FaChevronDown className="text-gold text-xl" />
+                                    <FaChevronDown className="text-gold text-sm sm:text-base md:text-xl" />
                                 </motion.div>
                             </div>
                             
@@ -103,7 +104,7 @@ const FAQ = () => {
                                             }
                                         }}
                                     >
-                                        <div className="px-6 pb-6 text-soft-black/70">
+                                        <div className="px-4 sm:px-5 md:px-6 pb-4 sm:pb-5 md:pb-6 text-soft-black/70 text-sm sm:text-base">
                                             {item.answer}
                                         </div>
                                     </motion.div>

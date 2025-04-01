@@ -1,14 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FiSearch, FiUser, FiShoppingBag, FiHeart, FiX } from 'react-icons/fi';
+import { FiSearch, FiUser, FiShoppingBag, FiHeart, FiX, FiMenu } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Close mobile menu when location changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location]);
 
   const categories = [
     // { name: 'BOGO', path: '/bogo' },
@@ -43,11 +66,20 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-soft-white border-b border-gold/20 sticky top-0 z-50 paper-texture">
+    <nav className={`bg-soft-white border-b border-gold/20 sticky top-0 z-50 paper-texture transition-shadow duration-300 ${scrolled ? 'shadow-md' : ''}`}>
       {/* Main Navigation */}
       <div className="max-w-[1440px] mx-auto px-4">
         {/* Upper Nav - Logo and Icons */}
         <div className="h-20 flex items-center justify-between relative">
+          {/* Mobile Menu Button - Only visible on small screens */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="lg:hidden p-2 hover:bg-cream rounded-full transition-colors"
+            aria-label="Open menu"
+          >
+            <FiMenu className="w-5 h-5 text-soft-black" />
+          </button>
+
           {/* Search Icon */}
           <button 
             onClick={() => setIsSearchOpen(true)}
@@ -58,8 +90,8 @@ const Navbar = () => {
           </button>
 
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0">
-            <h1 className="text-xl md:text-2xl font-serif font-bold tracking-wider text-burgundy">
+          <Link to="/" className="flex-shrink-0 absolute left-1/2 transform -translate-x-1/2 lg:static lg:translate-x-0">
+            <h1 className="text-xl md:text-2xl font-serif font-bold tracking-wider text-burgundy whitespace-nowrap">
               VELORIA <span className="text-gold">PERFUMES</span>
             </h1>
           </Link>
@@ -126,7 +158,97 @@ const Navbar = () => {
           )}
         </AnimatePresence>
 
-        {/* Categories Menu */}
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-soft-black/80 z-50 lg:hidden"
+            >
+              <motion.div 
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'tween', duration: 0.3 }}
+                className="fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-soft-white paper-texture overflow-y-auto"
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-8">
+                    <Link to="/" className="flex-shrink-0">
+                      <h2 className="text-xl font-serif font-bold tracking-wider text-burgundy">
+                        VELORIA <span className="text-gold">PERFUMES</span>
+                      </h2>
+                    </Link>
+                    <button 
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-2 hover:bg-cream rounded-full transition-colors"
+                      aria-label="Close menu"
+                    >
+                      <FiX className="w-5 h-5 text-soft-black" />
+                    </button>
+                  </div>
+                  
+                  <nav className="mb-8">
+                    <ul className="space-y-4">
+                      {categories.map((category) => (
+                        <li key={category.name}>
+                          <Link
+                            to={category.path}
+                            className={`block py-2 text-sm font-sans tracking-wider hover:text-burgundy transition-colors
+                              ${location.pathname === category.path ? 'text-burgundy font-medium' : 'text-soft-black'}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {category.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                  
+                  <div className="pt-6 border-t border-gold/20">
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <Link 
+                        to="/account" 
+                        className="flex items-center text-sm text-soft-black hover:text-burgundy transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <FiUser className="mr-2" /> My Account
+                      </Link>
+                      <Link 
+                        to="/wishlist" 
+                        className="flex items-center text-sm text-soft-black hover:text-burgundy transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <FiHeart className="mr-2" /> Wishlist
+                      </Link>
+                      <Link 
+                        to="/cart" 
+                        className="flex items-center text-sm text-soft-black hover:text-burgundy transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <FiShoppingBag className="mr-2" /> Cart
+                      </Link>
+                    </div>
+                    
+                    <button 
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setIsSearchOpen(true);
+                      }}
+                      className="w-full py-3 px-4 bg-cream hover:bg-cream/70 text-burgundy rounded-md transition-colors flex items-center justify-center"
+                    >
+                      <FiSearch className="mr-2" /> Search Products
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Categories Menu - Only visible on large screens */}
         <div className="hidden lg:flex items-center justify-center space-x-8 py-4">
           {categories.map((category) => (
             <Link

@@ -284,13 +284,13 @@ const ProductDetail = () => {
     return (
         <div className="min-h-screen bg-cream">
             {/* Breadcrumb */}
-            <div className="max-w-7xl mx-auto px-4 py-4 flex items-center text-sm text-soft-black/60">
+            <div className="max-w-7xl mx-auto px-4 py-3 md:py-4 flex flex-wrap items-center text-xs sm:text-sm text-soft-black/60">
                 <Link to="/" className="hover:text-burgundy transition-colors">Home</Link>
-                <FiChevronRight className="mx-2" />
+                <FiChevronRight className="mx-1 sm:mx-2" />
                 <Link to="/collections" className="hover:text-burgundy transition-colors">Collections</Link>
                 {product.category && product.category[0] && (
                     <>
-                        <FiChevronRight className="mx-2" />
+                        <FiChevronRight className="mx-1 sm:mx-2" />
                         <Link 
                             to={`/collections?category=${product.category[0]}`} 
                             className="hover:text-burgundy transition-colors"
@@ -299,16 +299,16 @@ const ProductDetail = () => {
                         </Link>
                     </>
                 )}
-                <FiChevronRight className="mx-2" />
-                <span className="text-burgundy font-medium">{product.name}</span>
+                <FiChevronRight className="mx-1 sm:mx-2" />
+                <span className="text-burgundy font-medium truncate max-w-[150px] sm:max-w-none">{product.name}</span>
             </div>
             
             {/* Product Detail Section */}
-            <div className="max-w-7xl mx-auto px-4 py-6">
+            <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
                 <div className="bg-soft-white border border-gold/10 shadow-sm overflow-hidden">
                     <div className="md:flex">
                         {/* Product Image Section */}
-                        <div className="md:w-1/2 p-6">
+                        <div className="md:w-1/2 p-4 sm:p-6">
                             <div className="relative">
                                 {/* Main Image with Zoom */}
                                 <div 
@@ -339,17 +339,17 @@ const ProductDetail = () => {
 
                                 {/* Discount badge */}
                                 {discount && (
-                                    <div className="absolute top-4 left-4 bg-burgundy text-soft-white px-2 py-1 text-sm font-medium">
+                                    <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-burgundy text-soft-white px-2 py-1 text-xs sm:text-sm font-medium">
                                         {discount}% OFF
                                     </div>
                                 )}
                                 
                                 {/* Thumbnail Images */}
-                                <div className="flex gap-2 mt-4">
+                                <div className="flex gap-2 mt-3 sm:mt-4 justify-center sm:justify-start flex-wrap">
                                     {productImages.map((img, index) => (
                                         <button
                                             key={index}
-                                            className={`w-20 h-20 border-2 overflow-hidden ${
+                                            className={`w-16 h-16 sm:w-20 sm:h-20 border-2 overflow-hidden ${
                                                 activeImageIndex === index 
                                                 ? 'border-burgundy' 
                                                 : 'border-gold/10 hover:border-gold/30'
@@ -371,13 +371,13 @@ const ProductDetail = () => {
                         </div>
                         
                         {/* Product Info */}
-                        <div className="md:w-1/2 p-6 md:p-8 border-l border-gold/10">
+                        <div className="md:w-1/2 p-4 sm:p-6 md:p-8 border-t md:border-t-0 md:border-l border-gold/10">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.1 }}
                             >
-                                <div className="flex flex-wrap gap-2 mb-4">
+                                <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
                                     {product.category && product.category.map((cat, index) => (
                                         <Link 
                                             key={index}
@@ -389,14 +389,14 @@ const ProductDetail = () => {
                                     ))}
                                 </div>
                                 
-                                <h1 className="text-3xl font-serif text-soft-black mb-2">{product.name}</h1>
+                                <h1 className="text-2xl sm:text-3xl font-serif text-soft-black mb-2">{product.name}</h1>
                                 
-                                <div className="flex items-center gap-2 mb-4">
+                                <div className="flex items-center gap-2 mb-3 sm:mb-4">
                                     <div className="flex items-center">
                                         {[...Array(5)].map((_, i) => (
                                             <FiStar 
                                                 key={i} 
-                                                className={`w-4 h-4 ${i < (product.rating || 5) ? 'text-gold fill-current' : 'text-soft-black/20'}`} 
+                                                className={`w-3 h-3 sm:w-4 sm:h-4 ${i < (product.rating || 5) ? 'text-gold fill-current' : 'text-soft-black/20'}`} 
                                             />
                                         ))}
                                     </div>
@@ -405,21 +405,21 @@ const ProductDetail = () => {
                                     </span>
                                 </div>
                                 
-                                <p className="text-soft-black/70 mb-6 leading-relaxed font-sans">
+                                <p className="text-sm sm:text-base text-soft-black/70 mb-4 sm:mb-6 leading-relaxed font-sans">
                                     {product.description}
                                 </p>
                                 
-                                <div className="mb-6">
+                                <div className="mb-4 sm:mb-6">
                                     <div className="flex items-baseline gap-2">
-                                        <span className="text-3xl font-serif text-burgundy">₹{product.price?.toLocaleString()}</span>
+                                        <span className="text-2xl sm:text-3xl font-serif text-burgundy">₹{product.price?.toLocaleString()}</span>
                                         
                                         {discount && (
-                                            <span className="text-soft-black/50 text-lg line-through">
+                                            <span className="text-soft-black/50 text-base sm:text-lg line-through">
                                                 ₹{product.originalPrice?.toLocaleString()}
                                             </span>
                                         )}
                                     </div>
-                                    <div className="mt-2 flex items-center gap-2">
+                                    <div className="mt-2 flex items-center flex-wrap gap-2">
                                         {Number(product.stock) > 0 ? (
                                             <span className="inline-flex items-center px-2 py-1 text-xs bg-burgundy/10 text-burgundy uppercase tracking-wider">
                                                 In Stock ({product.stock})
@@ -439,15 +439,15 @@ const ProductDetail = () => {
                                 </div>
                                 
                                 {/* Quantity Selector */}
-                                <div className="flex items-center mb-6">
-                                    <span className="text-soft-black/70 mr-3 text-sm uppercase tracking-wider">Quantity:</span>
+                                <div className="flex items-center mb-4 sm:mb-6">
+                                    <span className="text-soft-black/70 mr-3 text-xs sm:text-sm uppercase tracking-wider">Quantity:</span>
                                     <div className="quantity-selector">
                                         <button 
                                             onClick={decrementQuantity}
                                             disabled={quantity <= 1}
                                             aria-label="Decrease quantity"
                                         >
-                                            <FiMinus className="w-4 h-4" />
+                                            <FiMinus className="w-3 h-3 sm:w-4 sm:h-4" />
                                         </button>
                                         <input
                                             type="text"
@@ -469,7 +469,7 @@ const ProductDetail = () => {
                                                     setQuantity(1);
                                                 }
                                             }}
-                                            className="veloria-input"
+                                            className="veloria-input text-sm"
                                             aria-label="Quantity"
                                         />
                                         <button 
@@ -477,17 +477,17 @@ const ProductDetail = () => {
                                             disabled={quantity >= product.stock}
                                             aria-label="Increase quantity"
                                         >
-                                            <FiPlus className="w-4 h-4" />
+                                            <FiPlus className="w-3 h-3 sm:w-4 sm:h-4" />
                                         </button>
                                     </div>
                                 </div>
                                 
                                 {/* Action Buttons */}
-                                <div className="flex flex-col sm:flex-row gap-3 mb-8">
+                                <div className="flex flex-col sm:flex-row gap-3 mb-6 sm:mb-8">
                                     <button
                                         onClick={handleAddToCart}
                                         disabled={isAddingToCart || Number(product.stock) <= 0}
-                                        className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 transition ${
+                                        className={`flex-1 flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 transition text-sm sm:text-base ${
                                             Number(product.stock) <= 0
                                             ? 'bg-soft-black/10 text-soft-black/50 cursor-not-allowed'
                                             : 'btn-primary'
@@ -497,11 +497,11 @@ const ProductDetail = () => {
                                         {isAddingToCart ? (
                                             <div className="flex items-center gap-2">
                                                 <span className="animate-pulse">Adding</span>
-                                                <div className="w-5 h-5 border-2 border-t-soft-white border-soft-white/30 rounded-full animate-spin"></div>
+                                                <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-t-soft-white border-soft-white/30 rounded-full animate-spin"></div>
                                             </div>
                                         ) : (
                                             <>
-                                                <FiShoppingBag className="w-5 h-5" />
+                                                <FiShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
                                                 {isInCart ? 'Update Cart' : 'Add to Cart'}
                                             </>
                                         )}
@@ -509,27 +509,32 @@ const ProductDetail = () => {
                                     
                                     <button
                                         onClick={toggleWishlist}
-                                        className={`flex items-center justify-center gap-2 px-6 py-3 transition ${
+                                        className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 transition text-sm sm:text-base ${
                                             isInWishlist
                                             ? 'bg-burgundy/10 text-burgundy border border-burgundy'
                                             : 'btn-outline'
                                         }`}
                                         aria-label={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
                                     >
-                                        <FiHeart className={`w-5 h-5 ${isInWishlist ? 'fill-current text-burgundy' : ''}`} />
-                                        {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                                        <FiHeart className={`w-4 h-4 sm:w-5 sm:h-5 ${isInWishlist ? 'fill-current text-burgundy' : ''}`} />
+                                        <span className="hidden xs:inline">
+                                          {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                                        </span>
+                                        <span className="xs:hidden">
+                                          {isInWishlist ? 'Remove' : 'Wishlist'}
+                                        </span>
                                     </button>
                                 </div>
 
                                 {/* Benefits */}
-                                <div className="border-t border-gold/10 pt-6">
-                                    <h3 className="text-sm uppercase tracking-wider text-gold mb-4">Benefits</h3>
-                                    <div className="grid grid-cols-2 gap-4">
+                                <div className="border-t border-gold/10 pt-4 sm:pt-6">
+                                    <h3 className="text-xs sm:text-sm uppercase tracking-wider text-gold mb-3 sm:mb-4">Benefits</h3>
+                                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
                                         {benefits.map((benefit, index) => (
-                                            <div key={index} className="flex items-start gap-3">
-                                                <div className="text-burgundy mt-1">{benefit.icon}</div>
+                                            <div key={index} className="flex items-start gap-2 sm:gap-3">
+                                                <div className="text-burgundy mt-0.5 sm:mt-1">{benefit.icon}</div>
                                                 <div>
-                                                    <h4 className="text-sm font-medium text-soft-black">{benefit.title}</h4>
+                                                    <h4 className="text-xs sm:text-sm font-medium text-soft-black">{benefit.title}</h4>
                                                     <p className="text-xs text-soft-black/70">{benefit.description}</p>
                                                 </div>
                                             </div>
@@ -541,14 +546,14 @@ const ProductDetail = () => {
                     </div>
 
                     {/* Product Details Tabs */}
-                    <div className="border-t border-gold/10 p-6">
+                    <div className="border-t border-gold/10 p-4 sm:p-6">
                         <div className="max-w-4xl mx-auto">
-                            <h2 className="text-xl font-serif text-burgundy mb-6">Product Details</h2>
+                            <h2 className="text-lg sm:text-xl font-serif text-burgundy mb-4 sm:mb-6">Product Details</h2>
                             
                             {product.features && product.features.length > 0 && (
-                                <div className="mb-8">
-                                    <h3 className="text-lg font-medium text-soft-black mb-4">Features</h3>
-                                    <ul className="space-y-2">
+                                <div className="mb-6 sm:mb-8">
+                                    <h3 className="text-base sm:text-lg font-medium text-soft-black mb-3 sm:mb-4">Features</h3>
+                                    <ul className="space-y-1.5 sm:space-y-2 text-sm sm:text-base">
                                         {product.features.map((feature, index) => (
                                             <li key={index} className="flex items-start">
                                                 <span className="text-gold mr-2">•</span>
@@ -559,25 +564,25 @@ const ProductDetail = () => {
                                 </div>
                             )}
                             
-                            <div className="mb-8">
-                                <h3 className="text-lg font-medium text-soft-black mb-4">Additional Information</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="border-b border-gold/10 pb-3">
-                                        <span className="text-soft-black/50 text-sm">Category</span>
+                            <div className="mb-6 sm:mb-8">
+                                <h3 className="text-base sm:text-lg font-medium text-soft-black mb-3 sm:mb-4">Additional Information</h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm sm:text-base">
+                                    <div className="border-b border-gold/10 pb-2 sm:pb-3">
+                                        <span className="text-soft-black/50 text-xs sm:text-sm">Category</span>
                                         <p className="text-soft-black">{product.category?.join(', ') || 'N/A'}</p>
                                     </div>
                                     {product.brand && (
-                                        <div className="border-b border-gold/10 pb-3">
-                                            <span className="text-soft-black/50 text-sm">Brand</span>
+                                        <div className="border-b border-gold/10 pb-2 sm:pb-3">
+                                            <span className="text-soft-black/50 text-xs sm:text-sm">Brand</span>
                                             <p className="text-soft-black">{product.brand}</p>
                                         </div>
                                     )}
-                                    <div className="border-b border-gold/10 pb-3">
-                                        <span className="text-soft-black/50 text-sm">Stock</span>
+                                    <div className="border-b border-gold/10 pb-2 sm:pb-3">
+                                        <span className="text-soft-black/50 text-xs sm:text-sm">Stock</span>
                                         <p className="text-soft-black">{product.stock}</p>
                                     </div>
-                                    <div className="border-b border-gold/10 pb-3">
-                                        <span className="text-soft-black/50 text-sm">SKU</span>
+                                    <div className="border-b border-gold/10 pb-2 sm:pb-3">
+                                        <span className="text-soft-black/50 text-xs sm:text-sm">SKU</span>
                                         <p className="text-soft-black">{product.sku || product._id.slice(-8).toUpperCase()}</p>
                                     </div>
                                 </div>
@@ -589,12 +594,12 @@ const ProductDetail = () => {
             
             {/* Related Products Section */}
             {relatedProducts.length > 0 && (
-                <div className="max-w-7xl mx-auto px-4 py-12">
-                    <div className="text-center mb-8">
-                        <h2 className="text-2xl font-serif text-burgundy mb-2">You Might Also Like</h2>
-                        <div className="w-24 h-px bg-gold mx-auto"></div>
+                <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
+                    <div className="text-center mb-6 sm:mb-8">
+                        <h2 className="text-xl sm:text-2xl font-serif text-burgundy mb-2">You Might Also Like</h2>
+                        <div className="w-16 sm:w-24 h-px bg-gold mx-auto"></div>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
                         {relatedProducts.map((relatedProduct) => (
                             <motion.div
                                 key={relatedProduct._id}
@@ -615,10 +620,10 @@ const ProductDetail = () => {
                                             }}
                                         />
                                     </div>
-                                    <div className="p-4">
-                                        <h3 className="font-serif text-soft-black hover:text-burgundy transition-colors">{relatedProduct.name}</h3>
+                                    <div className="p-3 sm:p-4">
+                                        <h3 className="font-serif text-soft-black hover:text-burgundy transition-colors text-sm sm:text-base truncate">{relatedProduct.name}</h3>
                                         <div className="flex items-baseline gap-2 mt-1">
-                                            <p className="text-burgundy">₹{relatedProduct.price?.toLocaleString()}</p>
+                                            <p className="text-burgundy text-sm sm:text-base">₹{relatedProduct.price?.toLocaleString()}</p>
                                             {relatedProduct.originalPrice && relatedProduct.price < relatedProduct.originalPrice && (
                                                 <p className="text-soft-black/50 text-xs line-through">
                                                     ₹{relatedProduct.originalPrice?.toLocaleString()}

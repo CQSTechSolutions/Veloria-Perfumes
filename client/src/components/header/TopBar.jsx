@@ -25,7 +25,7 @@ const TopBar = () => {
   };
 
   return (
-    <div className="bg-burgundy text-soft-white py-2 text-center text-xs tracking-wider font-sans uppercase">
+    <div className="bg-burgundy text-soft-white py-2 text-center text-xs sm:text-sm tracking-wider font-sans">
       <Carousel
         responsive={responsive}
         infinite={true}
@@ -33,12 +33,14 @@ const TopBar = () => {
         autoPlaySpeed={5000}
         showDots={false}
         removeArrowOnDeviceType={["tablet", "mobile", "desktop"]}
+        containerClass="container-with-dots"
+        itemClass="px-4"
       >
         {messages.map((message, index) => (
           <div key={index} className="flex items-center justify-center">
-            <span className="inline-block mr-2 text-gold">✦</span>
-            <p>{message}</p>
-            <span className="inline-block ml-2 text-gold">✦</span>
+            <span className="hidden sm:inline-block mr-2 text-gold">✦</span>
+            <p className="truncate">{message}</p>
+            <span className="hidden sm:inline-block ml-2 text-gold">✦</span>
           </div>
         ))}
       </Carousel>
