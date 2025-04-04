@@ -6,28 +6,12 @@ import { motion } from 'framer-motion';
 
 const HomeCarousel = () => {
   const slides = [
-    // {
-    //   id: 1,
-    //   image: 'https://images.unsplash.com/photo-1616486338812-3dadae405b3a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80',
-    //   title: 'Discover Elegance',
-    //   subtitle: 'Experience our exclusive collection of luxury fragrances',
-    //   buttonText: 'Shop Collection',
-    //   link: '/collections'
-    // },
-    // {
-    //   id: 2,
-    //   image: 'https://images.unsplash.com/photo-1563170352-898dae651d31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80',
-    //   title: 'Sensual & Refined',
-    //   subtitle: 'Handcrafted perfumes for the discerning connoisseur',
-    //   buttonText: 'Explore Now',
-    //   link: '/collections'
-    // },
     {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-      title: 'Gift of Luxury',
-      subtitle: 'Curated gift sets for every special occasion',
-      buttonText: 'View Gifts',
+      id: 1,
+      image: '/banner.webp',
+      title: 'VELORIA',
+      subtitle: 'PERFUME',
+      buttonText: 'VIEW GIFTS',
       link: '/collections'
     }
   ];
@@ -60,15 +44,14 @@ const HomeCarousel = () => {
         containerClass="carousel-container"
       >
         {slides.map((slide) => (
-          <div key={slide.id} className="relative h-[60vh] md:h-[80vh]">
-            {/* Image with overlay */}
+          <div key={slide.id} className="relative h-[60vh] md:h-[90vh] bg-[#f8f3ed]">
+            {/* Image */}
             <div className="absolute inset-0">
               <img 
                 src={slide.image} 
-                alt={slide.title} 
+                alt="Veloria Perfume"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-soft-black/30"></div>
             </div>
 
             {/* Content */}
@@ -79,15 +62,19 @@ const HomeCarousel = () => {
                 transition={{ duration: 0.8 }}
                 className="max-w-3xl"
               >
-                <span className="inline-block mb-3 text-gold text-3xl">✦</span>
-                <h2 className="text-3xl md:text-5xl lg:text-6xl font-serif text-soft-white mb-4">{slide.title}</h2>
-                <p className="text-soft-white/90 text-lg md:text-xl mb-8 font-sans max-w-2xl mx-auto tracking-wide">{slide.subtitle}</p>
-                <Link 
-                  to={slide.link} 
-                  className="inline-block border border-gold text-soft-white bg-transparent hover:bg-burgundy hover:border-burgundy px-8 py-3 transition-colors duration-300 tracking-wider uppercase text-sm"
+                {/* <h2 className="text-5xl md:text-7xl lg:text-8xl font-serif text-[#8B6E4E] mb-4">{slide.title}</h2> */}
+                {/* <p className="text-[#8B6E4E] text-2xl md:text-3xl mb-12 font-serif tracking-widest">{slide.subtitle}</p> */}
+                {/* <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  {slide.buttonText}
-                </Link>
+                  <Link 
+                    to={slide.link} 
+                    className="inline-block bg-[#e9dfd4] text-[#8B6E4E] px-12 py-4 transition-all duration-300 tracking-[0.2em] uppercase text-sm hover:bg-[#8B6E4E] hover:text-white"
+                  >
+                    {slide.buttonText}
+                  </Link>
+                </motion.div> */}
               </motion.div>
             </div>
           </div>
