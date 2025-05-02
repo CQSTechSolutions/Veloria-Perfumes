@@ -19,7 +19,7 @@ const perfumes = [
     image: 'https://images.pexels.com/photos/755992/pexels-photo-755992.jpeg',
     price: 8999,
     stock: '50',
-    category: ['Luxury', 'Oud', 'Unisex Fragrances', 'New Arrivals']
+    category: 'New Arrivals'
   },
   {
     name: 'Midnight Velvet',
@@ -27,7 +27,7 @@ const perfumes = [
     image: 'https://th.bing.com/th/id/OIP.gwd_XwTivnxa6olBO3b7qAHaE8?rs=1&pid=ImgDetMain',
     price: 7499,
     stock: '75',
-    category: ['Luxury', 'Evening Wear', "Women's Fragrances", 'Best Sellers']
+    category: 'Best Sellers'
   },
   {
     name: 'Amber Royale',
@@ -35,7 +35,7 @@ const perfumes = [
     image: 'https://th.bing.com/th/id/OIP.I-thhbeRfi7xnvXCopiRoQHaMB?w=196&h=318&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
     price: 9999,
     stock: '40',
-    category: ['Luxury', 'Amber', 'Unisex Fragrances', 'Limited Editions']
+    category: 'Limited Editions'
   },
   
   // Fresh & Citrus
@@ -45,7 +45,7 @@ const perfumes = [
     image: 'https://th.bing.com/th/id/OIP.HEqlDJcJSC-QDodpJ8Ng6AHaF7?w=279&h=223&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
     price: 3999,
     stock: '120',
-    category: ['Fresh', 'Citrus', "Summer Collection", 'New Arrivals']
+    category: 'New Arrivals'
   },
   {
     name: 'Citrus Splash',
@@ -53,7 +53,7 @@ const perfumes = [
     image: 'https://images.pexels.com/photos/965989/pexels-photo-965989.jpeg',
     price: 2999,
     stock: '150',
-    category: ['Fresh', 'Citrus', "Unisex Fragrances", 'Best Sellers']
+    category: 'Best Sellers'
   },
   
   // Floral
@@ -63,7 +63,7 @@ const perfumes = [
     image: 'https://th.bing.com/th/id/OIP.dkHwewY8IFAMznlJRtkKQwHaLG?w=204&h=305&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
     price: 5999,
     stock: '100',
-    category: ['Floral', "Women's Fragrances", 'Best Sellers']
+    category: 'Best Sellers'
   },
   {
     name: 'White Blossom',
@@ -71,7 +71,7 @@ const perfumes = [
     image: 'https://images.pexels.com/photos/3059609/pexels-photo-3059609.jpeg',
     price: 4999,
     stock: '85',
-    category: ['Floral', "Women's Fragrances", 'New Arrivals']
+    category: 'New Arrivals'
   },
   
   // Woody
@@ -81,7 +81,7 @@ const perfumes = [
     image: 'https://bellavitaorganic.com/cdn/shop/files/download_8064dace-302a-4462-a075-9da8103f97f9.jpg?v=1738909116&width=400',
     price: 4599,
     stock: '90',
-    category: ['Woody', "Men's Fragrances", 'Best Sellers']
+    category: 'Best Sellers'
   },
   {
     name: 'Sandalwood Legacy',
@@ -89,7 +89,7 @@ const perfumes = [
     image: 'https://bellavitaorganic.com/cdn/shop/files/download_5bea8eae-fa1f-45d3-95bc-81ced6860f9d.jpg?v=1732892381&width=400',
     price: 6999,
     stock: '65',
-    category: ['Woody', 'Sandalwood', 'Unisex Fragrances', 'Limited Editions']
+    category: 'Limited Editions'
   },
   
   // Oriental
@@ -99,7 +99,7 @@ const perfumes = [
     image: 'https://bellavitaorganic.com/cdn/shop/files/0_3.jpg?v=1698055971&width=400',
     price: 7499,
     stock: '70',
-    category: ['Oriental', 'Spicy', 'Unisex Fragrances', 'Limited Editions']
+    category: 'Limited Editions'
   },
   {
     name: 'Amber Nights',
@@ -107,7 +107,7 @@ const perfumes = [
     image: 'https://bellavitaorganic.com/cdn/shop/files/1_25f79680-b265-4423-b0c2-bdf6af78b69a.jpg?v=1700137801&width=400',
     price: 6999,
     stock: '80',
-    category: ['Oriental', 'Amber', 'Unisex Fragrances', 'Best Sellers']
+    category: 'Best Sellers'
   },
   
   // Fresh Additions
@@ -117,7 +117,7 @@ const perfumes = [
     image: 'https://images.pexels.com/photos/161599/scent-sticks-fragrance-aromatic-161599.jpeg',
     price: 3499,
     stock: '110',
-    category: ['Fresh', 'Aquatic', 'Unisex Fragrances', 'Summer Collection']
+    category: 'Summer Collection'
   },
   {
     name: 'Green Vitality',
@@ -125,7 +125,7 @@ const perfumes = [
     image: 'https://images.pexels.com/photos/4110348/pexels-photo-4110348.jpeg',
     price: 2999,
     stock: '130',
-    category: ['Fresh', 'Green', "Men's Fragrances", 'New Arrivals']
+    category: 'New Arrivals'
   },
   
   // Modern Luxury
@@ -135,7 +135,7 @@ const perfumes = [
     image: 'https://bellavitaorganic.com/cdn/shop/files/Tiger-10_1_2_1.jpg?v=1720330847&width=1000',
     price: 8499,
     stock: '60',
-    category: ['Luxury', 'Modern', "Men's Fragrances", 'Limited Editions']
+    category: 'Limited Editions'
   },
   {
     name: 'Velvet Iris',
@@ -143,7 +143,7 @@ const perfumes = [
     image: 'https://images.pexels.com/photos/264870/pexels-photo-264870.jpeg',
     price: 7999,
     stock: '70',
-    category: ['Luxury', 'Floral', "Women's Fragrances", 'Best Sellers']
+    category: 'Best Sellers'
   },
   
   // Distinctive Men's Fragrances
@@ -153,7 +153,7 @@ const perfumes = [
     image: 'https://images.pexels.com/photos/3910071/pexels-photo-3910071.jpeg',
     price: 6799,
     stock: '75',
-    category: ['Woody', 'Leather', "Men's Fragrances", 'Best Sellers']
+    category: 'Best Sellers'
   },
   {
     name: 'Gentleman\'s Club',
@@ -161,7 +161,7 @@ const perfumes = [
     image: 'https://bellavitaorganic.com/cdn/shop/files/1_f67f45b0-f265-4845-98bf-982e0c595504.jpg?v=1714740709&width=400',
     price: 5999,
     stock: '85',
-    category: ['Woody', 'Aromatic', "Men's Fragrances", 'New Arrivals']
+    category: 'New Arrivals'
   },
   
   // More products to reach 100
@@ -171,16 +171,33 @@ const perfumes = [
 // Function to generate additional perfumes to reach 100
 const generateMorePerfumes = () => {
   const categories = [
-    ['Luxury', 'Oud', 'Unisex Fragrances', 'New Arrivals'],
-    ['Fresh', 'Citrus', "Men's Fragrances", 'Summer Collection'],
-    ['Floral', "Women's Fragrances", 'Best Sellers'],
-    ['Woody', 'Aromatic', "Men's Fragrances", 'New Arrivals'],
-    ['Oriental', 'Spicy', 'Unisex Fragrances', 'Limited Editions'],
-    ['Fresh', 'Aquatic', "Women's Fragrances", 'Summer Collection'],
-    ['Woody', 'Leather', "Men's Fragrances", 'Best Sellers'],
-    ['Luxury', 'Modern', "Women's Fragrances", 'New Arrivals'],
-    ['Oriental', 'Amber', "Men's Fragrances", 'Winter Collection'],
-    ['Floral', 'Fruity', "Women's Fragrances", 'Spring Collection']
+    'Luxury',
+    'Fresh',
+    'Floral',
+    'Woody',
+    'Oriental',
+    'Aquatic',
+    'Oud',
+    'Citrus',
+    "Men's Fragrances",
+    'Summer Collection',
+    "Women's Fragrances",
+    'Best Sellers',
+    'New Arrivals',
+    'Winter Collection',
+    'Spring Collection',
+    'Limited Editions',
+    'Modern',
+    'Amber',
+    'Fruity',
+    'Spicy',
+    'Unisex Fragrances',
+    'Aquatic',
+    'Leather',
+    'Modern',
+    'Amber',
+    'Fruity',
+    'Spring Collection'
   ];
   
   const adjectives = ['Majestic', 'Elegant', 'Divine', 'Royal', 'Celestial', 'Eternal', 'Precious', 'Sublime', 'Exquisite', 'Opulent', 'Timeless', 'Classic', 'Modern', 'Sophisticated', 'Intense'];

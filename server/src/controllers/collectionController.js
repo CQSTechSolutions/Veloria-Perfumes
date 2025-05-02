@@ -109,4 +109,14 @@ const deleteCollection = async (req, res) => {
     }
 };
 
-module.exports = { getCollections, getCollectionById, createCollection, deleteCollection };
+const updateCollection = async (req, res) => {
+    try {
+        const collection = await Collection.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).json({ message: 'Collection updated successfully', collection });
+    } catch (error) {
+        console.error('Error updating collection:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+module.exports = { getCollections, getCollectionById, createCollection, deleteCollection, updateCollection };

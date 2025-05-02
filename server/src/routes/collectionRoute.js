@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getCollections, getCollectionById, createCollection, deleteCollection } = require('../controllers/collectionController');
+const { getCollections, getCollectionById, createCollection, deleteCollection, updateCollection } = require('../controllers/collectionController');
 const { isAdmin, isAuthenticated } = require('../middlewares/authMiddleware');
 
 // Debug log
@@ -15,5 +15,6 @@ router.get('/:id', getCollectionById);
 // Admin routes
 router.post('/', isAuthenticated, isAdmin, createCollection);
 router.delete('/:id', isAuthenticated, isAdmin, deleteCollection);
+router.put('/:id', isAuthenticated, isAdmin, updateCollection);
 
 module.exports = router;
