@@ -17,9 +17,18 @@ const Collections = () => {
     const [availableCategories, setAvailableCategories] = useState([]);
     const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
     const [sortBy, setSortBy] = useState('newest'); // 'newest', 'price-low', 'price-high'
+    const [searchValue, setSearchValue] = useState(''); // New state for search input
     
-    // Get category from URL params
+    // Get parameters from URL params
     const categoryParam = searchParams.get('category');
+    const searchQuery = searchParams.get('search') || '';
+
+    useEffect(() => {
+        // Set search input value from URL parameter
+        if (searchQuery) {
+            setSearchValue(searchQuery);
+        }
+    }, [searchQuery]);
 
     useEffect(() => {
         // Set selected category from URL parameter if available
@@ -45,10 +54,28 @@ const Collections = () => {
 
     useEffect(() => {
         setLoading(true);
-        // Use the category parameter in the API request if it exists
-        const apiUrl = categoryParam 
-            ? `${import.meta.env.VITE_API_URL}/api/collection?category=${categoryParam}`
-            : `${import.meta.env.VITE_API_URL}/api/collection`;
+        // Build the API URL with all necessary parameters
+        let apiUrl = `${import.meta.env.VITE_API_URL}/api/collection`;
+        
+        // Start with empty params object and build it
+        const params = new URLSearchParams();
+        
+        // Add category if it exists
+        if (categoryParam) {
+            params.append('category', categoryParam);
+        }
+        
+        // Add search query if it exists
+        if (searchQuery) {
+            params.append('search', searchQuery);
+        }
+        
+        // Add the params to the URL if any exist
+        if (params.toString()) {
+            apiUrl = `${apiUrl}?${params.toString()}`;
+        }
+        
+        console.log("Fetching from:", apiUrl);
             
         axios.get(apiUrl)
             .then(res => {
@@ -78,9 +105,27 @@ const Collections = () => {
                 setLoading(false);
                 toast.error('Failed to load collections');
             });
-    }, [categoryParam]); // Re-fetch when category param changes
+    }, [categoryParam, searchQuery]); // Re-fetch when category or search params change
 
-    const searchQuery = searchParams.get('search') || '';
+    // Handle search submission
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchValue.trim()) {
+            // Set search param and preserve other params
+            setSearchParams({ ...Object.fromEntries(searchParams), search: searchValue.trim() });
+        } else {
+            // Remove search param if empty
+            searchParams.delete('search');
+            setSearchParams(searchParams);
+        }
+    };
+
+    // Clear search
+    const clearSearch = () => {
+        setSearchValue('');
+        searchParams.delete('search');
+        setSearchParams(searchParams);
+    };
 
     // Modified filtering logic - case insensitive
     const filteredCollections = collections.filter(collection => {
@@ -255,6 +300,37 @@ const Collections = () => {
                     </p>
                 </motion.div>
 
+                {/* Search Bar */}
+                <div className="mb-8">
+                    <form onSubmit={handleSearch} className="flex w-full max-w-lg mx-auto">
+                        <div className="relative flex-1">
+                            <input
+                                type="text"
+                                placeholder="Search products..."
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            />
+                            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            {searchQuery && (
+                                <button 
+                                    type="button" 
+                                    onClick={clearSearch}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                >
+                                    &times;
+                                </button>
+                            )}
+                        </div>
+                        <button 
+                            type="submit" 
+                            className="bg-purple-600 text-white px-4 py-3 rounded-r-lg hover:bg-purple-700 transition-colors"
+                        >
+                            Search
+                        </button>
+                    </form>
+                </div>
+
                 {/* Filters and Controls Section */}
                 <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     {/* Category Filters */}
@@ -363,7 +439,12 @@ const Collections = () => {
                             Try adjusting your search or filter criteria
                         </p>
                         <button 
-                            onClick={() => setSelectedCategory('all')}
+                            onClick={() => {
+                                // Clear search and category filters
+                                setSearchValue('');
+                                setSelectedCategory('all');
+                                setSearchParams({});
+                            }}
                             className="px-6 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
                         >
                             View All Products
